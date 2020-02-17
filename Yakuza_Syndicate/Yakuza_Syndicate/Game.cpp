@@ -53,6 +53,7 @@ void Game::update() {
 void Game::draw() {
 	window.clear();
 
+	window.draw(gameField);
 	window.draw(players[0]);
 	window.draw(players[1]);
 

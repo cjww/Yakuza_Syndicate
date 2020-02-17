@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "GameField.h"
 class Game {
 private:
 	sf::RenderWindow window;
@@ -9,6 +9,8 @@ private:
 	
 	Player players[2];
 	int turn;
+
+	GameField gameField;
 
 public:
 	Game();
