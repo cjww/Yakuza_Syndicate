@@ -1,8 +1,12 @@
 #include "Game.h"
 
-Game::Game() : m_window(sf::VideoMode(1000, 600), "Yakuza Syndicate") {
+Game::Game() : window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
+	timePerFrame(sf::seconds(1.0f /60.0f)),
+	elapsedTime(sf::Time::Zero) {
 
-	while (m_window.isOpen()) {
+	turn = 0;
+
+	while (window.isOpen()) {
 		handleEvents();
 		update();
 		draw();
@@ -15,10 +19,10 @@ Game::~Game() {
 
 void Game::handleEvents() {
 	sf::Event e;
-	while (m_window.pollEvent(e)) {
+	while (window.pollEvent(e)) {
 		switch(e.type){
 		case sf::Event::Closed:
-			m_window.close();
+			window.close();
 			break;
 		}
 
@@ -26,14 +30,19 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-	float elapsedTime = m_clock.restart().asSeconds();
+	elapsedTime += clock.restart();
+	while (elapsedTime > timePerFrame) {
+		window.setTitle("FPS: " + std::to_string(1 / elapsedTime.asSeconds()));
+		elapsedTime -= timePerFrame;
 	
-	m_window.setTitle(std::to_string(1 / elapsedTime));
+		
+	}
+
 }
 
 void Game::draw() {
-	m_window.clear();
+	window.clear();
 
 
-	m_window.display();
+	window.display();
 }
