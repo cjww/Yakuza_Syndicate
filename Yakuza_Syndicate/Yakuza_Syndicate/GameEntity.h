@@ -7,6 +7,7 @@ private:
 	sf::Texture texture;
 
 public:
+	GameEntity();
 	GameEntity(sf::Texture &texture);
 
 	// Inherited via Drawable

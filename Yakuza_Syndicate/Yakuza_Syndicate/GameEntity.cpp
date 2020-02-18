@@ -1,5 +1,9 @@
 #include "GameEntity.h"
 
+GameEntity::GameEntity()
+{
+}
+
 GameEntity::GameEntity(sf::Texture &texture)
 	:texture(texture)
 {
