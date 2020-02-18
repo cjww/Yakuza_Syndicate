@@ -4,11 +4,17 @@
 class GameEntity : public sf::Drawable {
 private:
 	sf::Sprite sprite;
-	sf::Texture texture;
-
+	
 public:
 	GameEntity();
 	GameEntity(sf::Texture &texture);
+	GameEntity(sf::Texture &texture, sf::IntRect textureRect);
+
+	void setPosition(sf::Vector2f position);
+	sf::Vector2f getPosition();
+	
+	void move(sf::Vector2f offset);
+
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

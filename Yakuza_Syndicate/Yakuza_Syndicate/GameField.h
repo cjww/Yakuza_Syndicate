@@ -3,9 +3,10 @@
 #include "ResourceManager.h"
 class GameField : public sf::Drawable {
 private:
-	std::vector<std::vector<Tile>> tiles;
+	Tile tiles[15][15];
 	sf::Sprite s;
 public:
-	GameField();
+	GameField(const sf::RenderWindow& window);
+	virtual ~GameField();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

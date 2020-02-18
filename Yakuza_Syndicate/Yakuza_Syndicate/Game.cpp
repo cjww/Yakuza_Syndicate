@@ -1,8 +1,10 @@
 #include "Game.h"
 
-Game::Game() : window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
+Game::Game() 
+	: window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
 	timePerFrame(sf::seconds(1.0f /60.0f)),
-	elapsedTime(sf::Time::Zero) {
+	elapsedTime(sf::Time::Zero),
+	gameField(window) {
 
 	turn = 0;
 	players[0].setColor(sf::Color::Red);
