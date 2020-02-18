@@ -8,4 +8,5 @@ private:
 	Building* building;
 public:
 	Tile();
+	Tile(sf::Texture& texture);
 };

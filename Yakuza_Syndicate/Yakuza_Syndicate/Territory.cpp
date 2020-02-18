@@ -1,10 +1,10 @@
 #include "Territory.h"
 
-Territory::Territory()
-{
+Territory::Territory() : safeHouse(BuildingType::SafeHouse) {
+	
 }
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw()
+	
 }
