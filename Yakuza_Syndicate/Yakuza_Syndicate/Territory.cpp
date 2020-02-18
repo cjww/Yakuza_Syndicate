@@ -66,9 +66,12 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for (const auto& k : tilesInTerritory) {
 		sf::RectangleShape rect(sf::Vector2f(k->getGlobalBounds().width, k->getGlobalBounds().height));
 		rect.setPosition(k->getPosition());
+		sf::Color c = this->color;
+		c.a = 40;
 		rect.setOutlineColor(this->color);
 		rect.setOutlineThickness(1);
-		rect.setFillColor(sf::Color::Transparent);
+		//rect.setFillColor(sf::Color::Transparent);
+		rect.setFillColor(c);
 		target.draw(rect);
 	}
 
