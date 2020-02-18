@@ -1,7 +1,11 @@
 #include "Player.h"
 
-Player::Player() : endTurn(false), color(sf::Color::Black){
+Player::Player(GameField* gameField)
+	: endTurn(false),
+	color(sf::Color::Black),
+	territory(gameField) {
 
+	balance = 0;
 }
 
 void Player::mousePressed(sf::Vector2i mousePosition) {
@@ -10,12 +14,11 @@ void Player::mousePressed(sf::Vector2i mousePosition) {
 }
 
 void Player::update() {
-	std::cout << (int)color.r << ", " << (int)color.g << ", " << (int)color.b << std::endl;
 	
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-
+	target.draw(territory);
 }
 
 bool Player::getEndTurn() const {
@@ -28,4 +31,5 @@ void Player::setEndTurn(bool value) {
 
 void Player::setColor(sf::Color color) {
 	this->color = color;
+	territory.setColor(color);
 }

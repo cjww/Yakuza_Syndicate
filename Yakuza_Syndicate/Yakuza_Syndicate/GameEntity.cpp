@@ -32,6 +32,10 @@ void GameEntity::move(sf::Vector2f offset)
 	this->sprite.move(offset);
 }
 
+sf::FloatRect GameEntity::getGlobalBounds() const{
+	return this->sprite.getGlobalBounds();
+}
+
 void GameEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(this->sprite);

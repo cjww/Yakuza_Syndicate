@@ -9,4 +9,5 @@ private:
 public:
 	Tile();
 	Tile(sf::Texture& texture, sf::IntRect textureRect);
+
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Territory.h"
 
 class Player : public sf::Drawable {
 private:
@@ -9,8 +10,12 @@ private:
 
 	//TODO add gangMember array
 	
+	Territory territory;
+
+	int balance;
+		
 public:
-	Player();
+	Player(GameField* gameField);
 
 	void mousePressed(sf::Vector2i mousePosition);
 
