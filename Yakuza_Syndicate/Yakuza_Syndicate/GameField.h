@@ -13,4 +13,6 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	Tile* getTileAt(sf::Vector2f pos) const;
+	Tile* getTileByIndex(int row, int column) const;
+
 };
