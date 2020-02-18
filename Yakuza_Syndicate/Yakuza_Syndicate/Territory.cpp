@@ -31,6 +31,18 @@ Territory::Territory(GameField* gameField)
 	: safeHouse(BuildingType::SafeHouse, *ResourceManager::getTexture("SafeHouse")),
 	gameField(gameField) {
 
+	Tile* bottomLeft = gameField->getTileByIndex(0, 14);
+	if (bottomLeft->getBuilding() == nullptr) {
+		safeHouse.setPosition(bottomLeft->getPosition());
+		bottomLeft->setBuilding(&safeHouse);
+	}
+	else {
+		Tile* topRight = gameField->getTileByIndex(14, 0);
+		safeHouse.setPosition(topRight->getPosition());
+		topRight->setBuilding(&safeHouse);
+	}
+	
+	updateTerritory();
 }
 
 int Territory::getIncome() {
@@ -54,7 +66,8 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for (const auto& k : tilesInTerritory) {
 		sf::RectangleShape rect(sf::Vector2f(k->getGlobalBounds().width, k->getGlobalBounds().height));
 		rect.setPosition(k->getPosition());
-		rect.setOutlineColor(this->color * sf::Color(200));
+		rect.setOutlineColor(this->color);
+		rect.setOutlineThickness(1);
 		rect.setFillColor(sf::Color::Transparent);
 		target.draw(rect);
 	}

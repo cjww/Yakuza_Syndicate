@@ -10,4 +10,7 @@ public:
 	Tile();
 	Tile(sf::Texture& texture, sf::IntRect textureRect);
 
+	Building* getBuilding() const;
+	void setBuilding(Building* building);
+
 };

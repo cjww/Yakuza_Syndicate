@@ -47,7 +47,7 @@ Tile* GameField::getTileAt(sf::Vector2f pos) const {
 	return tileAt;
 }
 
-Tile* GameField::getTileByIndex(int row, int column) const {
+Tile* GameField::getTileByIndex(int column, int row) const {
 	Tile* tile = nullptr;
 	if (row < 15 && row >= 0 && column < 15 && column >= 0) {
 		tile = tiles[row][column];

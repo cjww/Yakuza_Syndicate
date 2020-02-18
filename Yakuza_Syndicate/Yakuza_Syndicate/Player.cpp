@@ -3,8 +3,10 @@
 Player::Player(GameField* gameField)
 	: endTurn(false),
 	color(sf::Color::Black),
-	territory(gameField) {
+	territory(gameField)
+{
 
+	territory.setColor(color);
 	balance = 0;
 }
 
