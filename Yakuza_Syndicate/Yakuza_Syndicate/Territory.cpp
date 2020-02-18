@@ -1,8 +1,7 @@
 #include "Territory.h"
 
-std::set<Tile*> Territory::calcTerritory() {
-	std::set<Tile*> tilesInTerritory;
-
+void Territory::updateTerritory() {
+	
 	for (int i = 0; i <= dojos.size(); i++) {
 		sf::Vector2f bPos = safeHouse.getPosition();
 		if (i < dojos.size()) {
@@ -26,7 +25,6 @@ std::set<Tile*> Territory::calcTerritory() {
 		tilesInTerritory.erase(nullptr);
 	}
 
-	return tilesInTerritory;
 }
 
 Territory::Territory(GameField* gameField)
@@ -36,7 +34,7 @@ Territory::Territory(GameField* gameField)
 }
 
 int Territory::getIncome() {
-	return calcTerritory().size() * 50;
+	return tilesInTerritory.size() * 50;
 }
 
 void Territory::setColor(sf::Color color) {
@@ -45,5 +43,17 @@ void Territory::setColor(sf::Color color) {
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	for (const auto& k : tilesInTerritory) {
+		sf::RectangleShape rect(sf::Vector2f(k->getGlobalBounds().width, k->getGlobalBounds().height));
+		rect.setPosition(k->getPosition());
+		rect.setOutlineColor(this->color * sf::Color(200));
+		rect.setFillColor(sf::Color::Transparent);
+		target.draw(rect);
+	}
 
+	for (const auto& dojo : dojos) {
+		target.draw(dojo);
+	}
+
+	target.draw(safeHouse);
 }

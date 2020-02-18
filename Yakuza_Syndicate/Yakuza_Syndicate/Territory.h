@@ -10,7 +10,8 @@ private:
 	sf::Color color;
 	GameField* gameField;
 
-	std::set<Tile*> calcTerritory();
+	std::set<Tile*> tilesInTerritory;
+	void updateTerritory();
 
 public:
 	Territory(GameField* gameField);
