@@ -1,7 +1,7 @@
 #include "GameField.h"
 
 GameField::GameField(){
-
+	
 }
 
 void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
