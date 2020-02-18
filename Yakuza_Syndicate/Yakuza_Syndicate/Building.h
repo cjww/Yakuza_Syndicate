@@ -8,5 +8,5 @@ private:
 	BuildingType type;
 
 public:
-	Building(BuildingType type);
+	Building(BuildingType type, sf::Texture& texture);
 };

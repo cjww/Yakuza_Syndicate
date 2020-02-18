@@ -7,10 +7,11 @@ private:
 	sf::Time elapsedTime;
 	sf::Time timePerFrame;
 	
-	Player players[2];
-	int turn;
-
 	GameField gameField;
+	
+	Player players[2];
+	int turnIndex;
+
 
 public:
 	Game();

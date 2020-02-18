@@ -28,7 +28,7 @@ void Territory::updateTerritory() {
 }
 
 Territory::Territory(GameField* gameField)
-	: safeHouse(BuildingType::SafeHouse),
+	: safeHouse(BuildingType::SafeHouse, *ResourceManager::getTexture("SafeHouse")),
 	gameField(gameField) {
 
 }
@@ -39,6 +39,14 @@ int Territory::getIncome() {
 
 void Territory::setColor(sf::Color color) {
 	this->color = color;
+}
+
+void Territory::buildDojo(sf::Vector2f position) {
+	Tile* tile = gameField->getTileAt(position);
+	Building newDojo(BuildingType::Dojo, *ResourceManager::getTexture("Dojo"));
+	newDojo.setPosition(tile->getPosition());
+	dojos.push_back(newDojo);
+
 }
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -1,13 +1,14 @@
 #include "Game.h"
 
-Game::Game() 
-	: window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
+Game::Game() : 
 	timePerFrame(sf::seconds(1.0f /60.0f)),
 	elapsedTime(sf::Time::Zero),
-	gameField(window),
-	players { Player(&gameField), Player(&gameField) } {
+	gameField(window), 
+	players{ Player(&gameField), Player(&gameField) },
+	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
+{
 
-	turn = 0;
+	turnIndex = 0;
 	players[0].setColor(sf::Color::Red);
 	players[1].setColor(sf::Color::Green);
 
@@ -31,7 +32,7 @@ void Game::handleEvents() {
 			window.close();
 			break;
 		case sf::Event::MouseButtonPressed:
-			players[turn].mousePressed(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+			players[turnIndex].mousePressed(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 			break;
 		}
 
@@ -44,10 +45,10 @@ void Game::update() {
 		window.setTitle("FPS: " + std::to_string(1 / elapsedTime.asSeconds()));
 		elapsedTime -= timePerFrame;
 	
-		players[turn].update();
-		if (players[turn].getEndTurn()) {
-			players[turn].setEndTurn(false);
-			turn = (turn + 1) % 2;
+		players[turnIndex].update();
+		if (players[turnIndex].getEndTurn()) {
+			players[turnIndex].setEndTurn(false);
+			turnIndex = (turnIndex + 1) % 2;
 		}
 	}
 

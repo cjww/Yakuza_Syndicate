@@ -20,6 +20,8 @@ public:
 
 	void setColor(sf::Color color);
 
+	void buildDojo(sf::Vector2f position);
+
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
