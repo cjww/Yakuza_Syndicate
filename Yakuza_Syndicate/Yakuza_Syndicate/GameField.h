@@ -6,6 +6,7 @@ private:
 	Tile* tiles[15][15];
 	int tileSize;
 	int fieldSize;
+
 public:
 	GameField(const sf::RenderWindow& window);
 	virtual ~GameField();

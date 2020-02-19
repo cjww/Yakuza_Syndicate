@@ -58,7 +58,7 @@ void Territory::buildDojo(sf::Vector2f position) {
 	Building newDojo(BuildingType::Dojo, *ResourceManager::getTexture("Dojo"));
 	newDojo.setPosition(tile->getPosition());
 	dojos.push_back(newDojo);
-
+	updateTerritory();
 }
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const

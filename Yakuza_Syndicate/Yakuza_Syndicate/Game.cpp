@@ -32,7 +32,7 @@ void Game::handleEvents() {
 			window.close();
 			break;
 		case sf::Event::MouseButtonPressed:
-			players[turnIndex].mousePressed(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+			players[turnIndex].mousePressed(sf::Vector2i(e.mouseButton.x, e.mouseButton.y), e.mouseButton.button);
 			break;
 		}
 
