@@ -8,6 +8,8 @@ Game::Game() :
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
 {
 
+	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
+
 	turnIndex = 0;
 	players[0].setColor(sf::Color::Cyan);
 	players[1].setColor(sf::Color::Magenta);

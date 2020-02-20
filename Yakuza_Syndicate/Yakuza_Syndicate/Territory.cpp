@@ -55,7 +55,7 @@ void Territory::setColor(sf::Color color) {
 
 void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
-	if (tile->getBuilding() == nullptr) {
+	if (tile != nullptr && tile->getBuilding() == nullptr) {
 		Building newDojo(BuildingType::Dojo, *ResourceManager::getTexture("Dojo"));
 		newDojo.setPosition(tile->getPosition());
 		dojos.push_back(newDojo);
@@ -66,9 +66,10 @@ void Territory::buildDojo(sf::Vector2f position) {
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	for (const auto& k : tilesInTerritory) {
-		sf::RectangleShape rect(sf::Vector2f(k->getGlobalBounds().width, k->getGlobalBounds().height));
-		rect.setPosition(k->getPosition());
+
+	for (const auto& tile : tilesInTerritory) {
+		sf::RectangleShape rect(sf::Vector2f(tile->getGlobalBounds().width, tile->getGlobalBounds().height));
+		rect.setPosition(tile->getPosition());
 		sf::Color c = this->color;
 		c.a = 40;
 		rect.setOutlineColor(this->color);

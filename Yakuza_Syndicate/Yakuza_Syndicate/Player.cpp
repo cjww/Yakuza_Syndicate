@@ -16,10 +16,7 @@ void Player::mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button) 
 	//TODO check if button was pressed
 	//endTurn = true;
 	if (button == sf::Mouse::Button::Left) {
-		Tile* clickedTile = gameField->getTileAt((sf::Vector2f)mousePosition);
-		if (clickedTile != nullptr) {
-			territory.buildDojo(clickedTile->getPosition());
-		}
+		territory.buildDojo((sf::Vector2f)mousePosition);
 	}
 	else {
 		endTurn = true;
