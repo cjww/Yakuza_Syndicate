@@ -17,6 +17,7 @@ public:
 	Territory(GameField* gameField);
 
 	int getIncome();
+	std::vector<GangMembers> getNewGangMembers();
 
 	void setColor(sf::Color color);
 

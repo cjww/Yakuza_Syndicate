@@ -10,6 +10,7 @@ Player::Player(GameField* gameField)
 	territory.setColor(color);
 	balance = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
+	
 }
 
 void Player::mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button) {
@@ -21,6 +22,7 @@ void Player::mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button) 
 	else {
 		endTurn = true;
 	}
+
 }
 
 void Player::update() {
@@ -29,6 +31,9 @@ void Player::update() {
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(territory, &shader);
+	for (const auto& gm : gangMembers) {
+		target.draw(gm, &shader);
+	}
 }
 
 bool Player::getEndTurn() const {
@@ -37,6 +42,26 @@ bool Player::getEndTurn() const {
 
 void Player::setEndTurn(bool value) {
 	endTurn = value;
+}
+
+void Player::turnStart() {
+	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
+	for (auto& newGm : newGangMembers) { // loop all new GangMembers
+		bool found = false;
+		for (auto& myGm : gangMembers) { // check for any preexcisting gangMember on same position
+			if (myGm.getPosition() == newGm.getPosition()) {
+				if (!myGm.merge(newGm)) {
+					int diff = abs(64 - myGm.getAmount());
+					GangMembers diffGm(diff);
+					myGm.merge(diffGm);
+				}
+				found = true;
+			}
+		}
+		if (!found) { // no preexcisting gangmemebr att position
+			gangMembers.push_back(newGm);
+		}
+	}
 }
 
 void Player::setColor(sf::Color color) {

@@ -12,7 +12,7 @@ public:
 	GameEntity(sf::Texture &texture, sf::IntRect textureRect);
 
 	void setPosition(sf::Vector2f position);
-	sf::Vector2f getPosition();
+	sf::Vector2f getPosition() const;
 	
 	void move(sf::Vector2f offset);
 

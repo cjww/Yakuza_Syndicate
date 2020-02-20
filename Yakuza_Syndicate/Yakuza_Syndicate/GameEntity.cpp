@@ -22,7 +22,7 @@ void GameEntity::setPosition(sf::Vector2f position)
 	this->sprite.setPosition(position);
 }
 
-sf::Vector2f GameEntity::getPosition()
+sf::Vector2f GameEntity::getPosition() const
 {
 	return this->sprite.getPosition();
 }

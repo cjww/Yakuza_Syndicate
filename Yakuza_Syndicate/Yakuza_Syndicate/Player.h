@@ -10,7 +10,6 @@ private:
 	sf::Color color;
 	sf::Shader shader;
 
-	//TODO add gangMember array
 	std::vector<GangMembers> gangMembers;
 
 	Territory territory;
@@ -28,6 +27,8 @@ public:
 
 	bool getEndTurn() const;
 	void setEndTurn(bool value);
+
+	void turnStart();
 
 	void setColor(sf::Color color);
 };
