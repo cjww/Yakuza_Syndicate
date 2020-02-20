@@ -1,5 +1,6 @@
 #pragma once
 #include "GameEntity.h"
+#include "Tile.h"
 
 class GangMembers : public GameEntity {
 private:
@@ -12,7 +13,10 @@ private:
 
 public:
 	GangMembers(int amount);
+	
+	bool merge(GangMembers& other);
 
-	void move();
+	int getAmount();
+	void move(Tile* moveTo);
 	void fight(GangMembers &other);
 };
