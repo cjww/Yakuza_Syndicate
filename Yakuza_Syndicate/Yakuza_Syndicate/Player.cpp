@@ -9,6 +9,7 @@ Player::Player(GameField* gameField)
 
 	territory.setColor(color);
 	balance = 0;
+	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 }
 
 void Player::mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button) {
@@ -30,7 +31,7 @@ void Player::update() {
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(territory);
+	target.draw(territory, &shader);
 }
 
 bool Player::getEndTurn() const {
@@ -44,4 +45,5 @@ void Player::setEndTurn(bool value) {
 void Player::setColor(sf::Color color) {
 	this->color = color;
 	territory.setColor(color);
+	shader.setUniform("teamColor", sf::Glsl::Vec4(color));
 }

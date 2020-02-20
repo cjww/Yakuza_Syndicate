@@ -4,13 +4,13 @@ Game::Game() :
 	timePerFrame(sf::seconds(1.0f /60.0f)),
 	elapsedTime(sf::Time::Zero),
 	gameField(window), 
-	players{ Player(&gameField), Player(&gameField) },
+	players{ &gameField, &gameField },
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
 {
 
 	turnIndex = 0;
-	players[0].setColor(sf::Color::Red);
-	players[1].setColor(sf::Color::Green);
+	players[0].setColor(sf::Color::Cyan);
+	players[1].setColor(sf::Color::Magenta);
 
 
 	while (window.isOpen()) {

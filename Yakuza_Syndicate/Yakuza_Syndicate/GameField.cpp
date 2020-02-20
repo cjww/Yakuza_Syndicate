@@ -1,8 +1,8 @@
 #include "GameField.h"
 
 GameField::GameField(const sf::RenderWindow& window) {
-	ResourceManager::newTexture("../res/Dojo.png", "Dojo");
-	ResourceManager::newTexture("../res/Safe-House.png", "SafeHouse");
+	ResourceManager::newTexture("../res/Dojo_general.png", "Dojo");
+	ResourceManager::newTexture("../res/Safe-House_general.png", "SafeHouse");
 
 	sf::Texture* tileTexture = ResourceManager::newTexture("../res/tiles.png", "Tiles");
 	int scale = 2;

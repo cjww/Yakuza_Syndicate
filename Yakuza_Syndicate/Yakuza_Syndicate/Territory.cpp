@@ -79,8 +79,8 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 
 	for (const auto& dojo : dojos) {
-		target.draw(dojo);
+		target.draw(dojo, states);
 	}
 
-	target.draw(safeHouse);
+	target.draw(safeHouse, states);
 }

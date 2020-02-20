@@ -8,6 +8,7 @@ class Player : public sf::Drawable {
 private:
 	bool endTurn;
 	sf::Color color;
+	sf::Shader shader;
 
 	//TODO add gangMember array
 	std::vector<GangMembers> gangMembers;
