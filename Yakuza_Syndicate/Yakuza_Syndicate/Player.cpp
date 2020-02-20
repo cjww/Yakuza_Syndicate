@@ -13,14 +13,15 @@ Player::Player(GameField* gameField)
 	
 }
 
-void Player::mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button) {
+void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
 	//TODO check if button was pressed
 	//endTurn = true;
+	std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
 	if (button == sf::Mouse::Button::Left) {
-		territory.buildDojo((sf::Vector2f)mousePosition);
+		territory.buildDojo(mousePosition);
 	}
 	else {
-		endTurn = true;
+		turnEnd();
 	}
 
 }
@@ -36,15 +37,17 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	}
 }
 
-bool Player::getEndTurn() const {
+bool Player::wantsToEndTurn() const {
 	return this->endTurn;
 }
 
-void Player::setEndTurn(bool value) {
-	endTurn = value;
+void Player::turnEnd() {
+	endTurn = true;
+
 }
 
 void Player::turnStart() {
+	endTurn = false;
 	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers
 		bool found = false;
@@ -58,7 +61,7 @@ void Player::turnStart() {
 				found = true;
 			}
 		}
-		if (!found) { // no preexcisting gangmemebr att position
+		if (!found) { // no preexcisting gangMemebr att position
 			gangMembers.push_back(newGm);
 		}
 	}

@@ -4,8 +4,9 @@ uniform sampler2D texture;
 uniform vec4 teamColor;
 
 void main() {
-
-    vec4 texPixel = texture2D(texture, gl_TexCoord[0].xy); 
+    vec2 texCoord = gl_TexCoord[0].xy;
+    //texCoord.x = 1.0 - texCoord.x;
+    vec4 texPixel = texture2D(texture, texCoord); 
     if(texPixel == vec4(1, 0, 1, 1)){
         gl_FragColor = teamColor;
     }
