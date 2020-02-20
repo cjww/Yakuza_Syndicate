@@ -1,7 +1,11 @@
 #include "GangMembers.h"
 
-GangMembers::GangMembers()
+GangMembers::GangMembers(int amount)
+	:GameEntity(*ResourceManager::getTexture("GangMembers"))
 {
+	this->amount = amount;
+	inBuilding = true;
+	inFriendlyTerr = true;
 }
 
 void GangMembers::fight(GangMembers &other)

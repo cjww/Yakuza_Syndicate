@@ -3,12 +3,15 @@
 
 class GangMembers : public GameEntity {
 private:
+	sf::Text text;
+	sf::Font font;
+
 	int amount;
 	bool inBuilding;
 	bool inFriendlyTerr;
 
 public:
-	GangMembers();
+	GangMembers(int amount);
 
 	void move();
 	void fight(GangMembers &other);

@@ -157,9 +157,10 @@
     <ClCompile Include="GangMembers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PolicePatrol.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Territory.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Building.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="GameField.h" />
     <ClInclude Include="GangMembers.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PolicePatrol.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Territory.h" />
     <ClInclude Include="Tile.h" />
