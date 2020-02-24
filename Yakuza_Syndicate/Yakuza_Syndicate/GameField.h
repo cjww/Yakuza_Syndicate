@@ -4,7 +4,6 @@
 class GameField : public sf::Drawable {
 private:
 	Tile* tiles[15][15];
-	int tileSize;
 	int fieldSize;
 
 public:

@@ -10,6 +10,8 @@ public:
 	Tile();
 	Tile(sf::Texture& texture, sf::IntRect textureRect);
 
+	static const int size = 32;
+
 	Building* getBuilding() const;
 	void setBuilding(Building* building);
 
