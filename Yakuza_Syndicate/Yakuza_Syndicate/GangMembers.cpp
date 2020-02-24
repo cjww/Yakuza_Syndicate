@@ -3,12 +3,38 @@
 GangMembers::GangMembers(int amount)
 	:GameEntity(*ResourceManager::getTexture("GangMembers"))
 {
+
 	this->amount = amount;
 	inBuilding = true;
 	inFriendlyTerr = true;
 	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
 	this->text.setString(std::to_string(amount));
+	this->text.setFillColor(sf::Color::Magenta);
+	this->text.setOutlineColor(sf::Color::Black);
+	this->text.setOutlineThickness(2);
+
+}
+
+GangMembers::GangMembers(const GangMembers& other) : GangMembers(other.amount) {
+	this->amount = other.amount;
+	this->inBuilding = other.inBuilding;
+	this->inFriendlyTerr = other.inFriendlyTerr;	this->text = other.text;
+	this->text.setFont(this->font);
+
+	setPosition(other.getPosition());
+}
+
+GangMembers& GangMembers::operator=(const GangMembers& other) {
+
+	this->amount = other.amount;
+	this->inBuilding = other.inBuilding;
+	this->inFriendlyTerr = other.inFriendlyTerr;	this->text = other.text;
+	this->text.setFont(this->font);
+	
+	setPosition(other.getPosition());
+
+	return *this;
 }
 
 bool GangMembers::merge(GangMembers& other)
@@ -58,4 +84,14 @@ void GangMembers::fight(GangMembers &other)
 		other.amount = 0;
 	}
 	
+}
+
+void GangMembers::setTextPos(sf::Vector2f pos) 
+{
+	this->text.setPosition(pos);
+}
+
+void GangMembers::drawText(sf::RenderTarget& target, const sf::Shader& shader) const 
+{
+	target.draw(this->text, &shader);
 }

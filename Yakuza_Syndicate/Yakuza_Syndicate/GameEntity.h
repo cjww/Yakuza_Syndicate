@@ -5,7 +5,6 @@
 class GameEntity : public sf::Drawable {
 private:
 	sf::Sprite sprite;
-	
 public:
 	GameEntity();
 	GameEntity(sf::Texture &texture);
@@ -20,5 +19,4 @@ public:
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
 };
