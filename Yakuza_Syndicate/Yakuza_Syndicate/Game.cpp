@@ -10,10 +10,11 @@ Game::Game() :
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
 
-	turnIndex = 0;
 	players[0].setColor(sf::Color::Cyan);
 	players[1].setColor(sf::Color::Magenta);
 
+	turnIndex = 0;
+	players[turnIndex].turnStart();
 
 	while (window.isOpen()) {
 		handleEvents();
@@ -34,7 +35,7 @@ void Game::handleEvents() {
 			window.close();
 			break;
 		case sf::Event::MouseButtonPressed:
-			players[turnIndex].mousePressed(sf::Vector2i(e.mouseButton.x, e.mouseButton.y), e.mouseButton.button);
+			players[turnIndex].mousePressed(sf::Vector2f(e.mouseButton.x, e.mouseButton.y), e.mouseButton.button);
 			break;
 		}
 
@@ -48,9 +49,10 @@ void Game::update() {
 		elapsedTime -= timePerFrame;
 	
 		players[turnIndex].update();
-		if (players[turnIndex].getEndTurn()) {
-			players[turnIndex].setEndTurn(false);
+		if (players[turnIndex].wantsToEndTurn()) {
+			players[turnIndex].turnEnd();
 			turnIndex = (turnIndex + 1) % 2;
+			players[turnIndex].turnStart();
 		}
 	}
 

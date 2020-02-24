@@ -48,6 +48,17 @@ Territory::Territory(GameField* gameField)
 int Territory::getIncome() {
 	return tilesInTerritory.size() * 50;
 }
+#include <iostream>
+std::vector<GangMembers> Territory::getNewGangMembers() {
+	std::vector<GangMembers> allGangMembers;
+	for (auto& dojo : dojos) {
+		allGangMembers.push_back(dojo.spawnGangMembers());
+	}
+
+	allGangMembers.push_back(safeHouse.spawnGangMembers());
+
+	return allGangMembers;
+}
 
 void Territory::setColor(sf::Color color) {
 	this->color = color;

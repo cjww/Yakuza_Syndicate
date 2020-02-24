@@ -10,7 +10,6 @@ private:
 	sf::Color color;
 	sf::Shader shader;
 
-	//TODO add gangMember array
 	std::vector<GangMembers> gangMembers;
 
 	Territory territory;
@@ -21,13 +20,15 @@ private:
 public:
 	Player(GameField* gameField);
 
-	void mousePressed(sf::Vector2i mousePosition, sf::Mouse::Button button);
+	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);
 
 	void update();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	bool getEndTurn() const;
-	void setEndTurn(bool value);
+	bool wantsToEndTurn() const;
+	
+	void turnEnd();
+	void turnStart();
 
 	void setColor(sf::Color color);
 };

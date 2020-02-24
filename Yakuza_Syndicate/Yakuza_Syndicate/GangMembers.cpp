@@ -6,8 +6,7 @@ GangMembers::GangMembers(int amount)
 	this->amount = amount;
 	inBuilding = true;
 	inFriendlyTerr = true;
-
-	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
 	this->text.setString(std::to_string(amount));
 }
@@ -27,11 +26,6 @@ bool GangMembers::merge(GangMembers& other)
 int GangMembers::getAmount()
 {
 	return amount;
-}
-
-void GangMembers::move(Tile* moveTo)
-{
-	GameEntity().move(moveTo->getPosition);
 }
 
 void GangMembers::fight(GangMembers &other)
