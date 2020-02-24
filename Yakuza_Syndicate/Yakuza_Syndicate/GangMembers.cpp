@@ -7,7 +7,7 @@ GangMembers::GangMembers(int amount)
 	inBuilding = true;
 	inFriendlyTerr = true;
 
-	this->font.loadFromFile("../Windows/Fonts/Arial.ttf");
+	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
 	this->text.setString(std::to_string(amount));
 }
