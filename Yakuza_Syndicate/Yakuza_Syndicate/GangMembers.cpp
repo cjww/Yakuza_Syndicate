@@ -8,7 +8,8 @@ GangMembers::GangMembers(int amount)
 	inFriendlyTerr = true;
 	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
-	this->text.setString(std::to_string(amount));
+	this->text.setString(std::to_string(this->amount));
+	this->text.setFillColor(sf::Color::Magenta);
 }
 
 bool GangMembers::merge(GangMembers& other)
@@ -58,4 +59,14 @@ void GangMembers::fight(GangMembers &other)
 		other.amount = 0;
 	}
 	
+}
+
+void GangMembers::setTextPos(sf::Vector2f pos)
+{
+	this->text.setPosition(pos);
+}
+
+void GangMembers::drawText(sf::RenderTarget& target) const
+{
+	target.draw(this->text);
 }

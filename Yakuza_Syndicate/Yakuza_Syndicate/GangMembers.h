@@ -14,8 +14,9 @@ public:
 	GangMembers(int amount);
 	
 	bool merge(GangMembers& other);
-
 	int getAmount();
-
 	void fight(GangMembers &other);
+
+	void setTextPos(sf::Vector2f pos);
+	void drawText(sf::RenderTarget& target) const;
 };

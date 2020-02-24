@@ -27,13 +27,13 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 }
 
 void Player::update() {
-	
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(territory, &shader);
 	for (const auto& gm : gangMembers) {
 		target.draw(gm, &shader);
+		gm.drawText(target);
 	}
 }
 

@@ -21,5 +21,6 @@ GangMembers Building::spawnGangMembers() {
 		}
 	}
 	gm.setPosition(getPosition());
+	gm.setTextPos(getPosition());
 	return gm;
 }
