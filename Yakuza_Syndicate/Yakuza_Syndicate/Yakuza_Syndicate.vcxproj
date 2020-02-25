@@ -151,28 +151,35 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameField.cpp" />
     <ClCompile Include="GangMembers.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PolicePatrol.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Territory.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Building.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameField.h" />
     <ClInclude Include="GangMembers.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PolicePatrol.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Territory.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UI.h" />
+    <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
