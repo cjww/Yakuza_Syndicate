@@ -4,9 +4,9 @@ Game::Game() :
 	timePerFrame(sf::seconds(1.0f /60.0f)),
 	elapsedTime(sf::Time::Zero),
 	gameField(window), 
-	players{ &gameField, &gameField },
-	window(sf::VideoMode(1000, 600), "Yakuza Syndicate")
-	//window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
+	players{ Player(&gameField, 0), Player(&gameField, 1) },
+	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate")
+	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
 {
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");

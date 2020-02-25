@@ -10,15 +10,20 @@ private:
 	sf::Color color;
 	sf::Shader shader;
 
+	int playernr;
+
 	std::vector<GangMembers> gangMembers;
 
 	Territory territory;
 	GameField* gameField;
 
 	int balance;
+	sf::RectangleShape selectedTileRect;
+	Tile* selectedTile;
 		
 public:
-	Player(GameField* gameField);
+	Player(GameField* gameField, int playernr);
+	Player(const Player& otherPlayer);
 
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);
 
