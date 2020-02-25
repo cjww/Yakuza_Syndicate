@@ -46,6 +46,7 @@ sf::FloatRect GameEntity::getGlobalBounds() const{
 void GameEntity::flipSprite()
 {
 	sprite.setScale(-scale, scale);
+	sprite.setOrigin(sprite.getLocalBounds().width, 0);
 }
 
 void GameEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const

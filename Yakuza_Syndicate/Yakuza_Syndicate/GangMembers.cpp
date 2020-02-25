@@ -17,13 +17,14 @@ GangMembers::GangMembers(int amount)
 
 }
 
-GangMembers::GangMembers(const GangMembers& other) : GangMembers(other.amount) {
+GangMembers::GangMembers(const GangMembers& other) : GameEntity(other) {
 	this->amount = other.amount;
 	this->inBuilding = other.inBuilding;
 	this->inFriendlyTerr = other.inFriendlyTerr;	this->text = other.text;
+	this->font = other.font;
+	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(this->font);
 
-	setPosition(other.getPosition());
 }
 
 GangMembers& GangMembers::operator=(const GangMembers& other) {
