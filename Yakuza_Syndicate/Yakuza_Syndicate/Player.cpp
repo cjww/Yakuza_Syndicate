@@ -1,16 +1,23 @@
 #include "Player.h"
 
-Player::Player(GameField* gameField)
+Player::Player(GameField* gameField, int playernr)
 	: endTurn(false),
 	color(sf::Color::Black),
 	territory(gameField),
-	gameField(gameField)
+	gameField(gameField),
+	playernr(playernr)
 {
 
 	territory.setColor(color);
+	selectedTile = nullptr;
 	balance = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
+}
+
+Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr)
+{
+
 }
 
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
@@ -19,8 +26,17 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 	std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
 
 	if (button == sf::Mouse::Button::Left) {
-		//territory.buildDojo(mousePosition);
-		this->gameField->getTileAt(mousePosition);
+		territory.buildDojo(mousePosition);
+		Tile* tilePtr = this->gameField->getTileAt(mousePosition);
+		if(tilePtr != nullptr)
+		{
+			this->selectedTile = tilePtr;
+			selectedTileRect.setPosition(tilePtr->getPosition());
+			selectedTileRect.setSize(sf::Vector2f(tilePtr->getGlobalBounds().width,tilePtr->getGlobalBounds().height));
+			selectedTileRect.setFillColor(sf::Color::Transparent);
+			selectedTileRect.setOutlineColor(color);
+			selectedTileRect.setOutlineThickness(1);
+		}
 	}
 	else {
 		turnEnd();
@@ -35,8 +51,9 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(territory, &shader);
 	for (const auto& gm : gangMembers) {
 		target.draw(gm, &shader);
-		gm.drawText(target);
+		gm.drawText(target, shader);
 	}
+	target.draw(selectedTileRect);
 }
 
 bool Player::wantsToEndTurn() const {
@@ -53,7 +70,7 @@ void Player::turnStart() {
 	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers
 		bool found = false;
-		for (auto& myGm : gangMembers) { // check for any preexcisting gangMember on same position
+		for (auto& myGm : gangMembers) { // check for any preexisting gangMember on same position
 			if (myGm.getPosition() == newGm.getPosition()) {
 				if (!myGm.merge(newGm)) {
 					int diff = abs(64 - myGm.getAmount());
@@ -63,7 +80,11 @@ void Player::turnStart() {
 				found = true;
 			}
 		}
-		if (!found) { // no preexcisting gangMemebr att position
+		if (!found) { // no preexisting gangMemebr at position
+			if (this->playernr == 1)
+			{
+				newGm.flipSprite();
+			}
 			gangMembers.push_back(newGm);
 		}
 	}

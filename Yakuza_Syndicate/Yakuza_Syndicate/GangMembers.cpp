@@ -45,6 +45,7 @@ bool GangMembers::merge(GangMembers& other)
 	{
 		this->amount += other.amount;
 		other.amount = 0;
+		this->text.setString(std::to_string(this->amount));
 		merged = true;
 	}
 	return merged;

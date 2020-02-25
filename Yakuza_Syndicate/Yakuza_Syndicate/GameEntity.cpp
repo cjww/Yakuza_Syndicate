@@ -2,7 +2,8 @@
 
 GameEntity::GameEntity()
 {
-	this->sprite.scale(2, 2);
+	scale = 2;
+	this->sprite.scale(scale, scale);
 }
 
 GameEntity::GameEntity(sf::Texture &texture)
@@ -15,6 +16,12 @@ GameEntity::GameEntity(sf::Texture& texture, sf::IntRect textureRect)
 	: GameEntity(texture) 
 {
 	this->sprite.setTextureRect(textureRect);
+}
+
+GameEntity::GameEntity(const GameEntity& other)
+{
+	this->sprite = other.sprite;
+	this->scale = other.scale;
 }
 
 void GameEntity::setPosition(sf::Vector2f position)
@@ -34,6 +41,11 @@ void GameEntity::move(sf::Vector2f offset)
 
 sf::FloatRect GameEntity::getGlobalBounds() const{
 	return this->sprite.getGlobalBounds();
+}
+
+void GameEntity::flipSprite()
+{
+	sprite.setScale(-scale, scale);
 }
 
 void GameEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
