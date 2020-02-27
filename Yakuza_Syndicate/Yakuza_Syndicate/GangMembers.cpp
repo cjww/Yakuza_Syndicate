@@ -5,7 +5,7 @@ GangMembers::GangMembers(int amount)
 {
 
 	this->amount = amount;
-	inBuilding = true;
+	action = true;
 	inFriendlyTerr = true;
 	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
@@ -19,7 +19,7 @@ GangMembers::GangMembers(int amount)
 
 GangMembers::GangMembers(const GangMembers& other) : GameEntity(other) {
 	this->amount = other.amount;
-	this->inBuilding = other.inBuilding;
+	this->action= other.action;
 	this->inFriendlyTerr = other.inFriendlyTerr;	this->text = other.text;
 	this->font = other.font;
 	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
@@ -30,7 +30,7 @@ GangMembers::GangMembers(const GangMembers& other) : GameEntity(other) {
 GangMembers& GangMembers::operator=(const GangMembers& other) {
 
 	this->amount = other.amount;
-	this->inBuilding = other.inBuilding;
+	this->action = other.action;
 	this->inFriendlyTerr = other.inFriendlyTerr;	this->text = other.text;
 	this->text.setFont(this->font);
 	
@@ -55,6 +55,16 @@ bool GangMembers::merge(GangMembers& other)
 int GangMembers::getAmount()
 {
 	return amount;
+}
+
+bool GangMembers::hasAction()
+{
+	return action;
+}
+
+void GangMembers::setAction(bool action)
+{
+	this->action = action;
 }
 
 void GangMembers::fight(GangMembers &other)

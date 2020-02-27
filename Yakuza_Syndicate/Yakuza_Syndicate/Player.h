@@ -20,6 +20,7 @@ private:
 	int balance;
 	sf::RectangleShape selectedTileRect;
 	Tile* selectedTile;
+	GangMembers* selectedGM;
 		
 public:
 	Player(GameField* gameField, int playernr);
