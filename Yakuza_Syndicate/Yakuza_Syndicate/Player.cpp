@@ -10,6 +10,7 @@ Player::Player(GameField* gameField, int playernr)
 
 	territory.setColor(color);
 	selectedTile = nullptr;
+	selectedGM = nullptr;
 	balance = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
@@ -26,16 +27,43 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 	std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
 
 	if (button == sf::Mouse::Button::Left) {
-		territory.buildDojo(mousePosition);
+		//territory.buildDojo(mousePosition);
 		Tile* tilePtr = this->gameField->getTileAt(mousePosition);
 		if(tilePtr != nullptr)
 		{
-			this->selectedTile = tilePtr;
-			selectedTileRect.setPosition(tilePtr->getPosition());
-			selectedTileRect.setSize(sf::Vector2f(tilePtr->getGlobalBounds().width,tilePtr->getGlobalBounds().height));
-			selectedTileRect.setFillColor(sf::Color::Transparent);
-			selectedTileRect.setOutlineColor(color);
-			selectedTileRect.setOutlineThickness(1);
+			if (tilePtr == this->selectedTile)
+			{
+				selectedTile = nullptr;
+			}
+			else
+			{
+				this->selectedTile = tilePtr;
+				selectedTileRect.setPosition(tilePtr->getPosition());
+				selectedTileRect.setSize(sf::Vector2f(tilePtr->getGlobalBounds().width, tilePtr->getGlobalBounds().height));
+				selectedTileRect.setFillColor(sf::Color::Transparent);
+				selectedTileRect.setOutlineColor(color);
+				selectedTileRect.setOutlineThickness(1);
+
+				bool foundGM = false;
+				for (int i = 0; i < this->gangMembers.size(); i++)
+				{
+					if (gangMembers[i].getPosition() == selectedTile->getPosition())
+					{
+						selectedGM = &gangMembers[i];
+						foundGM = true;
+					}
+				}
+				if (!foundGM && selectedGM != nullptr && selectedGM->hasAction() &&
+					sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) + 
+					pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width)
+				{
+					selectedGM->setPosition(selectedTile->getPosition());
+					selectedGM->setTextPos(selectedGM->getPosition());
+					selectedGM->setAction(false);
+					selectedTile = nullptr;
+					selectedGM = nullptr;
+				}
+			}
 		}
 	}
 	else {
@@ -53,7 +81,9 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(gm, &shader);
 		gm.drawText(target, shader);
 	}
-	target.draw(selectedTileRect);
+	if (selectedTile != nullptr) {
+		target.draw(selectedTileRect);
+	}
 }
 
 bool Player::wantsToEndTurn() const {
@@ -62,7 +92,11 @@ bool Player::wantsToEndTurn() const {
 
 void Player::turnEnd() {
 	endTurn = true;
-
+	this->selectedTile = nullptr;
+	for (int i = 0; i < gangMembers.size(); i++)
+	{
+		gangMembers[i].setAction(true);
+	}
 }
 
 void Player::turnStart() {

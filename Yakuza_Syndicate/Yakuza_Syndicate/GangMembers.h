@@ -7,7 +7,7 @@ private:
 	sf::Font font;
 
 	int amount;
-	bool inBuilding;
+	bool action;
 	bool inFriendlyTerr;
 
 public:
@@ -18,6 +18,8 @@ public:
 	
 	bool merge(GangMembers& other);
 	int getAmount();
+	bool hasAction();
+	void setAction(bool action);
 	void fight(GangMembers &other);
 
 	void setTextPos(sf::Vector2f pos);
