@@ -17,6 +17,18 @@ Game::Game() :
 	turnIndex = 0;
 	players[turnIndex].turnStart();
 
+	UIVisualSettings uiVis = {};
+	uiVis.rectFillColor = sf::Color::Blue;
+	uiVis.textOutlineColor = sf::Color::Magenta;
+	uiVis.textOutlineThickness = 1;
+
+	elem.addChild(new Button("Press me", sf::Vector2f(400, 100), uiVis), sf::Vector2f(50, 100))
+		->addChild(new Label("value"), sf::Vector2f(500, 0));
+	uiVis.rectFillColor = sf::Color::Red;
+	elem.addChild(new Button(uiVis));
+	elem.addChild(new Button(new Image(*ResourceManager::getTexture("Dojo"))), sf::Vector2f(100, 500));
+
+	
 	while (window.isOpen()) {
 		handleEvents();
 		update();
@@ -65,6 +77,8 @@ void Game::draw() {
 	window.draw(gameField);
 	window.draw(players[0]);
 	window.draw(players[1]);
+
+	window.draw(elem);
 
 	window.display();
 }

@@ -156,8 +156,10 @@
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameField.cpp" />
     <ClCompile Include="GangMembers.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PolicePatrol.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -172,7 +174,9 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameField.h" />
     <ClInclude Include="GangMembers.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="Pane.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PolicePatrol.h" />
     <ClInclude Include="ResourceManager.h" />

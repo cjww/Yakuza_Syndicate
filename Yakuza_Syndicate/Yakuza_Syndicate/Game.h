@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "GameField.h"
+
+#include "UI.h"
 class Game {
 private:
 	sf::RenderWindow window;
@@ -12,6 +14,7 @@ private:
 	Player players[2];
 	int turnIndex;
 
+	Pane elem;
 
 public:
 	Game();
