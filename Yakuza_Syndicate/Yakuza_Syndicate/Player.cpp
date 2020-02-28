@@ -14,6 +14,12 @@ Player::Player(GameField* gameField, Owner owner)
 	balance = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
+	UIVisualSettings uiVis = {};
+	uiVis.rectFillColor = sf::Color::Yellow;
+	uiVis.textFillColor = sf::Color::Magenta;
+	uiVis.textOutlineThickness = 1;
+
+	uiPane.addChild((endTurnBtn = new Button("End Turn", uiVis)), sf::Vector2f(600, 200));
 }
 
 Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr)
@@ -23,8 +29,9 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
 	//TODO check if button was pressed
-	//endTurn = true;
-	std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
+	if (endTurnBtn->contains(mousePosition)) {
+		turnEnd();
+	}
 
 	if (button == sf::Mouse::Button::Left) {
 		//territory.buildDojo(mousePosition);
@@ -89,6 +96,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (selectedTile != nullptr) {
 		target.draw(selectedTileRect);
 	}
+	target.draw(uiPane, &shader);
 }
 
 bool Player::wantsToEndTurn() const {

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Territory.h"
 #include "GangMembers.h"
+#include "UI.h"
 
 class Player : public sf::Drawable {
 private:
@@ -21,7 +22,10 @@ private:
 	sf::RectangleShape selectedTileRect;
 	Tile* selectedTile;
 	GangMembers* selectedGM;
-		
+	
+	Pane uiPane;
+	Button* endTurnBtn;
+
 public:
 	Player(GameField* gameField, Owner owner);
 	Player(const Player& otherPlayer);

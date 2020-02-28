@@ -14,7 +14,6 @@ private:
 	Player players[2];
 	int turnIndex;
 
-	Pane elem;
 
 public:
 	Game();

@@ -19,4 +19,6 @@ public:
 
 	virtual void setPosition(sf::Vector2f position);
 
+	virtual bool contains(sf::Vector2f point);
+
 };
