@@ -28,6 +28,6 @@ void Pane::setSize(sf::Vector2f size){
 }
 
 void Pane::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(shape);
+	target.draw(shape, states);
 	drawChildren(target, states);
 }

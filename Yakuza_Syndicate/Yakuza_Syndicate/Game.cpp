@@ -12,22 +12,10 @@ Game::Game() :
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
 
 	players[0].setColor(sf::Color::Cyan);
-	players[1].setColor(sf::Color::Magenta);
+	players[1].setColor(sf::Color::Red);
 
 	turnIndex = 0;
 	players[turnIndex].turnStart();
-
-	UIVisualSettings uiVis = {};
-	uiVis.rectFillColor = sf::Color::Blue;
-	uiVis.textOutlineColor = sf::Color::Magenta;
-	uiVis.textOutlineThickness = 1;
-
-	elem.addChild(new Button("Press me", sf::Vector2f(400, 100), uiVis), sf::Vector2f(50, 100))
-		->addChild(new Label("value"), sf::Vector2f(500, 0));
-	uiVis.rectFillColor = sf::Color::Red;
-	elem.addChild(new Button(uiVis));
-	elem.addChild(new Button(new Image(*ResourceManager::getTexture("Dojo"))), sf::Vector2f(100, 500));
-
 	
 	while (window.isOpen()) {
 		handleEvents();
@@ -48,7 +36,7 @@ void Game::handleEvents() {
 			window.close();
 			break;
 		case sf::Event::MouseButtonPressed:
-			players[turnIndex].mousePressed(sf::Vector2f(e.mouseButton.x, e.mouseButton.y), e.mouseButton.button);
+				players[turnIndex].mousePressed(sf::Vector2f(e.mouseButton.x, e.mouseButton.y), e.mouseButton.button);
 			break;
 		}
 
@@ -77,8 +65,6 @@ void Game::draw() {
 	window.draw(gameField);
 	window.draw(players[0]);
 	window.draw(players[1]);
-
-	window.draw(elem);
 
 	window.display();
 }

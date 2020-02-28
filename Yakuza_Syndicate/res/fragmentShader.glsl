@@ -9,15 +9,12 @@ void main() {
 
     vec4 switchToColor = vec4(1, 0, 1, 1); //Magenta
     vec4 switchToShade = vec4(1, 1, 0, 1); //Yellow
-
-    if(texPixel == switchToColor || (gl_Color == switchToColor && texPixel.a > 0.5)) {
+    float alpha = min(gl_Color.a, texPixel.a);
+    gl_FragColor = gl_Color * texPixel;
+    if((gl_Color == switchToColor && alpha > 0.3) || texPixel == switchToColor) {
         gl_FragColor = teamColor;
     }
-    else if(texPixel == switchToShade){
+    else if((gl_Color == switchToShade && alpha > 0.3) || texPixel == switchToShade) {
         gl_FragColor = teamColor * vec4(0.8, 0.8, 0.8, 1);
     }
-    else{
-        gl_FragColor = gl_Color * texPixel;
-    }
-
 }

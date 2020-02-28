@@ -31,7 +31,7 @@ public:
 	virtual void setPosition(sf::Vector2f position) = 0;
 
 	virtual sf::FloatRect getBounds() const = 0;
-
+	
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 protected:

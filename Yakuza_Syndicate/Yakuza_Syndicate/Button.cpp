@@ -34,3 +34,7 @@ void Button::setPosition(sf::Vector2f position) {
 	setChildrenPosition(position);
 	if(label != nullptr) label->setPosition(position + sf::Vector2f(paddingLeft, paddingTop - 5.f));
 }
+
+bool Button::contains(sf::Vector2f point) {
+	return getBounds().contains(point);
+}
