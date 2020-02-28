@@ -2,7 +2,7 @@
 #include "GameEntity.h"
 #include "GangMembers.h"
 
-enum class BuildingType { Dojo, SafeHouse };
+enum class BuildingType { DOJO, SAFEHOUSE };
 
 class Building : public GameEntity {
 private:

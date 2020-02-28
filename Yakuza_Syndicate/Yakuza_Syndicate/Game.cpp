@@ -4,7 +4,7 @@ Game::Game() :
 	timePerFrame(sf::seconds(1.0f /60.0f)),
 	elapsedTime(sf::Time::Zero),
 	gameField(window), 
-	players{ Player(&gameField, 0), Player(&gameField, 1) },
+	players{ Player(&gameField, Owner::PLAYER1), Player(&gameField, Owner::PLAYER2) },
 	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate")
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
 {

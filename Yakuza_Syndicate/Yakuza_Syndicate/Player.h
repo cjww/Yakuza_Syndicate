@@ -10,7 +10,7 @@ private:
 	sf::Color color;
 	sf::Shader shader;
 
-	int playernr;
+	Owner playernr;
 
 	std::vector<GangMembers> gangMembers;
 
@@ -23,7 +23,7 @@ private:
 	GangMembers* selectedGM;
 		
 public:
-	Player(GameField* gameField, int playernr);
+	Player(GameField* gameField, Owner owner);
 	Player(const Player& otherPlayer);
 
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);

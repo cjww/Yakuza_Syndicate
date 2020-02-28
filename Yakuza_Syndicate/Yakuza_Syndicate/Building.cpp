@@ -8,10 +8,10 @@ Building::Building(BuildingType type, sf::Texture& texture)
 
 GangMembers Building::spawnGangMembers() {
 	GangMembers gm(0);
-	if (type == BuildingType::Dojo) {
+	if (type == BuildingType::DOJO) {
 		gm = GangMembers(2);
 	}
-	else if (type == BuildingType::SafeHouse) {
+	else if (type == BuildingType::SAFEHOUSE) {
 		if (this->firstRound) {
 			gm = GangMembers(20);
 			this->firstRound = false;

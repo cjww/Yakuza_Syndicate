@@ -1,11 +1,11 @@
 #include "Player.h"
 
-Player::Player(GameField* gameField, int playernr)
+Player::Player(GameField* gameField, Owner owner)
 	: endTurn(false),
 	color(sf::Color::Black),
 	territory(gameField),
 	gameField(gameField),
-	playernr(playernr)
+	playernr(owner)
 {
 
 	territory.setColor(color);
@@ -34,6 +34,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 			if (tilePtr == this->selectedTile)
 			{
 				selectedTile = nullptr;
+				selectedGM = nullptr;
 			}
 			else
 			{
@@ -62,6 +63,10 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					selectedGM->setAction(false);
 					selectedTile = nullptr;
 					selectedGM = nullptr;
+				}
+				else 
+				{
+
 				}
 			}
 		}
@@ -115,7 +120,7 @@ void Player::turnStart() {
 			}
 		}
 		if (!found) { // no preexisting gangMemebr at position
-			if (this->playernr == 1)
+			if (this->playernr == Owner::PLAYER2)
 			{
 				newGm.flipSprite();
 			}

@@ -4,6 +4,7 @@ GameEntity::GameEntity()
 {
 	scale = 2;
 	this->sprite.scale(scale, scale);
+	owner = Owner::NEUTRAL;
 }
 
 GameEntity::GameEntity(sf::Texture &texture)
@@ -32,6 +33,16 @@ void GameEntity::setPosition(sf::Vector2f position)
 sf::Vector2f GameEntity::getPosition() const
 {
 	return this->sprite.getPosition();
+}
+
+void GameEntity::setOwner(Owner owner)
+{
+	this->owner = owner;
+}
+
+Owner GameEntity::getOwner()
+{
+	return this->owner;
 }
 
 void GameEntity::move(sf::Vector2f offset) 

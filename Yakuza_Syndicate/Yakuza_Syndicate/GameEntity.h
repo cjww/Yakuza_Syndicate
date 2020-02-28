@@ -2,9 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include "ResourceManager.h"
 
+enum class Owner {PLAYER1, PLAYER2, NEUTRAL};
+
 class GameEntity : public sf::Drawable {
 private:
 	sf::Sprite sprite;
+	Owner owner;
 
 	int scale;
 public:
@@ -15,6 +18,8 @@ public:
 
 	void setPosition(sf::Vector2f position);
 	sf::Vector2f getPosition() const;
+	void setOwner(Owner owner);
+	Owner getOwner();
 	
 	void move(sf::Vector2f offset);
 
