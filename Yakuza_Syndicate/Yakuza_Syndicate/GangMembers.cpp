@@ -46,6 +46,7 @@ bool GangMembers::merge(GangMembers& other)
 	{
 		this->amount += other.amount;
 		other.amount = 0;
+		other.text.setString(std::to_string(other.amount));
 		this->text.setString(std::to_string(this->amount));
 		merged = true;
 	}
@@ -62,7 +63,7 @@ bool GangMembers::hasAction()
 	return action;
 }
 
-void GangMembers::setAction(bool action)
+void GangMembers::setHasAction(bool action)
 {
 	this->action = action;
 }
