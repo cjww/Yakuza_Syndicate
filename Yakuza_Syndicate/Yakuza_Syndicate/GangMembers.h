@@ -19,7 +19,7 @@ public:
 	bool merge(GangMembers& other);
 	int getAmount();
 	bool hasAction();
-	void setAction(bool action);
+	void setHasAction(bool action);
 	void fight(GangMembers &other);
 
 	void setTextPos(sf::Vector2f pos);

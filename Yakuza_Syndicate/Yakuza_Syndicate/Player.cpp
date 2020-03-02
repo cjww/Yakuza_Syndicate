@@ -52,29 +52,47 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				selectedTileRect.setOutlineColor(color);
 				selectedTileRect.setOutlineThickness(1);
 
-				bool foundGM = false;
+				
+				
+				GangMembers* toMerge = nullptr;
 				for (int i = 0; i < this->gangMembers.size(); i++)
 				{
 					if (gangMembers[i].getPosition() == selectedTile->getPosition())
 					{
-						selectedGM = &gangMembers[i];
-						foundGM = true;
+						if (selectedGM == nullptr)
+						{
+							selectedGM = &gangMembers[i];
+						}
+						else
+						{
+							toMerge = &gangMembers[i];
+														
+						}
+						
 					}
 				}
-				if (!foundGM && selectedGM != nullptr && selectedGM->hasAction() &&
+				
+				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition() && selectedGM->hasAction() &&
 					sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) + 
 					pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width)
 				{
-					selectedGM->setPosition(selectedTile->getPosition());
-					selectedGM->setTextPos(selectedGM->getPosition());
-					selectedGM->setAction(false);
-					selectedTile = nullptr;
-					selectedGM = nullptr;
+					if (toMerge == nullptr)
+					{
+						selectedGM->setPosition(selectedTile->getPosition());
+						selectedGM->setTextPos(selectedGM->getPosition());
+						selectedGM->setHasAction(false);
+						selectedTile = nullptr;
+						selectedGM = nullptr;
+					}
+					else
+					{
+						toMerge->merge(*selectedGM);
+						toMerge->setHasAction(false);
+						selectedTile = nullptr;
+						selectedGM = nullptr;
+					}
 				}
-				else 
-				{
-
-				}
+				
 			}
 		}
 	}
@@ -106,9 +124,10 @@ bool Player::wantsToEndTurn() const {
 void Player::turnEnd() {
 	endTurn = true;
 	this->selectedTile = nullptr;
+	this->selectedGM = nullptr;
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
-		gangMembers[i].setAction(true);
+		gangMembers[i].setHasAction(true);
 	}
 }
 
