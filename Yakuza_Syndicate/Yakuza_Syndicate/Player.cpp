@@ -66,7 +66,6 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						else
 						{
 							toMerge = &gangMembers[i];
-														
 						}
 						
 					}
