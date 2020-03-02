@@ -20,10 +20,10 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	uiActiveVis.textFillColor = sf::Color::Magenta;
 	uiActiveVis.textOutlineThickness = 1;
 
-	uiUnactiveVis = {};
-	uiUnactiveVis.rectFillColor = sf::Color(50, 50, 50);
-	uiUnactiveVis.textFillColor = sf::Color(100, 100, 100);
-	uiUnactiveVis.textOutlineThickness = 1;
+	uiInactiveVis = {};
+	uiInactiveVis.rectFillColor = sf::Color(50, 50, 50);
+	uiInactiveVis.textFillColor = sf::Color(100, 100, 100);
+	uiInactiveVis.textOutlineThickness = 1;
 
 
 	uiPane.addChild((incomeLabel = new Label("Income: - Yen", uiActiveVis)), sf::Vector2f(50, 50));
@@ -33,7 +33,7 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 
 	if (owner == Owner::PLAYER2) {
 		uiPane.setPosition(sf::Vector2f(1450, 0));
-		uiPane.setVisuals(uiUnactiveVis);
+		uiPane.setVisuals(uiInactiveVis);
 	}
 
 }
@@ -119,6 +119,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 }
 
 void Player::update() {
+
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -139,7 +140,7 @@ bool Player::wantsToEndTurn() const {
 
 void Player::turnEnd() {
 	endTurn = true;
-	uiPane.setVisuals(uiUnactiveVis);
+	uiPane.setVisuals(uiInactiveVis);
 
 	this->selectedTile = nullptr;
 	this->selectedGM = nullptr;

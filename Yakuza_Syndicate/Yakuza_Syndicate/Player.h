@@ -24,7 +24,7 @@ private:
 	GangMembers* selectedGM;
 	
 	UIVisualSettings uiActiveVis;
-	UIVisualSettings uiUnactiveVis;
+	UIVisualSettings uiInactiveVis;
 
 	Pane uiPane;
 	Button* endTurnBtn;
