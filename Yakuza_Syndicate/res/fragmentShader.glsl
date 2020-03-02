@@ -6,6 +6,9 @@ uniform vec4 teamColor;
 void main() {
     vec2 texCoord = gl_TexCoord[0].xy;
     vec4 texPixel = texture2D(texture, texCoord);
+    if(texPixel == vec4(0, 0, 0, 1) && gl_Color != vec4(1, 1, 1, 1)){
+        texPixel = vec4(1, 1, 1, 1);
+    }
 
     vec4 switchToColor = vec4(1, 0, 1, 1); //Magenta
     vec4 switchToShade = vec4(1, 1, 0, 1); //Yellow

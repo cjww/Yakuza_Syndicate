@@ -21,4 +21,6 @@ public:
 
 	virtual bool contains(sf::Vector2f point);
 
+	virtual void setVisuals(const UIVisualSettings& visuals) override;
+
 };

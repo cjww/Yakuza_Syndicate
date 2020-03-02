@@ -21,6 +21,7 @@ sf::FloatRect Image::getBounds() const {
 	return sprite.getGlobalBounds();
 }
 
+
 void Image::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(sprite, states);
 	drawChildren(target, states);

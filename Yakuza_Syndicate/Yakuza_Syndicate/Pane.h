@@ -15,6 +15,7 @@ public:
 	virtual sf::FloatRect getBounds() const;
 
 	void setSize(sf::Vector2f size);
+	virtual void setVisuals(const UIVisualSettings& visuals);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
