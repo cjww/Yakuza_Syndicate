@@ -1,13 +1,8 @@
 #include "Label.h"
 
 Label::Label(const char* str, const UIVisualSettings& visuals) : UIElement(visuals) {
-	font.loadFromFile(visuals.textFont);
-
+	setVisuals(visuals);
 	text.setFont(font);
-	text.setFillColor(visuals.textFillColor);
-	text.setOutlineColor(visuals.textOutlineColor);
-	text.setCharacterSize(visuals.textSize);
-	text.setOutlineThickness(visuals.textOutlineThickness);
 	text.setString(str);
 }
 
@@ -26,6 +21,15 @@ void Label::setString(const std::string& string) {
 
 sf::FloatRect Label::getBounds() const {
 	return text.getGlobalBounds();
+}
+
+void Label::setVisuals(const UIVisualSettings& visuals) {
+	font.loadFromFile(visuals.textFont);
+	text.setFillColor(visuals.textFillColor);
+	text.setOutlineColor(visuals.textOutlineColor);
+	text.setCharacterSize(visuals.textSize);
+	text.setOutlineThickness(visuals.textOutlineThickness);
+	UIElement::setVisuals(visuals);
 }
 
 void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const {

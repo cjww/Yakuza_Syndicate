@@ -1,11 +1,12 @@
 #include "Player.h"
 
-Player::Player(GameField* gameField, Owner owner)
+Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	: endTurn(false),
 	color(sf::Color::Black),
 	territory(gameField),
 	gameField(gameField),
-	playernr(owner)
+	playernr(owner),
+	window(window)
 {
 
 	territory.setColor(color);
@@ -14,17 +15,32 @@ Player::Player(GameField* gameField, Owner owner)
 	balance = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
-	UIVisualSettings uiVis = {};
-	uiVis.rectFillColor = sf::Color::Yellow;
-	uiVis.textFillColor = sf::Color::Magenta;
-	uiVis.textOutlineThickness = 1;
+	uiActiveVis = {};
+	uiActiveVis.rectFillColor = sf::Color::Yellow;
+	uiActiveVis.textFillColor = sf::Color::Magenta;
+	uiActiveVis.textOutlineThickness = 1;
 
-	uiPane.addChild((endTurnBtn = new Button("End Turn", uiVis)), sf::Vector2f(600, 200));
+	uiUnactiveVis = {};
+	uiUnactiveVis.rectFillColor = sf::Color(50, 50, 50);
+	uiUnactiveVis.textFillColor = sf::Color(100, 100, 100);
+	uiUnactiveVis.textOutlineThickness = 1;
+
+
+	uiPane.addChild((incomeLabel = new Label("Income: - Yen", uiActiveVis)), sf::Vector2f(50, 50));
+	uiPane.addChild((balanceLabel = new Label("Balance: - Yen", uiActiveVis)), sf::Vector2f(50, 100));
+	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: -", uiActiveVis)), sf::Vector2f(50, 150));
+	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50), uiActiveVis)), sf::Vector2f(50, 500));
+
+	if (owner == Owner::PLAYER2) {
+		uiPane.setPosition(sf::Vector2f(1450, 0));
+		uiPane.setVisuals(uiUnactiveVis);
+	}
+
 }
 
-Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr)
+Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr, otherPlayer.window)
 {
-
+	
 }
 
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
@@ -105,6 +121,8 @@ bool Player::wantsToEndTurn() const {
 
 void Player::turnEnd() {
 	endTurn = true;
+	uiPane.setVisuals(uiUnactiveVis);
+
 	this->selectedTile = nullptr;
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
@@ -114,6 +132,8 @@ void Player::turnEnd() {
 
 void Player::turnStart() {
 	endTurn = false;
+	uiPane.setVisuals(uiActiveVis);
+
 	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers
 		bool found = false;

@@ -38,3 +38,8 @@ void Button::setPosition(sf::Vector2f position) {
 bool Button::contains(sf::Vector2f point) {
 	return getBounds().contains(point);
 }
+
+void Button::setVisuals(const UIVisualSettings& visuals) {
+	Pane::setVisuals(visuals);
+	label->setVisuals(visuals);
+}

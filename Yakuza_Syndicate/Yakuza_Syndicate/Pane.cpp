@@ -1,9 +1,7 @@
 #include "Pane.h"
 
 Pane::Pane(const UIVisualSettings& visuals) : UIElement(visuals) {
-	shape.setFillColor(visuals.rectFillColor);
-	shape.setOutlineColor(visuals.rectOutlineColor);
-	shape.setOutlineThickness(visuals.rectOutlineThicknes);
+	setVisuals(visuals);
 }
 
 Pane::Pane(sf::Vector2f size, const UIVisualSettings& visuals) : Pane(visuals) {
@@ -25,6 +23,13 @@ sf::FloatRect Pane::getBounds() const {
 
 void Pane::setSize(sf::Vector2f size){
 	shape.setSize(size);
+}
+
+void Pane::setVisuals(const UIVisualSettings& visuals) {
+	shape.setFillColor(visuals.rectFillColor);
+	shape.setOutlineColor(visuals.rectOutlineColor);
+	shape.setOutlineThickness(visuals.rectOutlineThicknes);
+	UIElement::setVisuals(visuals);
 }
 
 void Pane::draw(sf::RenderTarget& target, sf::RenderStates states) const {

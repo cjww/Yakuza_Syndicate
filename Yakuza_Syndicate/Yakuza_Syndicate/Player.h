@@ -23,11 +23,20 @@ private:
 	Tile* selectedTile;
 	GangMembers* selectedGM;
 	
+	UIVisualSettings uiActiveVis;
+	UIVisualSettings uiUnactiveVis;
+
 	Pane uiPane;
 	Button* endTurnBtn;
+	Button* buildDojoBtn;
+	Label* balanceLabel;
+	Label* incomeLabel;
+	Label* totalGmLabel;
+
+	sf::RenderWindow& window;
 
 public:
-	Player(GameField* gameField, Owner owner);
+	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);
 	Player(const Player& otherPlayer);
 
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);
