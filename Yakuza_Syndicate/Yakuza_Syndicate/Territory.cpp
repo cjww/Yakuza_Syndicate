@@ -82,9 +82,7 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		sf::RectangleShape rect(sf::Vector2f(tile->getGlobalBounds().width, tile->getGlobalBounds().height));
 		rect.setPosition(tile->getPosition());
 		sf::Color c = this->color;
-		c.a = 40;
-		rect.setOutlineColor(this->color);
-		rect.setOutlineThickness(1);
+		c.a = 100;
 		//rect.setFillColor(sf::Color::Transparent);
 		rect.setFillColor(c);
 		target.draw(rect);
