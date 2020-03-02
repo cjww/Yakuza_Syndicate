@@ -26,11 +26,12 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	uiInactiveVis.textOutlineThickness = 1;
 
 
-	uiPane.addChild((incomeLabel = new Label("Income: - Yen", uiActiveVis)), sf::Vector2f(50, 50));
-	uiPane.addChild((balanceLabel = new Label("Balance: - Yen", uiActiveVis)), sf::Vector2f(50, 100));
-	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: -", uiActiveVis)), sf::Vector2f(50, 150));
-	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50), uiActiveVis)), sf::Vector2f(50, 500));
-
+	uiPane.addChild((incomeLabel = new Label("Income: - Yen")), sf::Vector2f(50, 50));
+	uiPane.addChild((balanceLabel = new Label("Balance: - Yen")), sf::Vector2f(50, 100));
+	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: -")), sf::Vector2f(50, 150));
+	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 500));
+	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 400));
+	
 	if (owner == Owner::PLAYER2) {
 		uiPane.setPosition(sf::Vector2f(1450, 0));
 		uiPane.setVisuals(uiInactiveVis);
@@ -45,12 +46,20 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
 	//TODO check if button was pressed
-	if (endTurnBtn->contains(mousePosition)) {
-		turnEnd();
-	}
 
 	if (button == sf::Mouse::Button::Left) {
-		//territory.buildDojo(mousePosition);
+		if (endTurnBtn->contains(mousePosition)) {
+			turnEnd();
+		}
+		if (canBuildDojo) {
+			if (buildDojoBtn->contains(mousePosition)) {
+				territory.buildDojo(selectedGM->getPosition());
+				selectedGM->setHasAction(false);
+			}
+		}
+		canBuildDojo = false;
+		buildDojoBtn->setVisuals(uiInactiveVis);
+
 		Tile* tilePtr = this->gameField->getTileAt(mousePosition);
 		if(tilePtr != nullptr)
 		{
@@ -78,6 +87,11 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						if (selectedGM == nullptr)
 						{
 							selectedGM = &gangMembers[i];
+							if (selectedGM->getAmount() >= 10 &&
+								selectedTile->getBuilding() == nullptr) {
+								canBuildDojo = true;
+								buildDojoBtn->setVisuals(uiActiveVis);
+							}
 						}
 						else
 						{
@@ -153,6 +167,7 @@ void Player::turnEnd() {
 void Player::turnStart() {
 	endTurn = false;
 	uiPane.setVisuals(uiActiveVis);
+	buildDojoBtn->setVisuals(uiInactiveVis);
 
 	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers

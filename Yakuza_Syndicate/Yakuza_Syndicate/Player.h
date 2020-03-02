@@ -28,6 +28,7 @@ private:
 
 	Pane uiPane;
 	Button* endTurnBtn;
+	bool canBuildDojo;
 	Button* buildDojoBtn;
 	Label* balanceLabel;
 	Label* incomeLabel;
