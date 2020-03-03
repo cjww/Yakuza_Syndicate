@@ -38,6 +38,13 @@ private:
 	Button* colorBtns[COLOR_COUNT];
 	sf::Color colors[COLOR_COUNT];
 
+	//Network menu
+	Pane menuNet;
+	Button* hostBtn;
+	Button* joinBtn;
+	//TODO TextField address
+	Button* back;
+
 public:
 	Game();
 	virtual ~Game();
@@ -45,4 +52,12 @@ public:
 	void handleEvents();
 	void update();
 	void draw();
+
+	void handleEventsMenu(const sf::Event& e);
+	void drawMenu();
+
+	void handleEventsLocalGame(const sf::Event& e);
+	void updateGame();
+	void drawGame();
+
 };
