@@ -21,9 +21,9 @@ private:
 	GameState state;
 
 	//Game states
-	GameField gameField;
+	GameField* gameField;
 	
-	Player players[2];
+	Player* players[2];
 	int turnIndex;
 
 	//Menu states
