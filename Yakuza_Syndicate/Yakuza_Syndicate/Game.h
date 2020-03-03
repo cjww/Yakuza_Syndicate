@@ -2,6 +2,15 @@
 #include "GameField.h"
 
 #include "UI.h"
+#include <map>
+
+enum class GameState {
+	MENU,		//Main Menu
+	MENU_NET,	//Menu for hosting or joining network
+	GAME_LOCAL, //Game on local comp
+	GAME_NET	//Game over network
+};
+
 class Game {
 private:
 	sf::RenderWindow window;
@@ -9,11 +18,25 @@ private:
 	sf::Time elapsedTime;
 	sf::Time timePerFrame;
 	
+	GameState state;
+
+	//Game states
 	GameField gameField;
 	
 	Player players[2];
 	int turnIndex;
 
+	//Menu states
+	Pane menu;
+	Button* playLocalBtn;
+	Button* playNetBtn;
+	Button* exitBtn;
+
+	static const int COLOR_COUNT = 12;
+	int clrPlayer1;
+	int clrPlayer2;
+	Button* colorBtns[COLOR_COUNT];
+	sf::Color colors[COLOR_COUNT];
 
 public:
 	Game();

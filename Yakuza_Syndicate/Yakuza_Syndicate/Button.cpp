@@ -41,5 +41,5 @@ bool Button::contains(sf::Vector2f point) {
 
 void Button::setVisuals(const UIVisualSettings& visuals) {
 	Pane::setVisuals(visuals);
-	label->setVisuals(visuals);
+	if(label != nullptr) label->setVisuals(visuals);
 }
