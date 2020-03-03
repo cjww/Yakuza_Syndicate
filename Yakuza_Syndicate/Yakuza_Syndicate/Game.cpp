@@ -51,8 +51,15 @@ Game::Game() :
 		(exitBtn = new Button("Exit", sf::Vector2f(window.getSize().x / 3, 50))),
 		sf::Vector2f(window.getSize().x / 3, 600));
 
-
-	
+	menuNet.addChild(
+		(hostBtn = new Button("Host", sf::Vector2f(window.getSize().x/3, 50))),
+		sf::Vector2f(window.getSize().x/3, 400));
+	menuNet.addChild(
+		(joinBtn = new Button("Join", sf::Vector2f(window.getSize().x / 3, 50))),
+		sf::Vector2f(window.getSize().x / 3, 500));
+	menuNet.addChild(
+		(backBtn = new Button("Back", sf::Vector2f(window.getSize().x / 3, 50))),
+		sf::Vector2f(window.getSize().x / 3, 700));
 	
 	turnIndex = 0;
 	while (window.isOpen()) {
@@ -117,8 +124,8 @@ void Game::draw() {
 
 void Game::handleEventsMenu(const sf::Event& e) {
 	if (e.type == sf::Event::MouseButtonPressed) {
+		sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
 		if (state == GameState::MENU) {
-			sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
 			if (playLocalBtn->contains(mousePos)) {
 				state = GameState::GAME_LOCAL;
 				players[0]->setColor(colors[clrPlayer1]);
@@ -164,7 +171,15 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			}
 		}
 		else if (state == GameState::MENU_NET) {
-
+			if (backBtn->contains(mousePos)) {
+				state = GameState::MENU;
+			}
+			else if (joinBtn->contains(mousePos)) {
+				state = GameState::GAME_NET;
+			}
+			else if (hostBtn->contains(mousePos)) {
+				state = GameState::GAME_NET;
+			}
 		}
 	}
 

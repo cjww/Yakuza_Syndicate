@@ -43,7 +43,7 @@ private:
 	Button* hostBtn;
 	Button* joinBtn;
 	//TODO TextField address
-	Button* back;
+	Button* backBtn;
 
 public:
 	Game();
