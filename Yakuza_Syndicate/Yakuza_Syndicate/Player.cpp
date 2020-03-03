@@ -43,6 +43,19 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 	
 }
 
+GangMembers* Player::getGMAtPos(sf::Vector2f pos)
+{
+	GangMembers* gmAtPos = nullptr;
+	for (int i = 0; i < this->gangMembers.size() && gmAtPos == nullptr; i++)
+	{
+		if (gangMembers[i].getPosition() == pos)
+		{
+			gmAtPos = &gangMembers[i];
+		}
+	}
+	return gmAtPos;
+}
+
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
 	//TODO check if button was pressed
 	if (endTurnBtn->contains(mousePosition)) {
@@ -71,6 +84,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				
 				
 				GangMembers* toMerge = nullptr;
+				int selectedGMIndex = -1;
 				for (int i = 0; i < this->gangMembers.size(); i++)
 				{
 					if (gangMembers[i].getPosition() == selectedTile->getPosition())
@@ -78,6 +92,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						if (selectedGM == nullptr)
 						{
 							selectedGM = &gangMembers[i];
+							selectedGMIndex = i;
 						}
 						else
 						{
@@ -103,6 +118,15 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					{
 						toMerge->merge(*selectedGM);
 						toMerge->setHasAction(false);
+						bool deleted = false;
+						for (int i = 0; i < gangMembers.size() && !deleted; i++)
+						{
+							if (&gangMembers[i] == selectedGM)
+							{
+								gangMembers.erase(gangMembers.begin() + i);
+								deleted = true;
+							}
+						}
 						selectedTile = nullptr;
 						selectedGM = nullptr;
 					}

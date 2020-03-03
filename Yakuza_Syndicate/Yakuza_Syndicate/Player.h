@@ -39,6 +39,7 @@ public:
 	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);
 	Player(const Player& otherPlayer);
 
+	GangMembers* getGMAtPos(sf::Vector2f pos);
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);
 
 	void update();
