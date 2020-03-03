@@ -1,12 +1,9 @@
 #include "GameField.h"
 
 GameField::GameField(const sf::RenderWindow& window) {
-	ResourceManager::newTexture("../res/Dojo_general.png", "Dojo");
-	ResourceManager::newTexture("../res/Safe-House_general.png", "SafeHouse");
-	
-	sf::Texture* tileTexture = ResourceManager::newTexture("../res/tiles.png", "Tiles");
 	int scale = 2;
 	fieldSize = 15;
+	sf::Texture* tileTexture = ResourceManager::getTexture("Tiles");
 	//sf::Vector2f offset = window.getSize() / 2.0f - sf::Vector2f(tileSize * scale * fieldSize / 2, 0);
 	sf::Vector2f offset = sf::Vector2f(window.getSize().x / 4.0f, 0);
 
@@ -16,6 +13,7 @@ GameField::GameField(const sf::RenderWindow& window) {
 			tiles[row][col]->setPosition(offset + sf::Vector2f(col, row) * (float)Tile::size * 2.0f);
 		}
 	}
+	police.setPosition(getTileByIndex(0, 0)->getPosition());
 }
 
 GameField::~GameField() {

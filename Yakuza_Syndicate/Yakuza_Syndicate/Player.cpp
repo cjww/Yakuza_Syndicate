@@ -107,7 +107,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 								buildDojoBtn->setVisuals(uiActiveVis);
 							}
 						}
-						else
+						else if (gangMembers[i].getPosition() != selectedGM->getPosition())
 						{
 							toMerge = &gangMembers[i];
 						}
@@ -115,37 +115,46 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					}
 				}
 				
-				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition() && selectedGM->hasAction() &&
-					sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) + 
-					pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width)
+				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition())
 				{
-					if (toMerge == nullptr)
+					if (selectedGM->hasAction() && sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
+						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width)
 					{
-						selectedGM->setPosition(selectedTile->getPosition());
-						selectedGM->setTextPos(selectedGM->getPosition());
-						selectedGM->setHasAction(false);
-
-					}
-					else
-					{
-						toMerge->merge(*selectedGM);
-						toMerge->setHasAction(false);
-						bool deleted = false;
-						for (int i = 0; i < gangMembers.size() && !deleted; i++)
+						if (toMerge == nullptr)
 						{
-							if (&gangMembers[i] == selectedGM)
+							selectedGM->setPosition(selectedTile->getPosition());
+							selectedGM->setTextPos(selectedGM->getPosition());
+							selectedGM->setHasAction(false);
+
+						}
+						else
+						{
+							if (toMerge->merge(*selectedGM))
 							{
-								gangMembers.erase(gangMembers.begin() + i);
-								deleted = true;
+								toMerge->setHasAction(false);
+								bool deleted = false;
+								for (int i = 0; i < gangMembers.size() && !deleted; i++)
+								{
+									if (&gangMembers[i] == selectedGM)
+									{
+										gangMembers.erase(gangMembers.begin() + i);
+										deleted = true;
+									}
+								}
 							}
 						}
-
 					}
 					selectedTile = nullptr;
 					selectedGM = nullptr;
+					
 				}
 				
 			}
+		}
+		else
+		{
+			selectedGM = nullptr;
+			selectedTile = nullptr;
 		}
 	}
 	else {

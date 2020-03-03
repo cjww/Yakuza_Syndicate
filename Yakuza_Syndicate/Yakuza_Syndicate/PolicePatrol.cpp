@@ -1,5 +1,11 @@
 #include "PolicePatrol.h"
 
-PolicePatrol::PolicePatrol()
+PolicePatrol::PolicePatrol() :GameEntity(*ResourceManager::getTexture("PolicePatrol"))
+	,isPatrolling(true), inCustody(nullptr)
 {
+}
+
+void PolicePatrol::move()
+{
+
 }

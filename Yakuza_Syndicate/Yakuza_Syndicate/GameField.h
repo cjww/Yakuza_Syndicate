@@ -1,10 +1,13 @@
 #pragma once
 #include "Tile.h"
 #include "ResourceManager.h"
+#include "PolicePatrol.h"
+
 class GameField : public sf::Drawable {
 private:
 	Tile* tiles[15][15];
 	int fieldSize;
+	PolicePatrol police;
 
 public:
 	GameField(const sf::RenderWindow& window);

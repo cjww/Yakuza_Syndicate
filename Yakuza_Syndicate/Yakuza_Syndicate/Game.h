@@ -9,9 +9,9 @@ private:
 	sf::Time elapsedTime;
 	sf::Time timePerFrame;
 	
-	GameField gameField;
+	GameField* gameField;
 	
-	Player players[2];
+	Player* players[2];
 	int turnIndex;
 
 
