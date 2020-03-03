@@ -44,6 +44,18 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 	
 }
 
+void Player::checkFight(Player* other)
+{
+	for (int i = 0; i < this->gangMembers.size(); i++)
+	{
+		GangMembers* gmToFight = other->getGMAtPos(gangMembers[i].getPosition());
+		if (gmToFight != nullptr)
+		{
+			gangMembers[i].fight(*gmToFight);
+		}
+	}
+}
+
 GangMembers* Player::getGMAtPos(sf::Vector2f pos)
 {
 	GangMembers* gmAtPos = nullptr;
@@ -117,8 +129,8 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				
 				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition())
 				{
-					if (selectedGM->hasAction() && sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
-						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width)
+					if (selectedGM->hasAction() /*&& sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
+						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width*/)
 					{
 						if (toMerge == nullptr)
 						{
@@ -189,6 +201,7 @@ void Player::turnEnd() {
 
 	this->selectedTile = nullptr;
 	this->selectedGM = nullptr;
+	
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
 		gangMembers[i].setHasAction(true);

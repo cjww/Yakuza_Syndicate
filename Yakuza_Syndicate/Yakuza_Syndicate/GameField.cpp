@@ -13,6 +13,14 @@ GameField::GameField(const sf::RenderWindow& window) {
 			tiles[row][col]->setPosition(offset + sf::Vector2f(col, row) * (float)Tile::size * 2.0f);
 		}
 	}
+	policeStation.setScale(2, 2);
+	policeStation.setTexture(*ResourceManager::getTexture("PoliceStation"));
+	policeStation.setPosition(getTileByIndex(0, 0)->getPosition());
+
+	bank.setScale(2, 2);
+	bank.setTexture(*ResourceManager::getTexture("Bank"));
+	bank.setPosition(getTileByIndex(14, 14)->getPosition());
+
 	police.setPosition(getTileByIndex(0, 0)->getPosition());
 }
 
@@ -30,6 +38,9 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			target.draw(*tile);
 		}
 	}
+	target.draw(policeStation);
+	target.draw(bank);
+	target.draw(police);
 }
 
 Tile* GameField::getTileAt(sf::Vector2f pos) const {
