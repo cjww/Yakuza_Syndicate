@@ -39,9 +39,14 @@ void UIElement::drawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 }
 
 void UIElement::setVisuals(const UIVisualSettings& visuals) {
+	this->visuals = visuals;
 	for (auto& child : children) {
 		child->setVisuals(visuals);
 	}
+}
+
+UIVisualSettings UIElement::getVisuals() const {
+	return this->visuals;
 }
 
 void UIElement::draw(sf::RenderTarget& target, sf::RenderStates states) const {

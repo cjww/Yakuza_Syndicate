@@ -19,6 +19,7 @@ private:
 	std::vector<UIElement*> children;
 	UIElement* parent;
 	sf::Vector2f offsetToParrent;
+	UIVisualSettings visuals;
 
 public:
 	UIElement(const UIVisualSettings& visuals = {});
@@ -33,6 +34,7 @@ public:
 	virtual sf::FloatRect getBounds() const = 0;
 	
 	virtual void setVisuals(const UIVisualSettings& visuals);
+	UIVisualSettings getVisuals() const;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
