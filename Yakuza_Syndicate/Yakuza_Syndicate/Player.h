@@ -24,10 +24,11 @@ private:
 	GangMembers* selectedGM;
 	
 	UIVisualSettings uiActiveVis;
-	UIVisualSettings uiUnactiveVis;
+	UIVisualSettings uiInactiveVis;
 
 	Pane uiPane;
 	Button* endTurnBtn;
+	bool canBuildDojo;
 	Button* buildDojoBtn;
 	Label* balanceLabel;
 	Label* incomeLabel;
