@@ -12,6 +12,7 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Dojo_general.png", "Dojo");
 	ResourceManager::newTexture("../res/Safe-House_general.png", "SafeHouse");
 	ResourceManager::newTexture("../res/Bank.png", "Bank");
+	ResourceManager::newTexture("../res/Police-Station.png", "PoliceStation");
 	ResourceManager::newTexture("../res/tiles.png", "Tiles");
 
 	state = GameState::MENU;
@@ -205,6 +206,7 @@ void Game::handleEventsLocalGame(const sf::Event& e) {
 void Game::updateGame() {
 	players[turnIndex]->update();
 	if (players[turnIndex]->wantsToEndTurn()) {
+		players[turnIndex]->checkFight(players[(turnIndex + 1) % 2]);
 		players[turnIndex]->turnEnd();
 		turnIndex = (turnIndex + 1) % 2;
 		players[turnIndex]->turnStart();

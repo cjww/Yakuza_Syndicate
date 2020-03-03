@@ -9,6 +9,9 @@ private:
 	int fieldSize;
 	PolicePatrol police;
 
+	sf::Sprite policeStation;
+	sf::Sprite bank;
+
 public:
 	GameField(const sf::RenderWindow& window);
 	virtual ~GameField();
