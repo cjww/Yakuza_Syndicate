@@ -31,6 +31,7 @@ private:
 	bool isHost;
 	sf::TcpSocket socket;
 	sf::TcpListener listener;
+	
 	void acceptThread();
 
 	//Menu states
@@ -48,8 +49,10 @@ private:
 	//Network menu
 	UIVisualSettings activeVis;
 	UIVisualSettings inactiveVis;
+	UIVisualSettings labelVis;
 	Pane menuNet;
 	Button* hostBtn;
+	Label* ipLabel;
 	Button* joinBtn;
 	//TODO TextField* address
 	Button* backBtn;

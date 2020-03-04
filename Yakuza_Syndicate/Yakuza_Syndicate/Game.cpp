@@ -23,6 +23,17 @@ Game::Game() :
 	players[1] = new Player(gameField, Owner::PLAYER2, window);
 
 	//Menu setup
+	labelVis = {};
+	labelVis.textFillColor = sf::Color::White;
+
+	activeVis = {};
+	activeVis.textOutlineThickness = 1;
+	activeVis.textOutlineColor = sf::Color::White;
+
+	inactiveVis = activeVis;
+	inactiveVis.rectFillColor = sf::Color(50, 50, 50);
+	inactiveVis.textFillColor = sf::Color(80, 80, 80);
+
 	clrPlayer1 = 0;
 	clrPlayer2 = 1;
 	colors[0] = sf::Color::Green;
@@ -38,7 +49,7 @@ Game::Game() :
 	colors[10] = sf::Color(166, 5, 5);
 	colors[11] = sf::Color(201, 181, 24);
 	menu.addChild(
-		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50))),
+		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x/3, 400));
 	for (int i = 0; i < COLOR_COUNT; i++) {
 		UIVisualSettings colorBtn;
@@ -47,27 +58,23 @@ Game::Game() :
 			sf::Vector2f(50 + 65 * (i % (COLOR_COUNT/2)), 375 + 65 * (i / (COLOR_COUNT/2))));
 	}
 	menu.addChild(
-		(playNetBtn = new Button("Play LAN", sf::Vector2f(window.getSize().x / 3, 50))),
+		(playNetBtn = new Button("Play LAN", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 500));
 	menu.addChild(
-		(exitBtn = new Button("Exit", sf::Vector2f(window.getSize().x / 3, 50))),
+		(exitBtn = new Button("Exit", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 600));
 
 
-	activeVis = {};
-
-	inactiveVis = activeVis;
-	inactiveVis.rectFillColor = sf::Color(50, 50, 50);
-	inactiveVis.textFillColor = sf::Color(80, 80, 80);
-
 	menuNet.addChild(
-		(hostBtn = new Button("Host", sf::Vector2f(window.getSize().x/3, 50))),
+		(hostBtn = new Button("Host", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x/3, 400));
+	hostBtn->addChild(
+		(ipLabel = new Label("", labelVis)), sf::Vector2f(0, -100));
 	menuNet.addChild(
-		(joinBtn = new Button("Join", sf::Vector2f(window.getSize().x / 3, 50))),
+		(joinBtn = new Button("Join", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 500));
 	menuNet.addChild(
-		(backBtn = new Button("Back", sf::Vector2f(window.getSize().x / 3, 50))),
+		(backBtn = new Button("Back", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 700));
 	
 	turnIndex = 0;
@@ -185,11 +192,9 @@ void Game::handleEventsMenu(const sf::Event& e) {
 				state = GameState::MENU;
 			}
 			else if (joinBtn->contains(mousePos)) {
-				state = GameState::GAME_NET;
 				initNetworkgame("127.0.0.1", false);
 			}
 			else if (hostBtn->contains(mousePos)) {
-				state = GameState::GAME_NET;
 				initNetworkgame("", true);
 			}
 		}
@@ -198,7 +203,7 @@ void Game::handleEventsMenu(const sf::Event& e) {
 				state = GameState::MENU_NET;
 				menuNet.setVisuals(activeVis);
 				if (isHost) {
-					serverAcceptThread.terminate();
+					listener.close();
 				}
 			}
 		}
@@ -241,13 +246,20 @@ void Game::drawGame() {
 }
 
 void Game::acceptThread() {
-	menuNet.setVisuals(inactiveVis);
-	backBtn->setVisuals(activeVis);
-	if (listener.accept(socket) != sf::Socket::Done) {
-		std::cout << "failed to accept client" << std::endl;
+
+	auto status = listener.accept(socket);
+	if (status == sf::Socket::Done) {
+		menuNet.setVisuals(activeVis);
+		ipLabel->setString("");
+		state = GameState::GAME_NET;
 	}
-	menuNet.setVisuals(activeVis);
-	state == GameState::GAME_NET;
+	else if (status == sf::Socket::Error) {
+		ipLabel->setString("");
+	}
+	else {
+		ipLabel->setString("Failed to accept client");
+		state = GameState::MENU_NET;
+	}
 }
 
 void Game::initNetworkgame(const std::string& ip, bool isHost) {
@@ -258,6 +270,12 @@ void Game::initNetworkgame(const std::string& ip, bool isHost) {
 			std::cout << "Failed to bind to port" << std::endl;
 			state = GameState::MENU;
 		}
+
+		menuNet.setVisuals(inactiveVis);
+		backBtn->setVisuals(activeVis);
+		ipLabel->setVisuals(labelVis);
+		ipLabel->setString("Server located at : " + sf::IpAddress::getLocalAddress().toString());
+
 		serverAcceptThread.launch();
 	}
 	else {
@@ -265,8 +283,10 @@ void Game::initNetworkgame(const std::string& ip, bool isHost) {
 			std::cout << "Failed to connect" << std::endl;
 			state == GameState::MENU_NET;
 		}
-		players[0]->setColor(colors[clrPlayer1]);
-		state == GameState::GAME_NET;
-		std::cout << "Connecteeed!" << std::endl;
+		else {
+			players[0]->setColor(colors[clrPlayer1]);
+			state == GameState::GAME_NET;
+			std::cout << "Connected!" << std::endl;
+		}
 	}
 }
