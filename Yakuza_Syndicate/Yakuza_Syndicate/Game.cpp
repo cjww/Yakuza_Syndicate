@@ -1,10 +1,11 @@
 #include "Game.h"
 
-Game::Game() : 
-	timePerFrame(sf::seconds(1.0f /60.0f)),
-	elapsedTime(sf::Time::Zero), 
-	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate")
-	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen)
+Game::Game() :
+	timePerFrame(sf::seconds(1.0f / 60.0f)),
+	elapsedTime(sf::Time::Zero),
+	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
+	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
+	serverAcceptThread(&Game::acceptThread, this)
 {
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
@@ -52,6 +53,13 @@ Game::Game() :
 		(exitBtn = new Button("Exit", sf::Vector2f(window.getSize().x / 3, 50))),
 		sf::Vector2f(window.getSize().x / 3, 600));
 
+
+	activeVis = {};
+
+	inactiveVis = activeVis;
+	inactiveVis.rectFillColor = sf::Color(50, 50, 50);
+	inactiveVis.textFillColor = sf::Color(80, 80, 80);
+
 	menuNet.addChild(
 		(hostBtn = new Button("Host", sf::Vector2f(window.getSize().x/3, 50))),
 		sf::Vector2f(window.getSize().x/3, 400));
@@ -84,7 +92,7 @@ void Game::handleEvents() {
 			window.close();
 			break;
 		}
-		if (state == GameState::MENU || state == GameState::MENU_NET) {
+		if (state == GameState::MENU || state == GameState::MENU_NET || state == GameState::MENU_NET_WAIT) {
 			handleEventsMenu(e);
 		}
 		else if (state == GameState::GAME_LOCAL) {
@@ -100,8 +108,8 @@ void Game::update() {
 		window.setTitle("FPS: " + std::to_string(1 / elapsedTime.asSeconds()));
 		elapsedTime -= timePerFrame;
 
-		if (state == GameState::MENU_NET) {
-			
+		if (state == GameState::MENU_NET_WAIT) {
+		
 		}
 		else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
 			updateGame();		
@@ -113,7 +121,7 @@ void Game::update() {
 void Game::draw() {
 
 	window.clear(sf::Color(92, 86, 43));
-	if (state == GameState::MENU || state == GameState::MENU_NET) {
+	if (state == GameState::MENU || state == GameState::MENU_NET || state == GameState::MENU_NET_WAIT) {
 		drawMenu();
 	}
 	else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
@@ -135,6 +143,7 @@ void Game::handleEventsMenu(const sf::Event& e) {
 				players[turnIndex]->turnStart();
 			}
 			else if (playNetBtn->contains(mousePos)) {
+				players[0]->setColor(colors[clrPlayer1]);
 				state = GameState::MENU_NET;
 			}
 			else if (exitBtn->contains(mousePos)) {
@@ -177,9 +186,20 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			}
 			else if (joinBtn->contains(mousePos)) {
 				state = GameState::GAME_NET;
+				initNetworkgame("127.0.0.1", false);
 			}
 			else if (hostBtn->contains(mousePos)) {
 				state = GameState::GAME_NET;
+				initNetworkgame("", true);
+			}
+		}
+		else if (state == GameState::MENU_NET_WAIT) {
+			if (backBtn->contains(mousePos)) {
+				state = GameState::MENU_NET;
+				menuNet.setVisuals(activeVis);
+				if (isHost) {
+					serverAcceptThread.terminate();
+				}
 			}
 		}
 	}
@@ -218,4 +238,35 @@ void Game::drawGame() {
 	window.draw(*players[0]);
 	window.draw(*players[1]);
 
+}
+
+void Game::acceptThread() {
+	menuNet.setVisuals(inactiveVis);
+	backBtn->setVisuals(activeVis);
+	if (listener.accept(socket) != sf::Socket::Done) {
+		std::cout << "failed to accept client" << std::endl;
+	}
+	menuNet.setVisuals(activeVis);
+	state == GameState::GAME_NET;
+}
+
+void Game::initNetworkgame(const std::string& ip, bool isHost) {
+	state = GameState::MENU_NET_WAIT;
+	this->isHost = isHost;
+	if (isHost) {
+		if (listener.listen(6969) != sf::Socket::Done) {
+			std::cout << "Failed to bind to port" << std::endl;
+			state = GameState::MENU;
+		}
+		serverAcceptThread.launch();
+	}
+	else {
+		if (socket.connect(ip, 6969) != sf::Socket::Done) {
+			std::cout << "Failed to connect" << std::endl;
+			state == GameState::MENU_NET;
+		}
+		players[0]->setColor(colors[clrPlayer1]);
+		state == GameState::GAME_NET;
+		std::cout << "Connecteeed!" << std::endl;
+	}
 }

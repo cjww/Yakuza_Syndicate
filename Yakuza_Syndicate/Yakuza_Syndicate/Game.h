@@ -2,11 +2,12 @@
 #include "GameField.h"
 
 #include "UI.h"
-#include <map>
+#include <SFML/Network.hpp>
 
 enum class GameState {
 	MENU,		//Main Menu
 	MENU_NET,	//Menu for hosting or joining network
+	MENU_NET_WAIT,
 	GAME_LOCAL, //Game on local comp
 	GAME_NET	//Game over network
 };
@@ -26,6 +27,12 @@ private:
 	Player* players[2];
 	int turnIndex;
 
+	sf::Thread serverAcceptThread;
+	bool isHost;
+	sf::TcpSocket socket;
+	sf::TcpListener listener;
+	void acceptThread();
+
 	//Menu states
 	Pane menu;
 	Button* playLocalBtn;
@@ -39,10 +46,12 @@ private:
 	sf::Color colors[COLOR_COUNT];
 
 	//Network menu
+	UIVisualSettings activeVis;
+	UIVisualSettings inactiveVis;
 	Pane menuNet;
 	Button* hostBtn;
 	Button* joinBtn;
-	//TODO TextField address
+	//TODO TextField* address
 	Button* backBtn;
 
 public:
@@ -59,5 +68,7 @@ public:
 	void handleEventsLocalGame(const sf::Event& e);
 	void updateGame();
 	void drawGame();
+
+	void initNetworkgame(const std::string& ip, bool isHost);
 
 };
