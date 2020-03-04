@@ -52,6 +52,27 @@ void Player::checkFight(Player* other)
 		if (gmToFight != nullptr)
 		{
 			gangMembers[i].fight(*gmToFight);
+			if (gangMembers[i].getAmount() == 0)
+			{
+				this->removeGM(&gangMembers[i]);
+				i--;
+			}
+			if (gmToFight->getAmount() == 0)
+			{
+				other->removeGM(gmToFight);
+			}
+		}
+	}
+}
+
+void Player::removeGM(GangMembers* toRemove)
+{
+	bool removed = false;
+	for (int i = 0; i < gangMembers.size(); i++)
+	{
+		if (toRemove == &gangMembers[i])
+		{
+			gangMembers.erase(gangMembers.begin() + i);
 		}
 	}
 }
@@ -70,7 +91,6 @@ GangMembers* Player::getGMAtPos(sf::Vector2f pos)
 }
 
 void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) {
-	//TODO check if button was pressed
 
 	if (button == sf::Mouse::Button::Left) {
 		if (endTurnBtn->contains(mousePosition)) {
@@ -80,6 +100,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 			if (buildDojoBtn->contains(mousePosition)) {
 				territory.buildDojo(selectedGM->getPosition());
 				selectedGM->setHasAction(false);
+				selectedGM->setInFriendlyTerr(true);
 			}
 		}
 		canBuildDojo = false;
@@ -137,7 +158,14 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							selectedGM->setPosition(selectedTile->getPosition());
 							selectedGM->setTextPos(selectedGM->getPosition());
 							selectedGM->setHasAction(false);
-
+							if (!this->territory.checkIfTileInTerr(selectedTile))
+							{
+								selectedGM->setInFriendlyTerr(false);
+							}
+							else
+							{
+								selectedGM->setInFriendlyTerr(true);
+							}
 						}
 						else
 						{
