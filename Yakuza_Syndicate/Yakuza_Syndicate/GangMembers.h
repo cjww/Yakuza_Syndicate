@@ -20,6 +20,7 @@ public:
 	int getAmount();
 	bool hasAction();
 	void setHasAction(bool action);
+	void setInFriendlyTerr(bool inFriendlyTerr);
 	void fight(GangMembers &other);
 
 	void setTextPos(sf::Vector2f pos);

@@ -41,6 +41,7 @@ public:
 	Player(const Player& otherPlayer);
 
 	void checkFight(Player* other);
+	void removeGM(GangMembers* toRemove);
 
 	GangMembers* getGMAtPos(sf::Vector2f pos);
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);

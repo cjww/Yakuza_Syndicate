@@ -60,6 +60,16 @@ std::vector<GangMembers> Territory::getNewGangMembers() {
 	return allGangMembers;
 }
 
+bool Territory::checkIfTileInTerr(Tile* tile)
+{
+	bool found = false;
+	if (tilesInTerritory.find(tile) != tilesInTerritory.end());
+	{
+		found = true;
+	}
+	return found;
+}
+
 void Territory::setColor(sf::Color color) {
 	this->color = color;
 }

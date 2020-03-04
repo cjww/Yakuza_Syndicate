@@ -68,6 +68,11 @@ void GangMembers::setHasAction(bool action)
 	this->action = action;
 }
 
+void GangMembers::setInFriendlyTerr(bool inFriendlyTerr)
+{
+	this->inFriendlyTerr = inFriendlyTerr;
+}
+
 void GangMembers::fight(GangMembers &other)
 {
 	int strThis = this->amount;
@@ -97,7 +102,8 @@ void GangMembers::fight(GangMembers &other)
 		this->amount = 0;
 		other.amount = 0;
 	}
-	
+	other.text.setString(std::to_string(other.amount));
+	this->text.setString(std::to_string(this->amount));
 }
 
 void GangMembers::setTextPos(sf::Vector2f pos) 
