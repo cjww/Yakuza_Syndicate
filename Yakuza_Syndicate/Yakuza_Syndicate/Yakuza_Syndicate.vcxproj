@@ -160,11 +160,13 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Pane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PolicePatrol.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Territory.cpp" />
+    <ClCompile Include="TextField.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
@@ -178,11 +180,13 @@
     <ClInclude Include="GangMembers.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Pane.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PolicePatrol.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Territory.h" />
+    <ClInclude Include="TextField.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIElement.h" />
