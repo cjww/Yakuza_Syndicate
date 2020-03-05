@@ -5,7 +5,8 @@ Game::Game() :
 	elapsedTime(sf::Time::Zero),
 	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
-	serverAcceptThread(&Game::acceptThread, this)
+	serverAcceptThread(&Game::acceptThread, this),
+	clientConnectThread(&Game::connectThread, this)
 {
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
@@ -16,7 +17,8 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Police-Station.png", "PoliceStation");
 	ResourceManager::newTexture("../res/tiles.png", "Tiles");
 
-	state = GameState::MENU;
+	this->lastState = GameState::MENU;
+	setState(GameState::MENU);
 
 	gameField = new GameField(window);
 	players[0] = new Player(gameField, Owner::PLAYER1, window);
@@ -115,14 +117,16 @@ void Game::update() {
 		window.setTitle("FPS: " + std::to_string(1 / elapsedTime.asSeconds()));
 		elapsedTime -= timePerFrame;
 
-		if (state == GameState::MENU_NET_WAIT) {
-		
+		if (this->state == GameState::MENU_NET && this->lastState == GameState::MENU_NET_WAIT) {
+			menuNet.setVisuals(activeVis);
+			ipLabel->setVisuals(labelVis);
+			ipLabel->setString("");
+			this->lastState = this->state;
 		}
 		else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
-			updateGame();		
+			updateGame();
 		}
 	}
-
 }
 
 void Game::draw() {
@@ -138,12 +142,17 @@ void Game::draw() {
 	window.display();
 }
 
+void Game::setState(GameState state) {
+	this->lastState = this->state;
+	this->state = state;
+}
+
 void Game::handleEventsMenu(const sf::Event& e) {
 	if (e.type == sf::Event::MouseButtonPressed) {
 		sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
 		if (state == GameState::MENU) {
 			if (playLocalBtn->contains(mousePos)) {
-				state = GameState::GAME_LOCAL;
+				setState(GameState::GAME_LOCAL);
 				players[0]->setColor(colors[clrPlayer1]);
 				players[1]->setColor(colors[clrPlayer2]);
 
@@ -151,7 +160,7 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			}
 			else if (playNetBtn->contains(mousePos)) {
 				players[0]->setColor(colors[clrPlayer1]);
-				state = GameState::MENU_NET;
+				setState(GameState::MENU_NET);
 			}
 			else if (exitBtn->contains(mousePos)) {
 				window.close();
@@ -189,22 +198,20 @@ void Game::handleEventsMenu(const sf::Event& e) {
 		}
 		else if (state == GameState::MENU_NET) {
 			if (backBtn->contains(mousePos)) {
-				state = GameState::MENU;
+				setState(GameState::MENU);
 			}
 			else if (joinBtn->contains(mousePos)) {
-				initNetworkgame("127.0.0.1", false);
+				initNetworkgame(false);
 			}
 			else if (hostBtn->contains(mousePos)) {
-				initNetworkgame("", true);
+				initNetworkgame(true);
 			}
 		}
 		else if (state == GameState::MENU_NET_WAIT) {
 			if (backBtn->contains(mousePos)) {
-				state = GameState::MENU_NET;
+				setState(GameState::MENU_NET);
 				menuNet.setVisuals(activeVis);
-				if (isHost) {
-					listener.close();
-				}
+				NetworkManager::close();
 			}
 		}
 	}
@@ -248,46 +255,54 @@ void Game::drawGame() {
 
 void Game::acceptThread() {
 
-	auto status = listener.accept(socket);
+	auto status = NetworkManager::accept();
 	if (status == sf::Socket::Done) {
 		menuNet.setVisuals(activeVis);
 		ipLabel->setString("");
-		state = GameState::GAME_NET;
+		setState(GameState::GAME_NET);
 	}
 	else if (status == sf::Socket::Error) {
 		ipLabel->setString("");
 	}
 	else {
 		ipLabel->setString("Failed to accept client");
-		state = GameState::MENU_NET;
+		setState(GameState::MENU_NET);
 	}
 }
 
-void Game::initNetworkgame(const std::string& ip, bool isHost) {
-	state = GameState::MENU_NET_WAIT;
-	this->isHost = isHost;
-	if (isHost) {
-		if (listener.listen(6969) != sf::Socket::Done) {
-			std::cout << "Failed to bind to port" << std::endl;
-			state = GameState::MENU;
-		}
-
-		menuNet.setVisuals(inactiveVis);
-		backBtn->setVisuals(activeVis);
-		ipLabel->setVisuals(labelVis);
-		ipLabel->setString("Server located at : " + sf::IpAddress::getLocalAddress().toString());
-
-		serverAcceptThread.launch();
+void Game::connectThread() {
+	std::string ip = "127.0.0.1";
+	if (NetworkManager::connect(ip, 6969) != sf::Socket::Done) {
+		ipLabel->setString("Failed to connect");
+		setState(GameState::MENU_NET);
 	}
 	else {
-		if (socket.connect(ip, 6969) != sf::Socket::Done) {
-			std::cout << "Failed to connect" << std::endl;
-			state == GameState::MENU_NET;
+		players[0]->setColor(colors[clrPlayer1]);
+		setState(GameState::GAME_NET);
+		std::cout << "Connected!" << std::endl;
+	}
+}
+
+void Game::initNetworkgame(bool isHost) {
+	setState(GameState::MENU_NET_WAIT);
+	menuNet.setVisuals(inactiveVis);
+	backBtn->setVisuals(activeVis);
+	ipLabel->setVisuals(labelVis);
+	if (isHost) {
+		try{
+			NetworkManager::listen(6969);
+
+			ipLabel->setString("Server located at : " + sf::IpAddress::getLocalAddress().toString());
+
+			serverAcceptThread.launch();
 		}
-		else {
-			players[0]->setColor(colors[clrPlayer1]);
-			state == GameState::GAME_NET;
-			std::cout << "Connected!" << std::endl;
+		catch (std::exception e) {
+			std::cout << e.what() << std::endl;
+			setState(GameState::MENU);
 		}
+	}
+	else {
+		
+		clientConnectThread.launch();
 	}
 }

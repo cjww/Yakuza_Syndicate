@@ -2,7 +2,7 @@
 #include "GameField.h"
 
 #include "UI.h"
-#include <SFML/Network.hpp>
+#include "NetworkManager.h"
 
 enum class GameState {
 	MENU,		//Main Menu
@@ -19,6 +19,7 @@ private:
 	sf::Time elapsedTime;
 	sf::Time timePerFrame;
 	
+	GameState lastState;
 	GameState state;
 
 	//Game states
@@ -28,11 +29,9 @@ private:
 	int turnIndex;
 
 	sf::Thread serverAcceptThread;
-	bool isHost;
-	sf::TcpSocket socket;
-	sf::TcpListener listener;
-	
+	sf::Thread clientConnectThread;
 	void acceptThread();
+	void connectThread();
 
 	//Menu states
 	Pane menu;
@@ -65,13 +64,15 @@ public:
 	void update();
 	void draw();
 
+	void setState(GameState state);
+
 	void handleEventsMenu(const sf::Event& e);
 	void drawMenu();
-
+	
 	void handleEventsLocalGame(const sf::Event& e);
 	void updateGame();
 	void drawGame();
 
-	void initNetworkgame(const std::string& ip, bool isHost);
+	void initNetworkgame(bool isHost);
 
 };

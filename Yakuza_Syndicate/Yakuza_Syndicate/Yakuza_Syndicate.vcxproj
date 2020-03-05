@@ -159,6 +159,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Pane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PolicePatrol.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="GangMembers.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Pane.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PolicePatrol.h" />
