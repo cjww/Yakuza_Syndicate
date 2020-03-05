@@ -17,8 +17,6 @@ GameField::GameField(const sf::RenderWindow& window) {
 	policeStation.setTexture(*ResourceManager::getTexture("PoliceStation"));
 	policeStation.setPosition(getTileByIndex(0, 0)->getPosition());
 
-	bank.setScale(2, 2);
-	bank.setTexture(*ResourceManager::getTexture("Bank"));
 	bank.setPosition(getTileByIndex(14, 14)->getPosition());
 
 	police.setPosition(getTileByIndex(0, 0)->getPosition());
@@ -43,6 +41,33 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(police);
 }
 
+std::set<Tile*> GameField::getSurroundingTiles(Tile* tile)
+{
+	std::set<Tile*> surroundingTiles;
+	sf::Vector2f tilePos = tile->getPosition();
+	
+	surroundingTiles.insert(tile);
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(64, 0)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(-64, 0)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(0, 64)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(0, -64)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(64, 64)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(64, -64)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(-64, 64)));
+	surroundingTiles.insert(getTileAt(tilePos + sf::Vector2f(-64, -64)));
+
+	if (surroundingTiles.find(nullptr) != surroundingTiles.end()) {
+		surroundingTiles.erase(nullptr);
+	}
+
+	return surroundingTiles;
+}
+
+void GameField::makeHeist(GangMembers* heistGM)
+{
+	heistGM->setAmount(heistGM->getAmount() - bank.heist());
+}
+
 void GameField::movePolice()
 {
 	this->police.move(sf::Vector2f((int)police.getDirection() * 64, (int)police.getDirection() * 64));
@@ -54,6 +79,7 @@ void GameField::movePolice()
 	{
 		police.changeDirection(Direction::BANK);
 	}
+	//if (getSurroundingTiles(getTileAt(police.getPosition)).)
 }
 
 Tile* GameField::getTileAt(sf::Vector2f pos) const {

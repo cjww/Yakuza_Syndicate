@@ -8,22 +8,11 @@ void Territory::updateTerritory() {
 			bPos = dojos[i].getPosition();
 		}
 
-		tilesInTerritory.insert(gameField->getTileAt(bPos));
 		
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(64, 0)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(-64, 0)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(0, 64)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(0, -64)));
+		std::set<Tile*> surroundingTiles = gameField->getSurroundingTiles(gameField->getTileAt(bPos));
+		tilesInTerritory.insert(surroundingTiles.begin(), surroundingTiles.end());
+	}
 
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(64, 64)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(64, -64)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(-64, 64)));
-		tilesInTerritory.insert(gameField->getTileAt(bPos + sf::Vector2f(-64, -64)));
-	}
-	
-	if (tilesInTerritory.find(nullptr) != tilesInTerritory.end()) {
-		tilesInTerritory.erase(nullptr);
-	}
 
 }
 
@@ -44,6 +33,8 @@ Territory::Territory(GameField* gameField)
 	
 	updateTerritory();
 }
+
+
 
 int Territory::getIncome() {
 	return tilesInTerritory.size() * 50;

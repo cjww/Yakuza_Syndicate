@@ -6,13 +6,16 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	territory(gameField),
 	gameField(gameField),
 	playernr(owner),
-	window(window)
+	window(window),
+	canBuildDojo(false),
+	canMakeHeist(false)
 {
 
 	territory.setColor(color);
 	selectedTile = nullptr;
 	selectedGM = nullptr;
-	balance = 0;
+	balance = 1000;
+	income = territory.getIncome();
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
 	uiActiveVis = {};
@@ -26,11 +29,13 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	uiInactiveVis.textOutlineThickness = 1;
 
 
-	uiPane.addChild((incomeLabel = new Label("Income: - Yen")), sf::Vector2f(50, 50));
-	uiPane.addChild((balanceLabel = new Label("Balance: - Yen")), sf::Vector2f(50, 100));
+	uiPane.addChild((incomeLabel = new Label("Income: " + std::to_string(income) + " Yen")), sf::Vector2f(50, 50));
+	uiPane.addChild((balanceLabel = new Label("Balance: " + std::to_string(balance) + " Yen")), sf::Vector2f(50, 100));
 	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: -")), sf::Vector2f(50, 150));
+	uiPane.addChild((gmInCustodyLabel = new Label("Gang Members in Custody: -")), sf::Vector2f(50, 200));
 	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 500));
 	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 400));
+	uiPane.addChild((makeHeistBtn = new Button("Make Heist", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 300));
 	
 	if (owner == Owner::PLAYER2) {
 		uiPane.setPosition(sf::Vector2f(1450, 0));
@@ -99,12 +104,26 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 		if (canBuildDojo) {
 			if (buildDojoBtn->contains(mousePosition)) {
 				territory.buildDojo(selectedGM->getPosition());
+				balance -= 1000;
+				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+				income = territory.getIncome();
+				incomeLabel->setString("Income: " + std::to_string(income) + " Yen");
 				selectedGM->setHasAction(false);
 				selectedGM->setInFriendlyTerr(true);
 			}
 		}
+		if (canMakeHeist) {
+			if (makeHeistBtn->contains(mousePosition)) {
+				balance += selectedGM->getAmount() * 100;
+				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+				gameField->makeHeist(selectedGM);
+				selectedGM->setHasAction(false);
+			}
+		}
 		canBuildDojo = false;
 		buildDojoBtn->setVisuals(uiInactiveVis);
+		canMakeHeist = false;
+		makeHeistBtn->setVisuals(uiInactiveVis);
 
 		Tile* tilePtr = this->gameField->getTileAt(mousePosition);
 		if(tilePtr != nullptr)
@@ -135,9 +154,18 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							selectedGM = &gangMembers[i];
 							if (selectedGM->getAmount() >= 10 &&
 								selectedTile->getBuilding() == nullptr &&
-								selectedGM->hasAction()) {
+								selectedGM->hasAction() &&
+								balance >= 1000) 
+							{
 								canBuildDojo = true;
 								buildDojoBtn->setVisuals(uiActiveVis);
+							}
+							if (selectedGM->getAmount() >= 10 &&
+								selectedGM->getPosition() == gameField->getTileByIndex(14, 14)->getPosition() &&
+								selectedGM->hasAction())
+							{
+								canMakeHeist = true;
+								makeHeistBtn->setVisuals(uiActiveVis);
 							}
 						}
 						else if (gangMembers[i].getPosition() != selectedGM->getPosition())
@@ -240,6 +268,10 @@ void Player::turnStart() {
 	endTurn = false;
 	uiPane.setVisuals(uiActiveVis);
 	buildDojoBtn->setVisuals(uiInactiveVis);
+	makeHeistBtn->setVisuals(uiInactiveVis);
+
+	balance += territory.getIncome();
+	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 
 	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers

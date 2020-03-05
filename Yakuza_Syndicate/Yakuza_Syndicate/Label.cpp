@@ -1,6 +1,6 @@
 #include "Label.h"
 
-Label::Label(const char* str, const UIVisualSettings& visuals) : UIElement(visuals) {
+Label::Label(std::string str, const UIVisualSettings& visuals) : UIElement(visuals) {
 	setVisuals(visuals);
 	text.setFont(font);
 	text.setString(str);

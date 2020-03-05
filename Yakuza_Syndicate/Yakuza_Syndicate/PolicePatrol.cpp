@@ -1,7 +1,7 @@
 #include "PolicePatrol.h"
 
 PolicePatrol::PolicePatrol() :GameEntity(*ResourceManager::getTexture("PolicePatrol"))
-	,direction(Direction::BANK), inCustody(nullptr)
+	,direction(Direction::BANK)
 {
 }
 

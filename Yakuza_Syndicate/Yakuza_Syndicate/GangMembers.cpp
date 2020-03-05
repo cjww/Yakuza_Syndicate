@@ -58,6 +58,12 @@ int GangMembers::getAmount()
 	return amount;
 }
 
+void GangMembers::setAmount(int amount)
+{
+	this->amount = amount;
+	text.setString(std::to_string(amount));
+}
+
 bool GangMembers::hasAction()
 {
 	return action;

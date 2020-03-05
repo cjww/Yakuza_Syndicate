@@ -7,7 +7,7 @@ enum class Direction {BANK = 1, STATION = -1};
 class PolicePatrol : public GameEntity {
 private:
 	Direction direction;
-	GangMembers* inCustody;
+	std::vector<GangMembers*> inCustody;
 
 public:
 	PolicePatrol();

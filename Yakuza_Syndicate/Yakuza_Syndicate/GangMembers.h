@@ -18,6 +18,7 @@ public:
 	
 	bool merge(GangMembers& other);
 	int getAmount();
+	void setAmount(int amount);
 	bool hasAction();
 	void setHasAction(bool action);
 	void setInFriendlyTerr(bool inFriendlyTerr);

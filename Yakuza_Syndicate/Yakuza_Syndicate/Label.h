@@ -7,7 +7,7 @@ private:
 
 	sf::CircleShape c;
 public:
-	Label(const char* str, const UIVisualSettings& visuals = {});
+	Label(std::string str, const UIVisualSettings& visuals = {});
 
 	virtual sf::Vector2f getPosition() const;
 	virtual void setPosition(sf::Vector2f position);

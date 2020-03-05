@@ -18,6 +18,7 @@ private:
 	Territory territory;
 	GameField* gameField;
 
+	int income;
 	int balance;
 	sf::RectangleShape selectedTileRect;
 	Tile* selectedTile;
@@ -30,9 +31,12 @@ private:
 	Button* endTurnBtn;
 	bool canBuildDojo;
 	Button* buildDojoBtn;
+	bool canMakeHeist;
+	Button* makeHeistBtn;
 	Label* balanceLabel;
 	Label* incomeLabel;
 	Label* totalGmLabel;
+	Label* gmInCustodyLabel;
 
 	sf::RenderWindow& window;
 

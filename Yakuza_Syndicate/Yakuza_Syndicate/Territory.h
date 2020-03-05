@@ -16,6 +16,7 @@ private:
 public:
 	Territory(GameField* gameField);
 
+
 	int getIncome();
 	std::vector<GangMembers> getNewGangMembers();
 	bool checkIfTileInTerr(Tile* tile);
