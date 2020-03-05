@@ -131,6 +131,12 @@ void Game::update() {
 			ipLabel->setString("");
 			this->lastState = this->state;
 		}
+		if (state == GameState::GAME_NET && lastState == GameState::MENU_NET_WAIT) {
+			menuNet.setVisuals(activeVis);
+			addressInput->setVisuals(inactiveVis);
+			ipLabel->setVisuals(labelVis);
+			this->lastState = this->state;
+		}
 		else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
 			updateGame();
 		}
@@ -276,7 +282,6 @@ void Game::acceptThread() {
 
 	auto status = NetworkManager::accept();
 	if (status == sf::Socket::Done) {
-		menuNet.setVisuals(activeVis);
 		ipLabel->setString("");
 		setState(GameState::GAME_NET);
 	}
@@ -299,6 +304,12 @@ void Game::connectThread() {
 		players[0]->setColor(colors[clrPlayer1]);
 		setState(GameState::GAME_NET);
 		std::cout << "Connected!" << std::endl;
+		//Send Color
+		Message msg;
+		msg.type = MessageType::COLOR_CHANGED;
+		msg.color = colors[clrPlayer1];
+		//if (NetworkManager::send(msg) != sf::Socket::Done) {}
+
 	}
 }
 
