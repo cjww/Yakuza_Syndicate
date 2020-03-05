@@ -43,6 +43,19 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(police);
 }
 
+void GameField::movePolice()
+{
+	this->police.move(sf::Vector2f((int)police.getDirection() * 64, (int)police.getDirection() * 64));
+	if (police.getPosition() == tiles[14][14]->getPosition())
+	{
+		police.changeDirection(Direction::STATION);
+	}
+	else if (police.getPosition() == tiles[0][0]->getPosition())
+	{
+		police.changeDirection(Direction::BANK);
+	}
+}
+
 Tile* GameField::getTileAt(sf::Vector2f pos) const {
 	Tile* tileAt = nullptr;
 	for (int i = 0; i < fieldSize && tileAt == nullptr; i++) {

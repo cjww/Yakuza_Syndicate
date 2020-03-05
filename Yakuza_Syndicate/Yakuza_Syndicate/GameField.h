@@ -18,6 +18,7 @@ public:
 	
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+	void movePolice();
 	Tile* getTileAt(sf::Vector2f pos) const;
 	Tile* getTileByIndex(int column, int row) const;
 

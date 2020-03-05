@@ -2,14 +2,16 @@
 #include "GameEntity.h"
 #include "GangMembers.h"
 
+enum class Direction {BANK = 1, STATION = -1};
+
 class PolicePatrol : public GameEntity {
 private:
-	bool isPatrolling;
+	Direction direction;
 	GangMembers* inCustody;
 
 public:
 	PolicePatrol();
 
-
-	void move();
+	Direction getDirection();
+	void changeDirection(Direction direction);
 };

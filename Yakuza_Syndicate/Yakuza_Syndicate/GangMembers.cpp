@@ -88,13 +88,15 @@ void GangMembers::fight(GangMembers &other)
 
 	if (strThis < strOther)
 	{
-		other.amount -= strThis;
+		strOther -= strThis;
+		other.amount = strOther;
 		this->amount = 0;
 			
 	}
 	else if (strThis > strOther)
 	{
-		this->amount -= strOther;
+		strThis -= strOther;
+		this->amount = strThis;
 		other.amount = 0;
 	}
 	else

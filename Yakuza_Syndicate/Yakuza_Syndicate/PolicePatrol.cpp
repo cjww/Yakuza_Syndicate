@@ -1,11 +1,16 @@
 #include "PolicePatrol.h"
 
 PolicePatrol::PolicePatrol() :GameEntity(*ResourceManager::getTexture("PolicePatrol"))
-	,isPatrolling(true), inCustody(nullptr)
+	,direction(Direction::BANK), inCustody(nullptr)
 {
 }
 
-void PolicePatrol::move()
+Direction PolicePatrol::getDirection()
 {
+	return direction;
+}
 
+void PolicePatrol::changeDirection(Direction direction)
+{
+	this->direction = direction;
 }

@@ -63,7 +63,7 @@ std::vector<GangMembers> Territory::getNewGangMembers() {
 bool Territory::checkIfTileInTerr(Tile* tile)
 {
 	bool found = false;
-	if (tilesInTerritory.find(tile) != tilesInTerritory.end());
+	if (tilesInTerritory.find(tile) != tilesInTerritory.end())
 	{
 		found = true;
 	}
