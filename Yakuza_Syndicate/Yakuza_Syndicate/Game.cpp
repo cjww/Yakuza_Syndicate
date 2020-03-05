@@ -284,6 +284,13 @@ void Game::acceptThread() {
 	if (status == sf::Socket::Done) {
 		ipLabel->setString("");
 		setState(GameState::GAME_NET);
+		Message msg;
+		if (NetworkManager::recv(msg) != sf::Socket::Done) {
+			std::cout << "Failed to recv color" << std::endl;
+		}
+		else {
+			players[1]->setColor(msg.color);
+		}
 	}
 	else if (status == sf::Socket::Error) {
 		ipLabel->setString("");
@@ -308,7 +315,9 @@ void Game::connectThread() {
 		Message msg;
 		msg.type = MessageType::COLOR_CHANGED;
 		msg.color = colors[clrPlayer1];
-		//if (NetworkManager::send(msg) != sf::Socket::Done) {}
+		if (NetworkManager::send(msg) != sf::Socket::Done) {
+			std::cout << "Failed to send color" << std::endl;
+		}
 
 	}
 }
