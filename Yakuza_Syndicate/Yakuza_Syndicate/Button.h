@@ -23,4 +23,5 @@ public:
 
 	virtual void setVisuals(const UIVisualSettings& visuals) override;
 
+	Label* getLabel() const;
 };

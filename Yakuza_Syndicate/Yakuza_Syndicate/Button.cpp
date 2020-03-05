@@ -43,3 +43,7 @@ void Button::setVisuals(const UIVisualSettings& visuals) {
 	Pane::setVisuals(visuals);
 	if(label != nullptr) label->setVisuals(visuals);
 }
+
+Label* Button::getLabel() const {
+	return label;
+}

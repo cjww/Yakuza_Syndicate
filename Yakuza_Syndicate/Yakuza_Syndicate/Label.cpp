@@ -19,6 +19,10 @@ void Label::setString(const std::string& string) {
 	text.setString(string);
 }
 
+std::string Label::getString() const {
+	return text.getString();
+}
+
 sf::FloatRect Label::getBounds() const {
 	return text.getGlobalBounds();
 }

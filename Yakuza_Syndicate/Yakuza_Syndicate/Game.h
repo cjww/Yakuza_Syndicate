@@ -53,7 +53,7 @@ private:
 	Button* hostBtn;
 	Label* ipLabel;
 	Button* joinBtn;
-	//TODO TextField* address
+	TextField* addressInput;
 	Button* backBtn;
 
 public:

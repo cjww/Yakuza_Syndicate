@@ -75,6 +75,10 @@ Game::Game() :
 	menuNet.addChild(
 		(joinBtn = new Button("Join", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 500));
+	menuNet.addChild((addressInput = new TextField("127.0.0.1", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
+		sf::Vector2f(window.getSize().x / 3, 600));
+	addressInput->setVisuals(inactiveVis);
+
 	menuNet.addChild(
 		(backBtn = new Button("Back", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 700));
@@ -119,7 +123,11 @@ void Game::update() {
 
 		if (this->state == GameState::MENU_NET && this->lastState == GameState::MENU_NET_WAIT) {
 			menuNet.setVisuals(activeVis);
+			addressInput->setVisuals(inactiveVis);
 			ipLabel->setVisuals(labelVis);
+			this->lastState = this->state;
+		}
+		if (this->state == GameState::MENU && this->lastState == GameState::MENU_NET) {
 			ipLabel->setString("");
 			this->lastState = this->state;
 		}
@@ -203,8 +211,16 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			else if (joinBtn->contains(mousePos)) {
 				initNetworkgame(false);
 			}
+			else if (addressInput->contains(mousePos)) {
+				addressInput->setFocused(true);
+				addressInput->setVisuals(activeVis);
+			}
 			else if (hostBtn->contains(mousePos)) {
 				initNetworkgame(true);
+			}
+			else {
+				addressInput->setFocused(false);
+				addressInput->setVisuals(inactiveVis);
 			}
 		}
 		else if (state == GameState::MENU_NET_WAIT) {
@@ -214,6 +230,9 @@ void Game::handleEventsMenu(const sf::Event& e) {
 				NetworkManager::close();
 			}
 		}
+	}
+	else if (e.type == sf::Event::TextEntered) {
+		addressInput->handleInput(e);
 	}
 
 }
@@ -271,7 +290,7 @@ void Game::acceptThread() {
 }
 
 void Game::connectThread() {
-	std::string ip = "127.0.0.1";
+	std::string ip = addressInput->getText();
 	if (NetworkManager::connect(ip, 6969) != sf::Socket::Done) {
 		ipLabel->setString("Failed to connect");
 		setState(GameState::MENU_NET);
