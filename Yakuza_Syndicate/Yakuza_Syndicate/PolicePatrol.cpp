@@ -14,3 +14,4 @@ void PolicePatrol::changeDirection(Direction direction)
 {
 	this->direction = direction;
 }
+

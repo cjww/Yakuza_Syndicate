@@ -265,6 +265,7 @@ void Game::updateGame() {
 	if (players[turnIndex]->wantsToEndTurn()) {
 		players[turnIndex]->checkFight(players[(turnIndex + 1) % 2]);
 		gameField->movePolice();
+
 		players[turnIndex]->turnEnd();
 		turnIndex = (turnIndex + 1) % 2;
 		players[turnIndex]->turnStart();
