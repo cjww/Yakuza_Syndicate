@@ -4,6 +4,7 @@
 #include "Territory.h"
 #include "GangMembers.h"
 #include "UI.h"
+#include "NetworkManager.h"
 
 class Player : public sf::Drawable {
 private:
@@ -54,6 +55,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	bool wantsToEndTurn() const;
+	void wantsToEndTurn(bool value);
 	
 	void turnEnd();
 	void turnStart();

@@ -30,8 +30,10 @@ private:
 
 	sf::Thread serverAcceptThread;
 	sf::Thread clientConnectThread;
+	sf::Thread processMessagesThread;
 	void acceptThread();
 	void connectThread();
+	void processMessages();
 
 	//Menu states
 	Pane menu;

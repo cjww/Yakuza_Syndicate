@@ -111,6 +111,11 @@ void Game::handleEvents() {
 		else if (state == GameState::GAME_LOCAL) {
 			handleEventsLocalGame(e);
 		}
+		else if (state == GameState::GAME_NET) {
+			if ((NetworkManager::isHost() && turnIndex == 0) || (!NetworkManager::isHost() && turnIndex == 1)) {
+				handleEventsLocalGame(e);
+			}
+		}
 	}
 
 }
@@ -135,6 +140,7 @@ void Game::update() {
 			menuNet.setVisuals(activeVis);
 			addressInput->setVisuals(inactiveVis);
 			ipLabel->setVisuals(labelVis);
+			players[turnIndex]->turnStart();
 			this->lastState = this->state;
 		}
 		else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
@@ -275,7 +281,6 @@ void Game::drawGame() {
 	window.draw(*gameField);
 	window.draw(*players[0]);
 	window.draw(*players[1]);
-
 }
 
 void Game::acceptThread() {
@@ -290,6 +295,11 @@ void Game::acceptThread() {
 		}
 		else {
 			players[1]->setColor(msg.color);
+			turnIndex = 0;
+		}
+		msg.color = colors[clrPlayer1];
+		if (NetworkManager::send(msg) != sf::Socket::Done) {
+			std::cout << "Failed to send" << std::endl;
 		}
 	}
 	else if (status == sf::Socket::Error) {
@@ -308,7 +318,7 @@ void Game::connectThread() {
 		setState(GameState::MENU_NET);
 	}
 	else {
-		players[0]->setColor(colors[clrPlayer1]);
+		players[1]->setColor(colors[clrPlayer1]);
 		setState(GameState::GAME_NET);
 		std::cout << "Connected!" << std::endl;
 		//Send Color
@@ -319,7 +329,37 @@ void Game::connectThread() {
 			std::cout << "Failed to send color" << std::endl;
 		}
 
+		if (NetworkManager::recv(msg) != sf::Socket::Done) {
+			std::cout << "Failed to recv color" << std::endl;
+		}
+		else {
+			players[0]->setColor(msg.color);
+		}
 	}
+}
+
+void Game::processMessages() {
+	Message msg;
+	do {
+		NetworkManager::recv(msg);
+		switch (msg.type) {
+		case MessageType::GANGMEMBER_MOVED:
+		
+			break;
+		case MessageType::DOJO_BUILT:
+		
+			break;
+		case MessageType::COLOR_CHANGED:
+		
+			break;
+		case MessageType::END_TURN:
+			players[turnIndex]->wantsToEndTurn(true);
+			break;
+		case MessageType::DISCONNECT:
+
+			break;
+		}
+	} while (msg.type != MessageType::END_TURN);
 }
 
 void Game::initNetworkgame(bool isHost) {
