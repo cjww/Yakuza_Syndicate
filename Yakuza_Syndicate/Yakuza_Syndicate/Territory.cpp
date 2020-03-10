@@ -40,10 +40,11 @@ int Territory::getIncome() {
 	return tilesInTerritory.size() * 50;
 }
 
-std::vector<GangMembers> Territory::getNewGangMembers() {
-	std::vector<GangMembers> allGangMembers;
+std::vector<GangMembers*> Territory::getNewGangMembers() {
+	std::vector<GangMembers*> allGangMembers;
 	for (auto& dojo : dojos) {
-		allGangMembers.push_back(dojo.spawnGangMembers());
+		GangMembers* gm = dojo.spawnGangMembers();
+		allGangMembers.push_back(gm);
 	}
 
 	allGangMembers.push_back(safeHouse.spawnGangMembers());

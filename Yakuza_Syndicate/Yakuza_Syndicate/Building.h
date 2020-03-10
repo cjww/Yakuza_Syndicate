@@ -11,5 +11,5 @@ private:
 public:
 	Building(BuildingType type, sf::Texture& texture);
 
-	GangMembers spawnGangMembers();
+	GangMembers* spawnGangMembers();
 };

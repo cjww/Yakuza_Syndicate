@@ -6,21 +6,20 @@ Building::Building(BuildingType type, sf::Texture& texture)
 	firstRound = true;
 }
 
-GangMembers Building::spawnGangMembers() {
-	GangMembers gm(0);
-	if (type == BuildingType::DOJO) {
-		gm = GangMembers(2);
-	}
-	else if (type == BuildingType::SAFEHOUSE) {
+GangMembers* Building::spawnGangMembers() {
+	GangMembers* gm = nullptr;
+	if (type == BuildingType::SAFEHOUSE) {
 		if (this->firstRound) {
-			gm = GangMembers(20);
+			gm = new GangMembers(20);
 			this->firstRound = false;
 		}
 		else {
-			gm = GangMembers(4);
+			gm = new GangMembers(4);
 		}
 	}
-	gm.setPosition(getPosition());
-	gm.setTextPos(getPosition());
+	else {
+		gm = new GangMembers(2);
+	}
+	gm->setPosition(getPosition());
 	return gm;
 }

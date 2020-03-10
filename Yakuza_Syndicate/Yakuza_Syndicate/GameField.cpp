@@ -79,7 +79,16 @@ void GameField::movePolice()
 	{
 		police.changeDirection(Direction::BANK);
 	}
-	//if (getSurroundingTiles(getTileAt(police.getPosition)).)
+	std::set<Tile*> tiles = getSurroundingTiles(getTileAt(police.getPosition()));
+	for (Tile* tile : tiles)
+	{
+		if (tile->getGangMembers() != nullptr)
+		{
+			tile->getGangMembers()->setAmount(0);
+			tile->setGangMembers(nullptr);
+			police.changeDirection(Direction::STATION);
+		}
+	}
 }
 
 Tile* GameField::getTileAt(sf::Vector2f pos) const {

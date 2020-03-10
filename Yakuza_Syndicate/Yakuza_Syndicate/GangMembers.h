@@ -25,7 +25,9 @@ public:
 	void fight(GangMembers &other);
 	GangMembers* split(int amountToSplit);
 
-	void setTextPos(sf::Vector2f pos);
+	void setPosition(sf::Vector2f pos) override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void setTextPos(sf::Vector2f pos);
 	void drawText(sf::RenderTarget& target, const sf::Shader& shader) const;
 };
