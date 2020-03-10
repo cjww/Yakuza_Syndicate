@@ -289,6 +289,10 @@ void Game::handleEventsLocalGame(const sf::Event& e) {
 		sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
 		players[turnIndex]->mousePressed(mousePos, e.mouseButton.button);
 	}
+	else if (e.type == sf::Event::KeyPressed)
+	{
+		players[turnIndex]->keyPressed(e.key.code);
+	}
 }
 
 void Game::updateGame() {

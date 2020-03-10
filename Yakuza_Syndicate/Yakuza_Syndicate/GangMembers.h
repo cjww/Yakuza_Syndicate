@@ -23,6 +23,7 @@ public:
 	void setHasAction(bool action);
 	void setInFriendlyTerr(bool inFriendlyTerr);
 	void fight(GangMembers &other);
+	GangMembers* split(int amountToSplit);
 
 	void setPosition(sf::Vector2f pos) override;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

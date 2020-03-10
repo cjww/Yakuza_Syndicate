@@ -114,6 +114,14 @@ void GangMembers::fight(GangMembers &other)
 	this->text.setString(std::to_string(this->amount));
 }
 
+GangMembers * GangMembers::split(int amountToSplit)
+{
+	GangMembers* newgm = new GangMembers(amountToSplit);
+	setAmount(this->amount - amountToSplit);
+
+	return newgm;
+}
+
 void GangMembers::setPosition(sf::Vector2f pos) {
 	GameEntity::setPosition(pos);
 	this->text.setPosition(pos);
