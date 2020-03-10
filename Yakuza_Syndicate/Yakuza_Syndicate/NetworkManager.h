@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 enum class MessageType {
 	GANGMEMBER_MOVED,
+	GANGMEMBER_SPLIT,
 	DOJO_BUILT,
 	MADE_HEIST,
 	COLOR_CHANGED,
@@ -15,6 +16,7 @@ struct Message {
 	
 	sf::Color color;
 	sf::Vector2f vec2[2];
+	uint32_t i;
 };
 
 class NetworkManager {

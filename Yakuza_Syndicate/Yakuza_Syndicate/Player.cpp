@@ -230,17 +230,22 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						}
 						if (toMerge == nullptr)
 						{
+							
 							Message msg;
-							msg.type = MessageType::GANGMEMBER_MOVED;
-							msg.vec2[0] = selectedGM->getPosition();
 							if (!split) {
+								msg.type = MessageType::GANGMEMBER_MOVED;
+								msg.vec2[0] = selectedGM->getPosition();
 								gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
+							}
+							else {
+								msg.type = MessageType::GANGMEMBER_SPLIT;
+								msg.vec2[0] = selectedGM->getPosition();
+								msg.i = selectedGmAmount;
 							}
 							selectedGM->setPosition(selectedTile->getPosition());
 							selectedTile->setGangMembers(selectedGM);
-							
 							selectedGM->setHasAction(false);
-							Tile* t = gameField->getTileAt(selectedTile->getPosition());
+							
 							if (!this->territory.checkIfTileInTerr(selectedTile))
 							{
 								selectedGM->setInFriendlyTerr(false);
@@ -249,8 +254,10 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							{
 								selectedGM->setInFriendlyTerr(true);
 							}
+
 							msg.vec2[1] = selectedGM->getPosition();
 							NetworkManager::send(msg);
+							
 						}
 						else
 						{
@@ -436,8 +443,29 @@ void Player::proccessMessage(Message& msg) {
 		{
 			gm->setInFriendlyTerr(true);
 		}
-	}
 		break;
+	}
+	case MessageType::GANGMEMBER_SPLIT:
+	{
+		GangMembers* gm = getGMAtPos(msg.vec2[0]);
+		Tile* tile = gameField->getTileAt(gm->getPosition());
+		gm = gm->split(msg.i);
+		gangMembers.push_back(gm);
+		gm->setPosition(msg.vec2[1]);
+		tile->setGangMembers(gm);
+		gm->setHasAction(false);
+
+		if (!this->territory.checkIfTileInTerr(tile))
+		{
+			gm->setInFriendlyTerr(false);
+		}
+		else
+		{
+			gm->setInFriendlyTerr(true);
+		}
+
+		break;
+	}
 	case MessageType::MADE_HEIST:
 	{
 		GangMembers* gm = getGMAtPos(gameField->getTileByIndex(14, 14)->getPosition());
