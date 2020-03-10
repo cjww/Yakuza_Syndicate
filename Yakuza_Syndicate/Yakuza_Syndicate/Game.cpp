@@ -302,6 +302,10 @@ void Game::updateGame() {
 			if ((NetworkManager::isHost() && (Owner)turnIndex == Owner::PLAYER1) ||
 				(!NetworkManager::isHost() && (Owner)turnIndex == Owner::PLAYER2)) 
 			{
+				Message msg;
+				msg.type = MessageType::END_TURN;
+				NetworkManager::send(msg);
+
 				processMessagesThread.launch();
 				std::cout << "started thread" << std::endl;
 			}

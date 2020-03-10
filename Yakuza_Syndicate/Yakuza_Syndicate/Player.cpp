@@ -125,11 +125,6 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 	if (button == sf::Mouse::Button::Left) {
 		if (endTurnBtn->contains(mousePosition)) {
 			endTurn = true;
-			if (NetworkManager::isOpen()) {
-				Message msg;
-				msg.type = MessageType::END_TURN;
-				NetworkManager::send(msg);
-			}
 		}
 		if (canBuildDojo) {
 			if (buildDojoBtn->contains(mousePosition)) {
