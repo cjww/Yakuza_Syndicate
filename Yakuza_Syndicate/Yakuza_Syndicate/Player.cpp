@@ -139,6 +139,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 		}
 		if (canMakeHeist) {
 			if (makeHeistBtn->contains(mousePosition)) {
+				Message msg;
+				msg.type = MessageType::MADE_HEIST;
+				NetworkManager::send(msg);
 				balance += selectedGM->getAmount() * 100;
 				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 				gameField->makeHeist(selectedGM);
@@ -393,6 +396,15 @@ void Player::proccessMessage(Message& msg) {
 		}
 	}
 		break;
+	case MessageType::MADE_HEIST:
+	{
+		GangMembers* gm = getGMAtPos(gameField->getTileByIndex(14, 14)->getPosition());
+		balance += gm->getAmount() * 100;
+		balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+		gameField->makeHeist(gm);
+		gm->setHasAction(false);
+		break;
+	}
 	case MessageType::END_TURN:
 		endTurn = true;
 		break;
