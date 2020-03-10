@@ -21,6 +21,5 @@ GangMembers* Building::spawnGangMembers() {
 		gm = new GangMembers(2);
 	}
 	gm->setPosition(getPosition());
-	gm->setTextPos(getPosition());
 	return gm;
 }

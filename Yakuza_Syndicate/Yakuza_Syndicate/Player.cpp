@@ -159,7 +159,6 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				selectedTileRect.setOutlineThickness(1);
 
 				
-				
 				GangMembers* toMerge = nullptr;
 				for (int i = 0; i < this->gangMembers.size(); i++)
 				{
@@ -202,7 +201,8 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
 							selectedGM->setPosition(selectedTile->getPosition());
 							selectedTile->setGangMembers(selectedGM);
-							selectedGM->setTextPos(selectedGM->getPosition());
+							//selectedGM->setTextPos(selectedGM->getPosition());
+
 							selectedGM->setHasAction(false);
 							Tile* t = gameField->getTileAt(selectedTile->getPosition());
 							if (!this->territory.checkIfTileInTerr(selectedTile))
@@ -259,7 +259,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(territory, &shader);
 	for (const auto& gm : gangMembers) {
 		target.draw(*gm, &shader);
-		gm->drawText(target, shader);
 	}
 	if (selectedTile != nullptr) {
 		target.draw(selectedTileRect);
@@ -301,15 +300,16 @@ void Player::turnStart() {
 	buildDojoBtn->setVisuals(uiInactiveVis);
 	makeHeistBtn->setVisuals(uiInactiveVis);
 
-	/*for (int i = 0; i < gangMembers.size(); i++)
+	for (int i = 0; i < gangMembers.size(); i++)
 	{
-		if (gangMembers[i].getAmount() == 0)
+		if (gangMembers[i]->getAmount() == 0)
 		{
-			gameField->getTileAt(gangMembers[i].getPosition())->setGangMembers(nullptr);
+			gameField->getTileAt(gangMembers[i]->getPosition())->setGangMembers(nullptr);
+			delete gangMembers[i];
 			gangMembers.erase(gangMembers.begin() + i);
 			i--;
 		}
-	}*/
+	}
 
 	balance += territory.getIncome();
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
