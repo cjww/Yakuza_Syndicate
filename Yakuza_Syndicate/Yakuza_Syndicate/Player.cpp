@@ -262,6 +262,18 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						{
 							if (toMerge->merge(*selectedGM))
 							{
+
+								Message msg;
+								msg.type = MessageType::GANGMEMBER_SPLIT;
+								msg.i = selectedGmAmount;
+								if (!split) {
+									msg.type = MessageType::GANGMEMBER_MOVED;
+									gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
+								}
+								msg.vec2[0] = selectedGM->getPosition();
+								msg.vec2[1] = toMerge->getPosition();
+								NetworkManager::send(msg);
+
 								toMerge->setHasAction(false);
 								bool deleted = false;
 								for (int i = 0; i < gangMembers.size() && !deleted; i++)
@@ -432,9 +444,16 @@ void Player::proccessMessage(Message& msg) {
 	case MessageType::GANGMEMBER_MOVED:
 	{
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		gm->setPosition(msg.vec2[1]);
-		gm->setTextPos(gm->getPosition());
-		gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
+		gameField->getTileAt(gm->getPosition())->setGangMembers(nullptr);
+		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
+		if (targetGm != nullptr) {
+			targetGm->merge(*gm);
+			removeGM(gm);
+		}
+		else {
+			gm->setPosition(msg.vec2[1]);
+			gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
+		}
 		if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
 		{
 			gm->setInFriendlyTerr(false);
@@ -448,23 +467,31 @@ void Player::proccessMessage(Message& msg) {
 	case MessageType::GANGMEMBER_SPLIT:
 	{
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		Tile* tile = gameField->getTileAt(gm->getPosition());
 		gm = gm->split(msg.i);
-		gangMembers.push_back(gm);
-		gm->setPosition(msg.vec2[1]);
-		tile->setGangMembers(gm);
-		gm->setHasAction(false);
-		if (this->playernr == Owner::PLAYER2)
-		{
-			gm->flipSprite();
+		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
+		if (targetGm != nullptr) {
+			targetGm->merge(*gm);
+			targetGm->setHasAction(false);
+			delete gm;
 		}
-		if (!this->territory.checkIfTileInTerr(tile))
-		{
-			gm->setInFriendlyTerr(false);
-		}
-		else
-		{
-			gm->setInFriendlyTerr(true);
+		else {
+			gangMembers.push_back(gm);
+			gm->setPosition(msg.vec2[1]);
+			gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
+			gm->setHasAction(false);
+
+			if (this->playernr == Owner::PLAYER2)
+			{
+				gm->flipSprite();
+			}
+			if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
+			{
+				gm->setInFriendlyTerr(false);
+			}
+			else
+			{
+				gm->setInFriendlyTerr(true);
+			}
 		}
 
 		break;

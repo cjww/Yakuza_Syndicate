@@ -60,6 +60,9 @@ private:
 	TextField* addressInput;
 	Button* backBtn;
 
+	//DEBUG
+	Label dbgLabel;
+
 public:
 	Game();
 	virtual ~Game();

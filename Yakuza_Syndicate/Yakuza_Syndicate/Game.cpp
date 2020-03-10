@@ -7,7 +7,8 @@ Game::Game() :
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
 	serverAcceptThread(&Game::acceptThread, this),
 	clientConnectThread(&Game::connectThread, this),
-	processMessagesThread(&Game::processMessages, this)
+	processMessagesThread(&Game::processMessages, this),
+	dbgLabel("")
 {
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
@@ -296,6 +297,17 @@ void Game::handleEventsLocalGame(const sf::Event& e) {
 }
 
 void Game::updateGame() {
+	Tile* mtile = gameField->getTileAt((sf::Vector2f)sf::Mouse::getPosition(window));
+	if (mtile != nullptr) {
+		if (mtile->getGangMembers() != nullptr) {
+			dbgLabel.setString(std::to_string(mtile->getGangMembers()->getAmount()));
+		}
+		else {
+			dbgLabel.setString("NULL");
+		}
+		dbgLabel.setPosition(mtile->getPosition());
+	}
+
 	players[turnIndex]->update();
 	if (players[turnIndex]->wantsToEndTurn()) {
 		if (NetworkManager::isOpen()) { //if connected or hosting
@@ -323,6 +335,8 @@ void Game::drawGame() {
 	window.draw(*gameField);
 	window.draw(*players[0]);
 	window.draw(*players[1]);
+
+	window.draw(dbgLabel);
 }
 
 void Game::acceptThread() {
