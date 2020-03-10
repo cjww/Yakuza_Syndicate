@@ -58,6 +58,7 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 }
 
 Player::~Player() {
+	delete selectedGmLabel;
 	for (auto& gm : gangMembers) {
 		delete gm;
 	}
@@ -292,7 +293,7 @@ void Player::keyPressed(sf::Keyboard::Key key)
 {
 	if (selectedGM != nullptr)
 	{
-		if (key == sf::Keyboard::Left && selectedGmAmount > 0)
+		if (key == sf::Keyboard::Left && selectedGmAmount > 1)
 		{
 			selectedGmAmount--;
 		}
