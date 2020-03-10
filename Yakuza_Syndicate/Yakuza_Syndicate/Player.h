@@ -55,10 +55,11 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	bool wantsToEndTurn() const;
-	void wantsToEndTurn(bool value);
 	
 	void turnEnd();
 	void turnStart();
 
 	void setColor(sf::Color color);
+
+	void proccessMessage(Message& msg);
 };

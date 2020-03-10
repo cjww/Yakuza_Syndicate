@@ -11,9 +11,9 @@ enum class MessageType {
 
 struct Message {
 	MessageType type;
+	
 	sf::Color color;
-	sf::Vector2f vec1;
-	sf::Vector2f vec2;
+	sf::Vector2f vec2[2];
 };
 
 class NetworkManager {

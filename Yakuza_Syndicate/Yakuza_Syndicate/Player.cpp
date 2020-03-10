@@ -109,6 +109,10 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 		}
 		if (canBuildDojo) {
 			if (buildDojoBtn->contains(mousePosition)) {
+				Message msg;
+				msg.type = MessageType::DOJO_BUILT;
+				msg.vec2[0] = selectedGM->getPosition();
+				NetworkManager::send(msg);
 				territory.buildDojo(selectedGM->getPosition());
 				balance -= 1000;
 				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
@@ -189,6 +193,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					{
 						if (toMerge == nullptr)
 						{
+							Message msg;
+							msg.type = MessageType::GANGMEMBER_MOVED;
+							msg.vec2[0] = selectedGM->getPosition();
 							selectedGM->setPosition(selectedTile->getPosition());
 							selectedGM->setTextPos(selectedGM->getPosition());
 							selectedGM->setHasAction(false);
@@ -200,6 +207,8 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							{
 								selectedGM->setInFriendlyTerr(true);
 							}
+							msg.vec2[1] = selectedGM->getPosition();
+							NetworkManager::send(msg);
 						}
 						else
 						{
@@ -257,10 +266,6 @@ bool Player::wantsToEndTurn() const {
 	return this->endTurn;
 }
 
-void Player::wantsToEndTurn(bool value) {
-	endTurn = value;
-}
-
 void Player::turnEnd() {
 	endTurn = true;
 	uiPane.setVisuals(uiInactiveVis);
@@ -310,4 +315,42 @@ void Player::setColor(sf::Color color) {
 	this->color = color;
 	territory.setColor(color);
 	shader.setUniform("teamColor", sf::Glsl::Vec4(color));
+}
+
+void Player::proccessMessage(Message& msg) {
+	switch (msg.type) {
+	case MessageType::COLOR_CHANGED:
+		setColor(msg.color);
+		break;
+	case MessageType::DOJO_BUILT:
+	{
+		territory.buildDojo(msg.vec2[0]);
+		balance -= 1000;
+		balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+		income = territory.getIncome();
+		incomeLabel->setString("Income: " + std::to_string(income) + " Yen");
+		GangMembers* gm = getGMAtPos(msg.vec2[0]);
+		gm->setHasAction(false);
+		gm->setInFriendlyTerr(true);
+		break;
+	}
+	case MessageType::GANGMEMBER_MOVED:
+	{
+		GangMembers* gm = getGMAtPos(msg.vec2[0]);
+		gm->setPosition(msg.vec2[1]);
+		gm->setTextPos(gm->getPosition());
+		if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
+		{
+			gm->setInFriendlyTerr(false);
+		}
+		else
+		{
+			gm->setInFriendlyTerr(true);
+		}
+	}
+		break;
+	case MessageType::END_TURN:
+		endTurn = true;
+		break;
+	}
 }

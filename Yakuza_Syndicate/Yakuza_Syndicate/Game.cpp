@@ -6,7 +6,8 @@ Game::Game() :
 	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
 	serverAcceptThread(&Game::acceptThread, this),
-	clientConnectThread(&Game::connectThread, this)
+	clientConnectThread(&Game::connectThread, this),
+	processMessagesThread(&Game::processMessages, this)
 {
 
 	ResourceManager::newTexture("../res/katana_general.png", "GangMembers");
@@ -48,7 +49,7 @@ Game::Game() :
 	colors[7] = sf::Color::Cyan;
 	colors[8] = sf::Color(46, 143, 59);
 	colors[9] = sf::Color(50, 75, 143);
-	colors[10] = sf::Color(166, 5, 5);
+	colors[10] = sf::Color(17, 213, 158);
 	colors[11] = sf::Color(201, 181, 24);
 	menu.addChild(
 		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
@@ -269,6 +270,14 @@ void Game::handleEventsLocalGame(const sf::Event& e) {
 void Game::updateGame() {
 	players[turnIndex]->update();
 	if (players[turnIndex]->wantsToEndTurn()) {
+		if (NetworkManager::isOpen()) { //if connected or hosting
+			if ((NetworkManager::isHost() && (Owner)turnIndex == Owner::PLAYER1) ||
+				(!NetworkManager::isHost() && (Owner)turnIndex == Owner::PLAYER2)) 
+			{
+				processMessagesThread.launch();
+				std::cout << "started thread" << std::endl;
+			}
+		}
 		players[turnIndex]->checkFight(players[(turnIndex + 1) % 2]);
 		gameField->movePolice();
 		players[turnIndex]->turnEnd();
@@ -335,6 +344,7 @@ void Game::connectThread() {
 		else {
 			players[0]->setColor(msg.color);
 		}
+		processMessagesThread.launch();
 	}
 }
 
@@ -343,23 +353,16 @@ void Game::processMessages() {
 	do {
 		NetworkManager::recv(msg);
 		switch (msg.type) {
-		case MessageType::GANGMEMBER_MOVED:
-		
-			break;
-		case MessageType::DOJO_BUILT:
-		
-			break;
-		case MessageType::COLOR_CHANGED:
-		
-			break;
-		case MessageType::END_TURN:
-			players[turnIndex]->wantsToEndTurn(true);
-			break;
 		case MessageType::DISCONNECT:
-
+				
+			break;
+		default:
+			players[turnIndex]->proccessMessage(msg);
 			break;
 		}
 	} while (msg.type != MessageType::END_TURN);
+	std::cout << "Ended turn" << std::endl;
+
 }
 
 void Game::initNetworkgame(bool isHost) {
