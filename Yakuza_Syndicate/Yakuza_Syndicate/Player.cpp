@@ -226,6 +226,10 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						{
 							selectedGM = selectedGM->split(selectedGmAmount);
 							gangMembers.push_back(selectedGM);
+							if (this->playernr == Owner::PLAYER2)
+							{
+								selectedGM->flipSprite();
+							}
 							split = true;
 						}
 						if (toMerge == nullptr)
@@ -435,6 +439,7 @@ void Player::proccessMessage(Message& msg) {
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
 		gm->setPosition(msg.vec2[1]);
 		gm->setTextPos(gm->getPosition());
+		gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
 		if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
 		{
 			gm->setInFriendlyTerr(false);
@@ -454,7 +459,10 @@ void Player::proccessMessage(Message& msg) {
 		gm->setPosition(msg.vec2[1]);
 		tile->setGangMembers(gm);
 		gm->setHasAction(false);
-
+		if (this->playernr == Owner::PLAYER2)
+		{
+			gm->flipSprite();
+		}
 		if (!this->territory.checkIfTileInTerr(tile))
 		{
 			gm->setInFriendlyTerr(false);
