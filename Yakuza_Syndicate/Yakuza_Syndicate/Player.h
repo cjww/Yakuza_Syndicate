@@ -13,7 +13,7 @@ private:
 
 	Owner playernr;
 
-	std::vector<GangMembers> gangMembers;
+	std::vector<GangMembers*> gangMembers;
 
 	Territory territory;
 	GameField* gameField;
@@ -43,6 +43,7 @@ private:
 public:
 	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);
 	Player(const Player& otherPlayer);
+	virtual ~Player();
 
 	void checkFight(Player* other);
 	void removeGM(GangMembers* toRemove);

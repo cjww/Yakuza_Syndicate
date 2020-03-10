@@ -49,30 +49,37 @@ Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherP
 	
 }
 
+Player::~Player() {
+	for (auto& gm : gangMembers) {
+		delete gm;
+	}
+	gangMembers.clear();
+}
+
 void Player::checkFight(Player* other)
 {
 	for (int i = 0; i < this->gangMembers.size(); i++)
 	{
-		GangMembers* gmToFight = other->getGMAtPos(gangMembers[i].getPosition());
+		GangMembers* gmToFight = other->getGMAtPos(gangMembers[i]->getPosition());
 		if (gmToFight != nullptr)
 		{
-			gangMembers[i].fight(*gmToFight);
-			if (gangMembers[i].getAmount() == 0 && gmToFight->getAmount() == 0)
+			gangMembers[i]->fight(*gmToFight);
+			if (gangMembers[i]->getAmount() == 0 && gmToFight->getAmount() == 0)
 			{
-				gameField->getTileAt(gangMembers[i].getPosition())->setGangMembers(nullptr);
-				this->removeGM(&gangMembers[i]);
+				gameField->getTileAt(gangMembers[i]->getPosition())->setGangMembers(nullptr);
+				this->removeGM(gangMembers[i]);
 				other->removeGM(gmToFight);
 			}
-			else if (gangMembers[i].getAmount() == 0)
+			else if (gangMembers[i]->getAmount() == 0)
 			{
-				gameField->getTileAt(gangMembers[i].getPosition())->setGangMembers(gmToFight);
-				this->removeGM(&gangMembers[i]);
+				gameField->getTileAt(gangMembers[i]->getPosition())->setGangMembers(gmToFight);
+				this->removeGM(gangMembers[i]);
 				i--;
 			}
 			else if (gmToFight->getAmount() == 0)
 			{
 				other->removeGM(gmToFight);
-				gameField->getTileAt(gangMembers[i].getPosition())->setGangMembers(&gangMembers[i]);
+				gameField->getTileAt(gangMembers[i]->getPosition())->setGangMembers(gangMembers[i]);
 			}
 		}
 	}
@@ -83,8 +90,9 @@ void Player::removeGM(GangMembers* toRemove)
 	bool removed = false;
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
-		if (toRemove == &gangMembers[i])
+		if (toRemove == gangMembers[i])
 		{
+			delete gangMembers[i];
 			gangMembers.erase(gangMembers.begin() + i);
 		}
 	}
@@ -95,9 +103,9 @@ GangMembers* Player::getGMAtPos(sf::Vector2f pos)
 	GangMembers* gmAtPos = nullptr;
 	for (int i = 0; i < this->gangMembers.size() && gmAtPos == nullptr; i++)
 	{
-		if (gangMembers[i].getPosition() == pos)
+		if (gangMembers[i]->getPosition() == pos)
 		{
-			gmAtPos = &gangMembers[i];
+			gmAtPos = gangMembers[i];
 		}
 	}
 	return gmAtPos;
@@ -155,11 +163,11 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				GangMembers* toMerge = nullptr;
 				for (int i = 0; i < this->gangMembers.size(); i++)
 				{
-					if (gangMembers[i].getPosition() == selectedTile->getPosition())
+					if (gangMembers[i]->getPosition() == selectedTile->getPosition())
 					{
 						if (selectedGM == nullptr)
 						{
-							selectedGM = &gangMembers[i];
+							selectedGM = gangMembers[i];
 							if (selectedGM->getAmount() >= 10 &&
 								selectedTile->getBuilding() == nullptr &&
 								selectedGM->hasAction() &&
@@ -176,9 +184,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 								makeHeistBtn->setVisuals(uiActiveVis);
 							}
 						}
-						else if (gangMembers[i].getPosition() != selectedGM->getPosition())
+						else if (gangMembers[i]->getPosition() != selectedGM->getPosition())
 						{
-							toMerge = &gangMembers[i];
+							toMerge = gangMembers[i];
 						}
 						
 					}
@@ -214,8 +222,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 								bool deleted = false;
 								for (int i = 0; i < gangMembers.size() && !deleted; i++)
 								{
-									if (&gangMembers[i] == selectedGM)
+									if (gangMembers[i] == selectedGM)
 									{
+										delete gangMembers[i];
 										gangMembers.erase(gangMembers.begin() + i);
 										deleted = true;
 									}
@@ -249,8 +258,8 @@ void Player::update() {
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(territory, &shader);
 	for (const auto& gm : gangMembers) {
-		target.draw(gm, &shader);
-		gm.drawText(target, shader);
+		target.draw(*gm, &shader);
+		gm->drawText(target, shader);
 	}
 	if (selectedTile != nullptr) {
 		target.draw(selectedTileRect);
@@ -268,9 +277,10 @@ void Player::turnEnd() {
 
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
-		if (gangMembers[i].getAmount() == 0)
+		if (gangMembers[i]->getAmount() == 0)
 		{
-			gameField->getTileAt(gangMembers[i].getPosition())->setGangMembers(nullptr);
+			gameField->getTileAt(gangMembers[i]->getPosition())->setGangMembers(nullptr);
+			delete gangMembers[i];
 			gangMembers.erase(gangMembers.begin() + i);
 			i--;
 		}
@@ -281,7 +291,7 @@ void Player::turnEnd() {
 	
 	for (int i = 0; i < gangMembers.size(); i++)
 	{
-		gangMembers[i].setHasAction(true);
+		gangMembers[i]->setHasAction(true);
 	}
 }
 
@@ -304,28 +314,29 @@ void Player::turnStart() {
 	balance += territory.getIncome();
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 
-	std::vector<GangMembers> newGangMembers = territory.getNewGangMembers();
+	std::vector<GangMembers*> newGangMembers = territory.getNewGangMembers();
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers
 		bool found = false;
 
 		for (auto& myGm : gangMembers) { // check for any preexisting gangMember on same position
 
-			if (myGm.getPosition() == newGm.getPosition()) {
-				if (!myGm.merge(newGm)) {
-					int diff = abs(64 - myGm.getAmount());
+			if (myGm->getPosition() == newGm->getPosition()) {
+				if (!myGm->merge(*newGm)) {
+					int diff = abs(64 - myGm->getAmount());
 					GangMembers diffGm(diff);
-					myGm.merge(diffGm);
+					myGm->merge(diffGm);
 				}
 				found = true;
+				delete newGm;
 			}
 		}
 		if (!found) { // no preexisting gangMemebr at position
 			if (this->playernr == Owner::PLAYER2)
 			{
-				newGm.flipSprite();
+				newGm->flipSprite();
 			}
 			gangMembers.push_back(newGm);
-			gameField->getTileAt(newGm.getPosition())->setGangMembers(&gangMembers.back());
+			gameField->getTileAt(newGm->getPosition())->setGangMembers(newGm);
 		}
 	}
 }
