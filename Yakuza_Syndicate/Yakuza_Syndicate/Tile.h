@@ -17,4 +17,7 @@ public:
 	Building* getBuilding() const;
 	void setBuilding(Building* building);
 
+	GangMembers* getGangMembers() const;
+	void setGangMembers(GangMembers* gangMembers);
+
 };

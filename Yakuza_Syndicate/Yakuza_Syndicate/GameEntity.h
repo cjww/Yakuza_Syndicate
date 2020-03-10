@@ -16,7 +16,7 @@ public:
 	GameEntity(sf::Texture &texture, sf::IntRect textureRect);
 	GameEntity(const GameEntity& other);
 
-	void setPosition(sf::Vector2f position);
+	virtual void setPosition(sf::Vector2f position);
 	sf::Vector2f getPosition() const;
 	void setOwner(Owner owner);
 	Owner getOwner();

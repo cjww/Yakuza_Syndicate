@@ -18,7 +18,7 @@ public:
 
 
 	int getIncome();
-	std::vector<GangMembers> getNewGangMembers();
+	std::vector<GangMembers*> getNewGangMembers();
 	bool checkIfTileInTerr(Tile* tile);
 
 	void setColor(sf::Color color);
