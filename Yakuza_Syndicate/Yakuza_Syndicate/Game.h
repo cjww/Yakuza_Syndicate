@@ -4,6 +4,8 @@
 #include "UI.h"
 #include "NetworkManager.h"
 
+#include <fstream>
+
 enum class GameState {
 	MENU,		//Main Menu
 	MENU_NET,	//Menu for hosting or joining network

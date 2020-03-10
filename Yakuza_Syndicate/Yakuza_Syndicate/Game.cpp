@@ -90,6 +90,7 @@ Game::Game() :
 		update();
 		draw();
 	}
+
 }
 
 Game::~Game() {
@@ -130,6 +131,7 @@ void Game::update() {
 		if (this->state == GameState::MENU_NET && this->lastState == GameState::MENU_NET_WAIT) {
 			menuNet.setVisuals(activeVis);
 			addressInput->setVisuals(inactiveVis);
+			addressInput->setFocused(false);
 			ipLabel->setVisuals(labelVis);
 			this->lastState = this->state;
 		}
@@ -140,6 +142,7 @@ void Game::update() {
 		if (state == GameState::GAME_NET && lastState == GameState::MENU_NET_WAIT) {
 			menuNet.setVisuals(activeVis);
 			addressInput->setVisuals(inactiveVis);
+			addressInput->setFocused(false);
 			ipLabel->setVisuals(labelVis);
 			players[turnIndex]->turnStart();
 			this->lastState = this->state;
@@ -182,6 +185,15 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			else if (playNetBtn->contains(mousePos)) {
 				players[0]->setColor(colors[clrPlayer1]);
 				setState(GameState::MENU_NET);
+				//Read file
+				std::ifstream infile("../res/last_ip.txt");
+				if (infile) {
+					std::string ip;
+					infile >> ip;
+					addressInput->setText(ip);
+				}
+				infile.close();
+
 			}
 			else if (exitBtn->contains(mousePos)) {
 				window.close();
@@ -219,9 +231,18 @@ void Game::handleEventsMenu(const sf::Event& e) {
 		}
 		else if (state == GameState::MENU_NET) {
 			if (backBtn->contains(mousePos)) {
+				addressInput->setFocused(false);
+				addressInput->setVisuals(inactiveVis);
 				setState(GameState::MENU);
 			}
 			else if (joinBtn->contains(mousePos)) {
+				//Write file
+				std::ofstream outfile("../res/last_ip.txt");
+				if (outfile) {
+					outfile << addressInput->getText();
+				}
+				outfile.close();
+
 				initNetworkgame(false);
 			}
 			else if (addressInput->contains(mousePos)) {
@@ -240,6 +261,9 @@ void Game::handleEventsMenu(const sf::Event& e) {
 			if (backBtn->contains(mousePos)) {
 				setState(GameState::MENU_NET);
 				menuNet.setVisuals(activeVis);
+				addressInput->setFocused(false);
+				addressInput->setVisuals(inactiveVis);
+				ipLabel->setVisuals(activeVis);
 				NetworkManager::close();
 			}
 		}

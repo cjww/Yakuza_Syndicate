@@ -17,14 +17,15 @@ void TextField::handleInput(const sf::Event& e) {
 			else {
 				string.push_back(c);
 			}
-			getLabel()->setString(string);
+			setText(string);
 		}
 	}
 }
 
 void TextField::setFocused(bool focus) {
 	this->focused = focus;
-	getLabel()->setPosition(getPosition() + sf::Vector2f(50, 5));
+	//getLabel()->setPosition(getPosition() + sf::Vector2f(50, 5));
+
 }
 
 std::string TextField::getText() const {
@@ -35,4 +36,8 @@ std::string TextField::getText() const {
 void TextField::setText(const std::string& string) {
 	this->string = string;
 	getLabel()->setString(string);
+	getLabel()->setPosition(
+		getPosition()
+		+ sf::Vector2f(getBounds().width / 2, 5)
+		- sf::Vector2f(getLabel()->getBounds().width / 2, 0));
 }
