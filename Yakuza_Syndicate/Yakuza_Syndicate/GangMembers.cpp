@@ -117,8 +117,8 @@ void GangMembers::fight(GangMembers &other)
 GangMembers * GangMembers::split(int amountToSplit)
 {
 	GangMembers* newgm = new GangMembers(amountToSplit);
+	newgm->setPosition(getPosition());
 	setAmount(this->amount - amountToSplit);
-
 	return newgm;
 }
 

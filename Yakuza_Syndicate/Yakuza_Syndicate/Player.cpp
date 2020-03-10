@@ -220,18 +220,21 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					if (selectedGM->hasAction() /*&& sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
 						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width*/)
 					{
+						bool split = false;
 						if (selectedGmAmount < selectedGM->getAmount())
 						{
 							selectedGM = selectedGM->split(selectedGmAmount);
-							gangMembers.push_back(*selectedGM);
+							gangMembers.push_back(selectedGM);
+							split = true;
 						}
 						if (toMerge == nullptr)
 						{
 							Message msg;
 							msg.type = MessageType::GANGMEMBER_MOVED;
 							msg.vec2[0] = selectedGM->getPosition();
-
-							gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
+							if (!split) {
+								gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
+							}
 							selectedGM->setPosition(selectedTile->getPosition());
 							selectedTile->setGangMembers(selectedGM);
 							
