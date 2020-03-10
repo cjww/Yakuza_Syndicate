@@ -16,6 +16,7 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	selectedGM = nullptr;
 	balance = 1000;
 	income = territory.getIncome();
+	selectedGmAmount = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
 	uiActiveVis = {};
@@ -36,6 +37,13 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 500));
 	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 400));
 	uiPane.addChild((makeHeistBtn = new Button("Make Heist", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 300));
+
+	UIVisualSettings vis = {};
+	vis.textFillColor = sf::Color::White;
+	vis.textOutlineColor = sf::Color::Black;
+	vis.textOutlineThickness = 1;
+	selectedGmLabel = new Label("", vis);
+
 	
 	if (owner == Owner::PLAYER2) {
 		uiPane.setPosition(sf::Vector2f(1450, 0));
@@ -162,6 +170,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 						if (selectedGM == nullptr)
 						{
 							selectedGM = &gangMembers[i];
+							selectedGmAmount = gangMembers[i].getAmount();
+							selectedGmLabel->setString("Selected: < " + std::to_string(selectedGmAmount) + " >");
+							selectedGmLabel->setPosition(selectedGM->getPosition() + sf::Vector2f(-64, 64));
 							if (selectedGM->getAmount() >= 10 &&
 								selectedTile->getBuilding() == nullptr &&
 								selectedGM->hasAction() &&
@@ -191,6 +202,11 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 					if (selectedGM->hasAction() /*&& sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
 						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width*/)
 					{
+						if (selectedGmAmount < selectedGM->getAmount())
+						{
+							selectedGM = selectedGM->split(selectedGmAmount);
+							gangMembers.push_back(*selectedGM);
+						}
 						if (toMerge == nullptr)
 						{
 							Message msg;
@@ -246,7 +262,24 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 
 }
 
-void Player::update() {
+void Player::keyPressed(sf::Keyboard::Key key)
+{
+	if (selectedGM != nullptr)
+	{
+		if (key == sf::Keyboard::Left && selectedGmAmount > 0)
+		{
+			selectedGmAmount--;
+		}
+		else if (key == sf::Keyboard::Right && selectedGmAmount < selectedGM->getAmount())
+		{
+			selectedGmAmount++;
+		}
+		selectedGmLabel->setString("Selected: < " + std::to_string(selectedGmAmount) + " >");
+	}
+}
+
+void Player::update() 
+{
 
 }
 
@@ -258,6 +291,10 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	}
 	if (selectedTile != nullptr) {
 		target.draw(selectedTileRect);
+	}
+	if (selectedGM != nullptr)
+	{
+		target.draw(*selectedGmLabel);
 	}
 	target.draw(uiPane, &shader);
 }

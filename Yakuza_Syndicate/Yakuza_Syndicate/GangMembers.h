@@ -23,6 +23,7 @@ public:
 	void setHasAction(bool action);
 	void setInFriendlyTerr(bool inFriendlyTerr);
 	void fight(GangMembers &other);
+	GangMembers* split(int amountToSplit);
 
 	void setTextPos(sf::Vector2f pos);
 

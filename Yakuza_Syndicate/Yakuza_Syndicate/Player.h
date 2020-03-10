@@ -21,9 +21,12 @@ private:
 
 	int income;
 	int balance;
+	
 	sf::RectangleShape selectedTileRect;
 	Tile* selectedTile;
 	GangMembers* selectedGM;
+	Label* selectedGmLabel;
+	int selectedGmAmount;
 	
 	UIVisualSettings uiActiveVis;
 	UIVisualSettings uiInactiveVis;
@@ -50,6 +53,7 @@ public:
 
 	GangMembers* getGMAtPos(sf::Vector2f pos);
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);
+	void keyPressed(sf::Keyboard::Key key);
 
 	void update();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
