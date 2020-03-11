@@ -136,8 +136,6 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				selectedGM->setIsBuilding(true);
 				balance -= 1000;
 				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-				income = territory.getIncome();
-				incomeLabel->setString("Income: " + std::to_string(income) + " Yen");
 				selectedGM->setHasAction(false);
 				selectedGM->setInFriendlyTerr(true);
 			}
@@ -413,8 +411,12 @@ void Player::turnStart() {
 
 	balance += territory.getIncome();
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-
+	
 	std::vector<GangMembers*> newGangMembers = territory.getNewGangMembers();
+
+	income = territory.getIncome();
+	incomeLabel->setString("Income: " + std::to_string(income) + " Yen");
+
 	for (auto& newGm : newGangMembers) { // loop all new GangMembers
 		bool found = false;
 
@@ -485,8 +487,6 @@ void Player::proccessMessage(Message& msg) {
 		territory.buildDojo(msg.vec2[0]);
 		balance -= 1000;
 		balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-		income = territory.getIncome();
-		incomeLabel->setString("Income: " + std::to_string(income) + " Yen");
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
 		gm->setHasAction(false);
 		gm->setInFriendlyTerr(true);
