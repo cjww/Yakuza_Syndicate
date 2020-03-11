@@ -18,6 +18,10 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Bank.png", "Bank");
 	ResourceManager::newTexture("../res/Police-Station.png", "PoliceStation");
 	ResourceManager::newTexture("../res/tiles.png", "Tiles");
+	ResourceManager::newTexture("../res/Hammer.png", "Hammer");
+	ResourceManager::newTexture("../res/Dojo_Construct.png", "Dojo_Construct");
+
+
 
 	this->lastState = GameState::MENU;
 	setState(GameState::MENU);
@@ -355,6 +359,7 @@ void Game::updateGame() {
 	}
 
 	players[turnIndex]->update();
+	gameField->updateAnimations();
 	if (players[turnIndex]->wantsToEndTurn()) {
 		if (NetworkManager::isOpen()) { //if connected or hosting
 			if ((NetworkManager::isHost() && (Owner)turnIndex == Owner::PLAYER1) ||

@@ -113,6 +113,16 @@ Tile* GameField::getTileByIndex(int column, int row) const {
 
 float GameField::lengthOfVector(sf::Vector2f vec)
 {
-	return sqrt(pow(vec.x, 2) +
-		pow(vec.y, 2));
+	return sqrt(pow(vec.x, 2) + pow(vec.y, 2));
+}
+
+void GameField::updateAnimations() {
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+			GangMembers* gm = tiles[i][j]->getGangMembers();
+			if (gm != nullptr) {
+				gm->update();
+			}
+		}
+	}
 }

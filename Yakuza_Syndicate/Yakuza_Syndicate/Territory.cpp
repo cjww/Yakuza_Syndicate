@@ -2,17 +2,15 @@
 
 void Territory::updateTerritory() {
 	
-	for (int i = 0; i <= dojos.size(); i++) {
-		sf::Vector2f bPos = safeHouse.getPosition();
-		if (i < dojos.size()) {
-			bPos = dojos[i].getPosition();
+	std::set<Tile*> safehouseTiles = gameField->getSurroundingTiles(gameField->getTileAt(safeHouse.getPosition()));
+	tilesInTerritory.insert(safehouseTiles.begin(), safehouseTiles.end());
+
+	for (int i = 0; i < dojos.size(); i++) {
+		if (dojos[i].getType() != BuildingType::DOJO_CONSTRUCTION) {
+			std::set<Tile*> surroundingTiles = gameField->getSurroundingTiles(gameField->getTileAt(dojos[i].getPosition()));
+			tilesInTerritory.insert(surroundingTiles.begin(), surroundingTiles.end());
 		}
-
-		
-		std::set<Tile*> surroundingTiles = gameField->getSurroundingTiles(gameField->getTileAt(bPos));
-		tilesInTerritory.insert(surroundingTiles.begin(), surroundingTiles.end());
 	}
-
 
 }
 
@@ -44,7 +42,13 @@ std::vector<GangMembers*> Territory::getNewGangMembers() {
 	std::vector<GangMembers*> allGangMembers;
 	for (auto& dojo : dojos) {
 		GangMembers* gm = dojo.spawnGangMembers();
-		allGangMembers.push_back(gm);
+		if (gm != nullptr) {
+			allGangMembers.push_back(gm);
+		}
+		if (dojo.getType() == BuildingType::DOJO_CONSTRUCTION) {
+			dojo.finishConstructing();
+			updateTerritory();
+		}
 	}
 
 	allGangMembers.push_back(safeHouse.spawnGangMembers());
@@ -69,7 +73,7 @@ void Territory::setColor(sf::Color color) {
 void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
 	if (tile != nullptr && tile->getBuilding() == nullptr) {
-		Building newDojo(BuildingType::DOJO, *ResourceManager::getTexture("Dojo"));
+		Building newDojo(BuildingType::DOJO_CONSTRUCTION, *ResourceManager::getTexture("Dojo_Construct"));
 		newDojo.setPosition(tile->getPosition());
 		dojos.push_back(newDojo);
 		tile->setBuilding(&dojos.back());
