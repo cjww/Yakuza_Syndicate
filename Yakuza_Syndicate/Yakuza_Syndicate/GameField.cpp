@@ -110,3 +110,9 @@ Tile* GameField::getTileByIndex(int column, int row) const {
 	}
 	return tile;
 }
+
+float GameField::lengthOfVector(sf::Vector2f vec)
+{
+	return sqrt(pow(vec.x, 2) +
+		pow(vec.y, 2));
+}

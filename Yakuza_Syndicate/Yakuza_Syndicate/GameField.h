@@ -27,5 +27,5 @@ public:
 	void movePolice();
 	Tile* getTileAt(sf::Vector2f pos) const;
 	Tile* getTileByIndex(int column, int row) const;
-
+	float lengthOfVector(sf::Vector2f vec);
 };

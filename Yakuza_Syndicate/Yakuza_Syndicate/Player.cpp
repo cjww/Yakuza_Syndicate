@@ -187,8 +187,27 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 							selectedGmLabel->setString("Selected: < " + std::to_string(selectedGmAmount) + " >");
 							selectedGmLabel->setPosition(selectedGM->getPosition() + sf::Vector2f(-64, 64));
 
+							std::set<Tile*> findBuilding = gameField->getSurroundingTiles(selectedTile);
+							bool foundBuilding = false;
+							for (const auto& tile : findBuilding)
+							{
+								if (tile->getBuilding() != nullptr)
+								{
+									foundBuilding = true;
+								}
+							}
+
+							bool tooCloseToMid = false;
+							for (i = 0; i < 15 && !tooCloseToMid; i++)
+							{
+								if (gameField->lengthOfVector(gameField->getTileByIndex(i, i)->getPosition() - selectedTile->getPosition()) <
+									selectedTile->getGlobalBounds().width * 2)
+								{
+									tooCloseToMid = true;
+								}
+							}
 							if (selectedGM->getAmount() >= 10 &&
-								selectedTile->getBuilding() == nullptr &&
+								!foundBuilding && !tooCloseToMid &&
 								selectedGM->hasAction() &&
 								balance >= 1000) 
 							{
@@ -213,8 +232,8 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				
 				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition())
 				{
-					if (selectedGM->hasAction() /*&& sqrt(pow(selectedTile->getGlobalBounds().left - selectedGM->getGlobalBounds().left, 2) +
-						pow(selectedTile->getGlobalBounds().top - selectedGM->getGlobalBounds().top, 2)) <= selectedTile->getGlobalBounds().width*/)
+					if (selectedGM->hasAction() /*&&
+						gameField->lengthOfVector(selectedGM->getPosition() - selectedTile->getPosition()) <= selectedTile->getGlobalBounds().width*/)
 					{
 						bool split = false;
 						if (selectedGmAmount < selectedGM->getAmount())
@@ -422,6 +441,34 @@ void Player::setColor(sf::Color color) {
 	this->color = color;
 	territory.setColor(color);
 	shader.setUniform("teamColor", sf::Glsl::Vec4(color));
+}
+
+sf::Color Player::getColor()
+{
+	return color;
+}
+
+bool Player::checkIfWin()
+{
+	bool won = false;
+	for (int i = 0; i < gangMembers.size() && !won; i++)
+	{
+		if ((int)playernr == 0)
+		{
+			if (gangMembers[i]->getPosition() == gameField->getTileByIndex(14, 0)->getPosition())
+			{
+				won = true;
+			}
+		}
+		else
+		{
+			if (gangMembers[i]->getPosition() == gameField->getTileByIndex(0, 14)->getPosition())
+			{
+				won = true;
+			}
+		}
+	}
+	return won;
 }
 
 void Player::proccessMessage(Message& msg) {

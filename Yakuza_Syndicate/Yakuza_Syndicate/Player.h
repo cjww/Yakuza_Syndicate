@@ -65,6 +65,9 @@ public:
 	void turnStart();
 
 	void setColor(sf::Color color);
+	sf::Color getColor();
+
+	bool checkIfWin();
 
 	void proccessMessage(Message& msg);
 };

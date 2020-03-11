@@ -11,7 +11,8 @@ enum class GameState {
 	MENU_NET,	//Menu for hosting or joining network
 	MENU_NET_WAIT,
 	GAME_LOCAL, //Game on local comp
-	GAME_NET	//Game over network
+	GAME_NET,	//Game over network
+	GAME_MENU
 };
 
 class Game {
@@ -29,6 +30,7 @@ private:
 	
 	Player* players[2];
 	int turnIndex;
+	int winner;
 
 	sf::Thread serverAcceptThread;
 	sf::Thread clientConnectThread;
@@ -42,6 +44,15 @@ private:
 	Button* playLocalBtn;
 	Button* playNetBtn;
 	Button* exitBtn;
+
+	Button* gameMenuBtn;
+	Pane gameMenu;
+	Button* resumeBtn;
+	Button* mainMenuBtn;
+	Button* gameMenuExitBtn;
+	
+	sf::Text winnerText;
+	sf::Font winnerFont;
 
 	static const int COLOR_COUNT = 12;
 	int clrPlayer1;

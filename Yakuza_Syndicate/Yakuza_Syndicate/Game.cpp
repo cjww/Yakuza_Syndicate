@@ -25,6 +25,7 @@ Game::Game() :
 	gameField = new GameField(window);
 	players[0] = new Player(gameField, Owner::PLAYER1, window);
 	players[1] = new Player(gameField, Owner::PLAYER2, window);
+	winner = -1;
 
 	//Menu setup
 	labelVis = {};
@@ -52,6 +53,7 @@ Game::Game() :
 	colors[9] = sf::Color(50, 75, 143);
 	colors[10] = sf::Color(17, 213, 158);
 	colors[11] = sf::Color(201, 181, 24);
+
 	menu.addChild(
 		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x/3, 400));
@@ -67,7 +69,6 @@ Game::Game() :
 	menu.addChild(
 		(exitBtn = new Button("Exit", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 600));
-
 
 	menuNet.addChild(
 		(hostBtn = new Button("Host", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
@@ -85,6 +86,23 @@ Game::Game() :
 		(backBtn = new Button("Back", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 700));
 	
+	gameMenuBtn = new Button("Game Menu", sf::Vector2f(window.getSize().x / 3, 50), activeVis);
+	gameMenuBtn->setPosition(sf::Vector2f(window.getSize().x / 3, window.getSize().y - 75));
+
+	resumeBtn = new Button("Resume", sf::Vector2f(window.getSize().x / 3, 50), activeVis);
+	resumeBtn->setPosition(sf::Vector2f(window.getSize().x / 3, 400));
+	gameMenu.addChild(
+		(mainMenuBtn = new Button("Main Menu", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
+		sf::Vector2f(window.getSize().x / 3, 500));
+	gameMenu.addChild(
+		(gameMenuExitBtn = new Button("Exit Game", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
+		sf::Vector2f(window.getSize().x / 3, 600));
+
+	winnerFont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	winnerText.setString("player...");
+	winnerText.setFont(winnerFont);
+	winnerText.setPosition(window.getSize().x / 3, 400);
+
 	turnIndex = 0;
 	while (window.isOpen()) {
 		handleEvents();
@@ -98,6 +116,8 @@ Game::~Game() {
 	delete gameField;
 	delete players[0];
 	delete players[1];
+	delete gameMenuBtn;
+	delete resumeBtn;
 }
 
 void Game::handleEvents() {
@@ -117,6 +137,25 @@ void Game::handleEvents() {
 		else if (state == GameState::GAME_NET) {
 			if ((NetworkManager::isHost() && turnIndex == 0) || (!NetworkManager::isHost() && turnIndex == 1)) {
 				handleEventsLocalGame(e);
+			}
+		}
+		else if(state == GameState::GAME_MENU) {
+			if (e.type == sf::Event::MouseButtonPressed)
+			{
+				sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
+				if (resumeBtn->contains(mousePos) && winner == -1)
+				{
+					setState(lastState);
+				}
+				else if (mainMenuBtn->contains(mousePos))
+				{
+					setState(GameState::MENU);
+				}
+				else if (gameMenuExitBtn->contains(mousePos))
+				{
+					window.close();
+				
+				}
 			}
 		}
 	}
@@ -160,7 +199,7 @@ void Game::draw() {
 	if (state == GameState::MENU || state == GameState::MENU_NET || state == GameState::MENU_NET_WAIT) {
 		drawMenu();
 	}
-	else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
+	else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET || state == GameState::GAME_MENU) {
 		drawGame();
 	}
 
@@ -288,7 +327,14 @@ void Game::drawMenu() {
 void Game::handleEventsLocalGame(const sf::Event& e) {
 	if (e.type == sf::Event::MouseButtonPressed) {
 		sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
+		
+		if (gameMenuBtn->contains(mousePos))
+		{
+			setState(GameState::GAME_MENU);
+		}
+		else {
 		players[turnIndex]->mousePressed(mousePos, e.mouseButton.button);
+		}
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
@@ -326,6 +372,11 @@ void Game::updateGame() {
 		gameField->movePolice();
 
 		players[turnIndex]->turnEnd();
+		if (players[turnIndex]->checkIfWin())
+		{
+			winner = turnIndex;
+			state = GameState::GAME_MENU;
+		}
 		turnIndex = (turnIndex + 1) % 2;
 		players[turnIndex]->turnStart();
 	}
@@ -335,7 +386,21 @@ void Game::drawGame() {
 	window.draw(*gameField);
 	window.draw(*players[0]);
 	window.draw(*players[1]);
-
+	window.draw(*gameMenuBtn);
+	if (state == GameState::GAME_MENU)
+	{
+		window.draw(gameMenu);
+		if (winner != -1)
+		{
+			winnerText.setFillColor(players[winner]->getColor());
+			winnerText.setString("Player " + std::to_string(winner + 1) + " wins!");
+			window.draw(winnerText);
+		}
+		else
+		{
+			window.draw(*resumeBtn);
+		}
+	}
 	window.draw(dbgLabel);
 }
 
