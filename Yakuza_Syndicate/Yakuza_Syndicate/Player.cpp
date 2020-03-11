@@ -490,6 +490,7 @@ void Player::proccessMessage(Message& msg) {
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
 		gm->setHasAction(false);
 		gm->setInFriendlyTerr(true);
+		gm->setIsBuilding(true);
 		break;
 	}
 	case MessageType::GANGMEMBER_MOVED:
