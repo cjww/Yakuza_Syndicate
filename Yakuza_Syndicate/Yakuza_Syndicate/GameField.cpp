@@ -110,3 +110,14 @@ Tile* GameField::getTileByIndex(int column, int row) const {
 	}
 	return tile;
 }
+
+void GameField::updateAnimations() {
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+			GangMembers* gm = tiles[i][j]->getGangMembers();
+			if (gm != nullptr) {
+				gm->update();
+			}
+		}
+	}
+}

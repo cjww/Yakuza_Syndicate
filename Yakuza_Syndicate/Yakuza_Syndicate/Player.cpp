@@ -326,9 +326,7 @@ void Player::keyPressed(sf::Keyboard::Key key)
 
 void Player::update() 
 {
-	for (int i = 0; i < gangMembers.size(); i++) {
-		gangMembers[i]->update();
-	}
+
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {

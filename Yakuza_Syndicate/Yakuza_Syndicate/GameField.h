@@ -28,4 +28,6 @@ public:
 	Tile* getTileAt(sf::Vector2f pos) const;
 	Tile* getTileByIndex(int column, int row) const;
 
+	void updateAnimations();
+
 };

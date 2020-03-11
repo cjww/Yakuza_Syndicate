@@ -73,7 +73,7 @@ void Territory::setColor(sf::Color color) {
 void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
 	if (tile != nullptr && tile->getBuilding() == nullptr) {
-		Building newDojo(BuildingType::DOJO_CONSTRUCTION, *ResourceManager::getTexture("PoliceStation"));
+		Building newDojo(BuildingType::DOJO_CONSTRUCTION, *ResourceManager::getTexture("Dojo_Construct"));
 		newDojo.setPosition(tile->getPosition());
 		dojos.push_back(newDojo);
 		tile->setBuilding(&dojos.back());
