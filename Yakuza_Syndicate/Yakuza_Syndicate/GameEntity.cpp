@@ -5,6 +5,9 @@ GameEntity::GameEntity()
 	scale = 2;
 	this->sprite.scale(scale, scale);
 	owner = Owner::NEUTRAL;
+
+	animFrame = 0;
+	animTimer = 0.f;
 }
 
 GameEntity::GameEntity(sf::Texture &texture)
@@ -60,7 +63,27 @@ void GameEntity::flipSprite()
 	sprite.setOrigin(sprite.getLocalBounds().width, 0);
 }
 
+void GameEntity::setTexture(sf::Texture& texture) {
+	sprite.setTexture(texture, true);
+}
+
+void GameEntity::setTexture(sf::Texture& texture, sf::IntRect textureRect) {
+	sprite.setTexture(texture);
+	sprite.setTextureRect(textureRect);
+}
+
 void GameEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(this->sprite, states);
+}
+
+void GameEntity::animate(sf::Texture* tex, int imageSize, int length, float timePerFrame) {
+	sprite.setTexture(*tex);
+	animRect = sf::IntRect(animFrame * imageSize, 0, imageSize, imageSize);
+	sprite.setTextureRect(animRect);
+	animTimer++;
+	if (animTimer >= timePerFrame * 60.f) {
+		animTimer = 0;
+		animFrame = (animFrame + 1) % length;
+	}
 }

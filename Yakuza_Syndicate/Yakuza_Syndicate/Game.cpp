@@ -18,6 +18,8 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Bank.png", "Bank");
 	ResourceManager::newTexture("../res/Police-Station.png", "PoliceStation");
 	ResourceManager::newTexture("../res/tiles.png", "Tiles");
+	ResourceManager::newTexture("../res/Hammer.png", "Hammer");
+
 
 	this->lastState = GameState::MENU;
 	setState(GameState::MENU);

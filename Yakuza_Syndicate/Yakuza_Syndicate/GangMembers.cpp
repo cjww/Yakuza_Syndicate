@@ -7,7 +7,7 @@ GangMembers::GangMembers(int amount)
 	this->amount = amount;
 	action = true;
 	inFriendlyTerr = true;
-	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	inBuildingState = false;	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	this->text.setFont(font);
 
 	this->text.setString(std::to_string(amount));
@@ -132,15 +132,21 @@ void GangMembers::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 	target.draw(this->text, states);
 }
 
-void GangMembers::setTextPos(sf::Vector2f pos) 
-{
-	this->text.setPosition(pos);
+void GangMembers::setIsBuilding(bool value) {
+	this->inBuildingState = value;
 }
 
+bool GangMembers::getIsBuilding() const {
+	return inBuildingState;
+}
 
-void GangMembers::drawText(sf::RenderTarget& target, const sf::Shader& shader) const 
-{
-	target.draw(this->text, &shader);
+void GangMembers::update() {
+	//Set sprite
+	setTexture(*ResourceManager::getTexture("GangMembers"));
+	if (inBuildingState) {
+		//Animate
+		animate(ResourceManager::getTexture("Hammer"), 32, 3, 0.15f);
+	}
 }
 
 

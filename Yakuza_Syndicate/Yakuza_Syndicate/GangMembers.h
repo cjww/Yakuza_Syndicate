@@ -10,6 +10,8 @@ private:
 	bool action;
 	bool inFriendlyTerr;
 
+	bool inBuildingState;
+
 public:
 	GangMembers(int amount);
 	GangMembers(const GangMembers& other);
@@ -28,6 +30,8 @@ public:
 	void setPosition(sf::Vector2f pos) override;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void setTextPos(sf::Vector2f pos);
-	void drawText(sf::RenderTarget& target, const sf::Shader& shader) const;
+	void setIsBuilding(bool value);
+	bool getIsBuilding() const;
+
+	void update();
 };

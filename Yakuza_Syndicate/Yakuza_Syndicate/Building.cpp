@@ -17,9 +17,23 @@ GangMembers* Building::spawnGangMembers() {
 			gm = new GangMembers(4);
 		}
 	}
-	else {
+	else if(type == BuildingType::DOJO){
 		gm = new GangMembers(2);
 	}
-	gm->setPosition(getPosition());
+	if (gm != nullptr) {
+		gm->setPosition(getPosition());
+	}
 	return gm;
+}
+
+void Building::finishConstructing() {
+	if (type == BuildingType::DOJO_CONSTRUCTION) {
+		type = BuildingType::DOJO;
+		setTexture(*ResourceManager::getTexture("Dojo"));
+	}
+
+}
+
+BuildingType Building::getType() const {
+	return type;
 }

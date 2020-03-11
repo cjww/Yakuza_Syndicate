@@ -133,6 +133,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				msg.vec2[0] = selectedGM->getPosition();
 				NetworkManager::send(msg);
 				territory.buildDojo(selectedGM->getPosition());
+				selectedGM->setIsBuilding(true);
 				balance -= 1000;
 				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 				income = territory.getIncome();
@@ -325,7 +326,9 @@ void Player::keyPressed(sf::Keyboard::Key key)
 
 void Player::update() 
 {
-
+	for (int i = 0; i < gangMembers.size(); i++) {
+		gangMembers[i]->update();
+	}
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -385,6 +388,9 @@ void Player::turnStart() {
 			delete gangMembers[i];
 			gangMembers.erase(gangMembers.begin() + i);
 			i--;
+		}
+		else if (gangMembers[i]->getIsBuilding()) {
+			gangMembers[i]->setIsBuilding(false);
 		}
 	}
 
