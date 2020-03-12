@@ -504,14 +504,18 @@ void Player::proccessMessage(Message& msg) {
 	case MessageType::GANGMEMBER_MOVED:
 	{
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		gameField->getTileAt(gm->getPosition())->setGangMembers(nullptr);
+		Tile* tile = gameField->getTileAt(gm->getPosition());
+		tile->setGangMembers(nullptr);
 		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
+		if (tile->getGangMembers() != nullptr) {
+			if (tile->getGangMembers.getOwner() != playernr) {
+				katanaSound.play();
+			}
+		}
 		if (targetGm != nullptr) {
 			targetGm->merge(*gm);
 			removeGM(gm);
-			if (targetGm->getOwner() != playernr) {
-				katanaSound.play();
-			}
+			
 		}
 		else {
 			gm->setPosition(msg.vec2[1]);
@@ -532,13 +536,16 @@ void Player::proccessMessage(Message& msg) {
 		GangMembers* gm = getGMAtPos(msg.vec2[0]);
 		gm = gm->split(msg.i);
 		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
+		Tile* tile = gameField->getTileAt(targetGm->getPosition());
+		if (tile->getGangMembers() != nullptr) {
+			if (tile->getGangMembers.getOwner() != playernr) {
+				katanaSound.play();
+			}
+		}
 		if (targetGm != nullptr) {
 			targetGm->merge(*gm);
 			targetGm->setHasAction(false);
 			delete gm;
-			if (targetGm->getOwner() != playernr) {
-				katanaSound.play();
-			}
 		}
 		else {
 			gangMembers.push_back(gm);
