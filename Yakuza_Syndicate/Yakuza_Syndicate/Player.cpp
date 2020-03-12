@@ -346,8 +346,11 @@ void Player::update()
 
 }
 
+void Player::drawTerritory(sf::RenderWindow& window) {
+	window.draw(this->territory, &shader);
+}
+
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(territory, &shader);
 	for (const auto& gm : gangMembers) {
 		target.draw(*gm, &shader);
 	}

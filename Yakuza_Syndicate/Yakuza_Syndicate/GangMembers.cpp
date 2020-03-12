@@ -89,15 +89,15 @@ void GangMembers::setInFriendlyTerr(bool inFriendlyTerr)
 
 void GangMembers::fight(GangMembers &other)
 {
-	int strThis = this->amount;
-	int strOther = other.amount;
+	float strThis = this->amount;
+	float strOther = other.amount;
 	if (this->inFriendlyTerr)
 	{
-		strThis *= 1.5;
+		strOther *= 0.75f;
 	}
 	else if (other.inFriendlyTerr)
 	{
-		strOther *= 1.5;
+		strThis *= 0.75f;
 	}
 
 	if (strThis < strOther)

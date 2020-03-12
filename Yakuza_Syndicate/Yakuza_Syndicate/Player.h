@@ -57,6 +57,7 @@ public:
 	void keyPressed(sf::Keyboard::Key key);
 
 	void update();
+	void drawTerritory(sf::RenderWindow& window);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	bool wantsToEndTurn() const;

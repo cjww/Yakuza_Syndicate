@@ -114,6 +114,16 @@ Game::Game() :
 		draw();
 	}
 
+	Message msg;
+	msg.type = MessageType::DISCONNECT;
+	NetworkManager::send(msg);
+
+	NetworkManager::close();
+
+	clientConnectThread.terminate();
+	serverAcceptThread.terminate();
+	processMessagesThread.terminate();
+
 }
 
 Game::~Game() {
@@ -168,11 +178,14 @@ void Game::handleEvents() {
 				else if (mainMenuBtn->contains(mousePos))
 				{
 					setState(GameState::MENU);
+					Message msg;
+					msg.type = MessageType::DISCONNECT;
+					NetworkManager::send(msg);
+					processMessagesThread.terminate();
 				}
 				else if (gameMenuExitBtn->contains(mousePos))
 				{
 					window.close();
-				
 				}
 			}
 		}
@@ -375,9 +388,6 @@ void Game::updateGame() {
 				Message msg;
 				msg.type = MessageType::END_TURN;
 				NetworkManager::send(msg);
-
-				processMessagesThread.launch();
-				std::cout << "started thread" << std::endl;
 			}
 		}
 		players[turnIndex]->checkFight(players[(turnIndex + 1) % 2]);
@@ -396,6 +406,8 @@ void Game::updateGame() {
 
 void Game::drawGame() {
 	window.draw(*gameField);
+	players[0]->drawTerritory(window);
+	players[1]->drawTerritory(window);
 	window.draw(*players[0]);
 	window.draw(*players[1]);
 	window.draw(*gameMenuBtn);
@@ -434,6 +446,7 @@ void Game::acceptThread() {
 		if (NetworkManager::send(msg) != sf::Socket::Done) {
 			std::cout << "Failed to send" << std::endl;
 		}
+		processMessagesThread.launch();
 	}
 	else if (status == sf::Socket::Error) {
 		ipLabel->setString("");
@@ -478,14 +491,14 @@ void Game::processMessages() {
 		NetworkManager::recv(msg);
 		switch (msg.type) {
 		case MessageType::DISCONNECT:
-				
+			ipLabel->setString("Player disconnected");
+			setState(GameState::MENU_NET);
 			break;
 		default:
 			players[turnIndex]->proccessMessage(msg);
 			break;
 		}
-	} while (msg.type != MessageType::END_TURN);
-	std::cout << "Ended turn" << std::endl;
+	} while (msg.type != MessageType::DISCONNECT);
 
 }
 
