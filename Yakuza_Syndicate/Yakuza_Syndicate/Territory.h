@@ -9,12 +9,13 @@ private:
 	Building safeHouse;
 	sf::Color color;
 	GameField* gameField;
+	Owner owner;
 
 	std::set<Tile*> tilesInTerritory;
 	void updateTerritory();
 
 public:
-	Territory(GameField* gameField);
+	Territory(GameField* gameField, Owner owner);
 
 
 	int getIncome();

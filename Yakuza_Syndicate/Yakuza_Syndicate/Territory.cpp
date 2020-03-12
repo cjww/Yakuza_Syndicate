@@ -14,10 +14,11 @@ void Territory::updateTerritory() {
 
 }
 
-Territory::Territory(GameField* gameField)
+Territory::Territory(GameField* gameField, Owner owner)
 	: safeHouse(BuildingType::SAFEHOUSE, *ResourceManager::getTexture("SafeHouse")),
-	gameField(gameField) {
+	gameField(gameField), owner(owner) {
 
+	safeHouse.setOwner(owner);
 	Tile* bottomLeft = gameField->getTileByIndex(0, 14);
 	if (bottomLeft->getBuilding() == nullptr) {
 		safeHouse.setPosition(bottomLeft->getPosition());
@@ -74,6 +75,7 @@ void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
 	if (tile != nullptr && tile->getBuilding() == nullptr) {
 		Building newDojo(BuildingType::DOJO_CONSTRUCTION, *ResourceManager::getTexture("Dojo_Construct"));
+		newDojo.setOwner(owner);
 		newDojo.setPosition(tile->getPosition());
 		dojos.push_back(newDojo);
 		tile->setBuilding(&dojos.back());

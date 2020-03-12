@@ -3,7 +3,7 @@
 Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	: endTurn(false),
 	color(sf::Color::Black),
-	territory(gameField),
+	territory(gameField, owner),
 	gameField(gameField),
 	playernr(owner),
 	window(window),

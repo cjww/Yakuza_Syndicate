@@ -21,6 +21,7 @@ GangMembers* Building::spawnGangMembers() {
 		gm = new GangMembers(2);
 	}
 	if (gm != nullptr) {
+		gm->setOwner(getOwner());
 		gm->setPosition(getPosition());
 	}
 	return gm;

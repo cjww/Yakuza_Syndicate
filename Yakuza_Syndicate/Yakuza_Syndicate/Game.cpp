@@ -137,10 +137,24 @@ void Game::handleEvents() {
 		}
 		else if (state == GameState::GAME_LOCAL) {
 			handleEventsLocalGame(e);
+			if (e.type == sf::Event::MouseButtonPressed) {
+				sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
+				if (gameMenuBtn->contains(mousePos))
+				{
+					setState(GameState::GAME_MENU);
+				}
+			}
 		}
 		else if (state == GameState::GAME_NET) {
 			if ((NetworkManager::isHost() && turnIndex == 0) || (!NetworkManager::isHost() && turnIndex == 1)) {
 				handleEventsLocalGame(e);
+			}
+			if (e.type == sf::Event::MouseButtonPressed) {
+				sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
+				if (gameMenuBtn->contains(mousePos))
+				{
+					setState(GameState::GAME_MENU);
+				}
 			}
 		}
 		else if(state == GameState::GAME_MENU) {
@@ -331,14 +345,7 @@ void Game::drawMenu() {
 void Game::handleEventsLocalGame(const sf::Event& e) {
 	if (e.type == sf::Event::MouseButtonPressed) {
 		sf::Vector2f mousePos(e.mouseButton.x, e.mouseButton.y);
-		
-		if (gameMenuBtn->contains(mousePos))
-		{
-			setState(GameState::GAME_MENU);
-		}
-		else {
 		players[turnIndex]->mousePressed(mousePos, e.mouseButton.button);
-		}
 	}
 	else if (e.type == sf::Event::KeyPressed)
 	{
@@ -406,7 +413,7 @@ void Game::drawGame() {
 			window.draw(*resumeBtn);
 		}
 	}
-	window.draw(dbgLabel);
+	//window.draw(dbgLabel);
 }
 
 void Game::acceptThread() {

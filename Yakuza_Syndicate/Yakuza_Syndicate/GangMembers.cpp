@@ -124,7 +124,13 @@ GangMembers * GangMembers::split(int amountToSplit)
 
 void GangMembers::setPosition(sf::Vector2f pos) {
 	GameEntity::setPosition(pos);
-	this->text.setPosition(pos);
+	if (getOwner() == Owner::PLAYER2)
+	{
+		this->text.setPosition(pos + sf::Vector2f(32, 0));
+	}
+	else {
+		this->text.setPosition(pos);
+	}
 }
 
 void GangMembers::draw(sf::RenderTarget& target, sf::RenderStates states) const {
