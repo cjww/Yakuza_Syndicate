@@ -72,6 +72,14 @@ bool GangMembers::hasAction()
 void GangMembers::setHasAction(bool action)
 {
 	this->action = action;
+	if (!action)
+	{
+		text.setFillColor(sf::Color(200, 200, 200));
+	}
+	else
+	{
+		text.setFillColor(sf::Color::Magenta);
+	}
 }
 
 void GangMembers::setInFriendlyTerr(bool inFriendlyTerr)
@@ -129,6 +137,7 @@ void GangMembers::setPosition(sf::Vector2f pos) {
 
 void GangMembers::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	GameEntity::draw(target, states);
+
 	target.draw(this->text, states);
 }
 
