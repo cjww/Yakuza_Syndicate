@@ -3,7 +3,7 @@
 GameField::GameField(const sf::RenderWindow& window) {
 	int scale = 2;
 	fieldSize = 15;
-	sf::Texture* tileTexture = ResourceManager::getTexture("Tiles");
+	sf::Texture* tileTexture = &ResourceManager::getTexture("Tiles");
 	//sf::Vector2f offset = window.getSize() / 2.0f - sf::Vector2f(tileSize * scale * fieldSize / 2, 0);
 	sf::Vector2f offset = sf::Vector2f(window.getSize().x / 4.0f, 0);
 
@@ -14,7 +14,7 @@ GameField::GameField(const sf::RenderWindow& window) {
 		}
 	}
 	policeStation.setScale(2, 2);
-	policeStation.setTexture(*ResourceManager::getTexture("PoliceStation"));
+	policeStation.setTexture(ResourceManager::getTexture("PoliceStation"));
 	policeStation.setPosition(getTileByIndex(0, 0)->getPosition());
 
 	bank.setPosition(getTileByIndex(14, 14)->getPosition());

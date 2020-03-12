@@ -1,6 +1,6 @@
 #include "PolicePatrol.h"
 
-PolicePatrol::PolicePatrol() :GameEntity(*ResourceManager::getTexture("PolicePatrol"))
+PolicePatrol::PolicePatrol() :GameEntity(ResourceManager::getTexture("PolicePatrol"))
 	,direction(Direction::BANK)
 {
 }

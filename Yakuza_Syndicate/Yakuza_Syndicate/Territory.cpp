@@ -15,7 +15,7 @@ void Territory::updateTerritory() {
 }
 
 Territory::Territory(GameField* gameField, Owner owner)
-	: safeHouse(BuildingType::SAFEHOUSE, *ResourceManager::getTexture("SafeHouse")),
+	: safeHouse(BuildingType::SAFEHOUSE, ResourceManager::getTexture("SafeHouse")),
 	gameField(gameField), owner(owner) {
 
 	safeHouse.setOwner(owner);
@@ -74,7 +74,7 @@ void Territory::setColor(sf::Color color) {
 void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
 	if (tile != nullptr && tile->getBuilding() == nullptr) {
-		Building newDojo(BuildingType::DOJO_CONSTRUCTION, *ResourceManager::getTexture("Dojo_Construct"));
+		Building newDojo(BuildingType::DOJO_CONSTRUCTION, ResourceManager::getTexture("Dojo_Construct"));
 		newDojo.setOwner(owner);
 		newDojo.setPosition(tile->getPosition());
 		dojos.push_back(newDojo);

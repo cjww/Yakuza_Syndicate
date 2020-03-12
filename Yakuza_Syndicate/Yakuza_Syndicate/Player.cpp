@@ -11,6 +11,8 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	canMakeHeist(false)
 {
 
+	katanaSound.setBuffer(ResourceManager::getSoundBuffer("Katana"));
+
 	territory.setColor(color);
 	selectedTile = nullptr;
 	selectedGM = nullptr;
@@ -260,6 +262,9 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 								msg.i = selectedGmAmount;
 							}
 							selectedGM->setPosition(selectedTile->getPosition());
+							if (selectedTile->getGangMembers() != nullptr) {
+								katanaSound.play();
+							}
 							selectedTile->setGangMembers(selectedGM);
 							selectedGM->setHasAction(false);
 							
@@ -504,6 +509,9 @@ void Player::proccessMessage(Message& msg) {
 		if (targetGm != nullptr) {
 			targetGm->merge(*gm);
 			removeGM(gm);
+			if (targetGm->getOwner() != playernr) {
+				katanaSound.play();
+			}
 		}
 		else {
 			gm->setPosition(msg.vec2[1]);
@@ -528,6 +536,9 @@ void Player::proccessMessage(Message& msg) {
 			targetGm->merge(*gm);
 			targetGm->setHasAction(false);
 			delete gm;
+			if (targetGm->getOwner() != playernr) {
+				katanaSound.play();
+			}
 		}
 		else {
 			gangMembers.push_back(gm);

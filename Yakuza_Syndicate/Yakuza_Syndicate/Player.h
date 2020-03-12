@@ -5,6 +5,7 @@
 #include "GangMembers.h"
 #include "UI.h"
 #include "NetworkManager.h"
+#include <SFML/Audio.hpp>
 
 class Player : public sf::Drawable {
 private:
@@ -43,6 +44,8 @@ private:
 	Label* gmInCustodyLabel;
 
 	sf::RenderWindow& window;
+
+	sf::Sound katanaSound;
 
 public:
 	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);

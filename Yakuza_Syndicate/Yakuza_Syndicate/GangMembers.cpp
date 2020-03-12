@@ -1,7 +1,7 @@
 #include "GangMembers.h"
 
 GangMembers::GangMembers(int amount)
-	:GameEntity(*ResourceManager::getTexture("GangMembers"))
+	:GameEntity(ResourceManager::getTexture("GangMembers"))
 {
 
 	this->amount = amount;
@@ -157,10 +157,10 @@ bool GangMembers::getIsBuilding() const {
 
 void GangMembers::update() {
 	//Set sprite
-	setTexture(*ResourceManager::getTexture("GangMembers"));
+	setTexture(ResourceManager::getTexture("GangMembers"));
 	if (inBuildingState) {
 		//Animate
-		animate(ResourceManager::getTexture("Hammer"), 32, 3, 0.15f);
+		animate(&ResourceManager::getTexture("Hammer"), 32, 3, 0.15f);
 	}
 }
 

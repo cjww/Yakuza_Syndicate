@@ -30,7 +30,7 @@ GangMembers* Building::spawnGangMembers() {
 void Building::finishConstructing() {
 	if (type == BuildingType::DOJO_CONSTRUCTION) {
 		type = BuildingType::DOJO;
-		setTexture(*ResourceManager::getTexture("Dojo"));
+		setTexture(ResourceManager::getTexture("Dojo"));
 	}
 
 }

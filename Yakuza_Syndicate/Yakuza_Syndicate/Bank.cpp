@@ -1,7 +1,7 @@
 #include "Bank.h"
 
 Bank::Bank()
-	:GameEntity(*ResourceManager::getTexture("Bank")),
+	:GameEntity(ResourceManager::getTexture("Bank")),
 	security(0)
 {
 }

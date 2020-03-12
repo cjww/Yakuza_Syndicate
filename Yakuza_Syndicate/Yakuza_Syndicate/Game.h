@@ -3,6 +3,7 @@
 
 #include "UI.h"
 #include "NetworkManager.h"
+#include <SFML/Audio/Music.hpp>
 
 #include <fstream>
 
@@ -70,6 +71,8 @@ private:
 	Button* joinBtn;
 	TextField* addressInput;
 	Button* backBtn;
+
+	sf::Music music;
 
 	//DEBUG
 	Label dbgLabel;

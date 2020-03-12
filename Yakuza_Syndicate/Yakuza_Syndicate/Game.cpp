@@ -20,6 +20,7 @@ Game::Game() :
 	ResourceManager::newTexture("../res/tiles.png", "Tiles");
 	ResourceManager::newTexture("../res/Hammer.png", "Hammer");
 	ResourceManager::newTexture("../res/Dojo_Construct.png", "Dojo_Construct");
+	ResourceManager::newSoundBuffer("../res/katana.wav", "Katana");
 
 
 
@@ -107,6 +108,9 @@ Game::Game() :
 	winnerText.setFont(winnerFont);
 	winnerText.setPosition(window.getSize().x / 3, 400);
 
+	music.openFromFile("../res/Shamisen.wav");
+	music.setLoop(true);
+	
 	turnIndex = 0;
 	while (window.isOpen()) {
 		handleEvents();
@@ -182,6 +186,9 @@ void Game::handleEvents() {
 					msg.type = MessageType::DISCONNECT;
 					NetworkManager::send(msg);
 					processMessagesThread.terminate();
+
+					music.stop();
+
 				}
 				else if (gameMenuExitBtn->contains(mousePos))
 				{
@@ -216,6 +223,8 @@ void Game::update() {
 			addressInput->setFocused(false);
 			ipLabel->setVisuals(labelVis);
 			players[turnIndex]->turnStart();
+			music.stop();
+			music.play();
 			this->lastState = this->state;
 		}
 		else if (state == GameState::GAME_LOCAL || state == GameState::GAME_NET) {
@@ -252,6 +261,8 @@ void Game::handleEventsMenu(const sf::Event& e) {
 				players[1]->setColor(colors[clrPlayer2]);
 
 				players[turnIndex]->turnStart();
+				music.stop();
+				music.play();
 			}
 			else if (playNetBtn->contains(mousePos)) {
 				players[0]->setColor(colors[clrPlayer1]);
