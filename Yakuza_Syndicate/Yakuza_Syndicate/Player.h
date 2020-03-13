@@ -1,11 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/System/Mutex.hpp>
+
 #include <iostream>
 #include "Territory.h"
 #include "GangMembers.h"
 #include "UI.h"
 #include "NetworkManager.h"
-#include <SFML/Audio.hpp>
+
 
 class Player : public sf::Drawable {
 private:
@@ -46,6 +49,8 @@ private:
 	sf::RenderWindow& window;
 
 	sf::Sound katanaSound;
+
+	sf::Mutex* mutex;
 
 public:
 	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);

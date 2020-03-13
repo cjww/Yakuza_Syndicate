@@ -52,6 +52,8 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 		uiPane.setVisuals(uiInactiveVis);
 	}
 
+	mutex = new sf::Mutex;
+
 }
 
 Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr, otherPlayer.window)
@@ -65,6 +67,8 @@ Player::~Player() {
 		delete gm;
 	}
 	gangMembers.clear();
+
+	delete mutex;
 }
 
 void Player::checkFight(Player* other)
@@ -98,6 +102,7 @@ void Player::checkFight(Player* other)
 
 void Player::removeGM(GangMembers* toRemove)
 {
+	mutex->lock();
 	bool removed = false;
 	for (int i = 0; i < gangMembers.size() && !removed; i++)
 	{
@@ -108,6 +113,7 @@ void Player::removeGM(GangMembers* toRemove)
 			removed = true;
 		}
 	}
+	mutex->unlock();
 }
 
 GangMembers* Player::getGMAtPos(sf::Vector2f pos)
@@ -225,9 +231,11 @@ void Player::drawTerritory(sf::RenderWindow& window) {
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	mutex->lock();
 	for (const auto& gm : gangMembers) {
 		target.draw(*gm, &shader);
 	}
+	mutex->unlock();
 	if (selectedTile != nullptr) {
 		target.draw(selectedTileRect);
 	}
@@ -480,7 +488,7 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 	}
 	GangMembers* toMerge = toTile->getGangMembers();
 	if (toMerge != nullptr) {
-		if (toMerge->getOwner() != playernr) {
+		if (toMerge->getOwner() != this->playernr) {
 			katanaSound.play();
 			gmToMove->setPosition(toTile->getPosition());
 			if (!hasSplit) {
