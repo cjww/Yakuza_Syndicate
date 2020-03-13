@@ -486,6 +486,9 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 			if (!hasSplit) {
 				fromTile->setGangMembers(nullptr);
 			}
+			else {
+				gangMembers.push_back(gmToMove);
+			}
 			toTile->setGangMembers(gmToMove);
 		}
 		else {

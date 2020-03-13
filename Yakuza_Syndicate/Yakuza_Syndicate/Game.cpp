@@ -110,6 +110,7 @@ Game::Game() :
 
 	music.openFromFile("../res/Shamisen.wav");
 	music.setLoop(true);
+	music.setVolume(30);
 	
 	turnIndex = 0;
 	while (window.isOpen()) {
