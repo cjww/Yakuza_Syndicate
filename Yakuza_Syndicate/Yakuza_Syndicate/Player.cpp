@@ -131,11 +131,18 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 		}
 		if (canBuildDojo) {
 			if (buildDojoBtn->contains(mousePosition)) {
+				Message msg;
+				msg.type = MessageType::DOJO_BUILT;
+				msg.vec2[0] = selectedGM->getPosition();
+				NetworkManager::send(msg);
 				buildDojo(selectedGM);
 			}
 		}
 		if (canMakeHeist) {
 			if (makeHeistBtn->contains(mousePosition)) {
+				Message msg;
+				msg.type = MessageType::MADE_HEIST;
+				NetworkManager::send(msg);
 				makeHeist(selectedGM);
 			}
 		}
@@ -355,13 +362,7 @@ void Player::proccessMessage(Message& msg) {
 		break;
 	case MessageType::DOJO_BUILT:
 	{
-		territory.buildDojo(msg.vec2[0]);
-		balance -= 1000;
-		balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		gm->setHasAction(false);
-		gm->setInFriendlyTerr(true);
-		gm->setIsBuilding(true);
+		buildDojo(getGMAtPos(msg.vec2[0]));
 		break;
 	}
 	case MessageType::GANGMEMBER_MOVED:
@@ -374,10 +375,7 @@ void Player::proccessMessage(Message& msg) {
 	case MessageType::MADE_HEIST:
 	{
 		GangMembers* gm = getGMAtPos(gameField->getTileByIndex(14, 14)->getPosition());
-		balance += gm->getAmount() * 100;
-		balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-		gameField->makeHeist(gm);
-		gm->setHasAction(false);
+		makeHeist(gm);
 		break;
 	}
 	case MessageType::END_TURN:
@@ -388,10 +386,6 @@ void Player::proccessMessage(Message& msg) {
 
 void Player::buildDojo(GangMembers* gm)
 {
-	Message msg;
-	msg.type = MessageType::DOJO_BUILT;
-	msg.vec2[0] = gm->getPosition();
-	NetworkManager::send(msg);
 	territory.buildDojo(gm->getPosition());
 	gm->setIsBuilding(true);
 	balance -= 1000;
@@ -401,9 +395,6 @@ void Player::buildDojo(GangMembers* gm)
 
 void Player::makeHeist(GangMembers* gm)
 {
-	Message msg;
-	msg.type = MessageType::MADE_HEIST;
-	NetworkManager::send(msg);
 	balance += gm->getAmount() * 100;
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 	gameField->makeHeist(gm);
