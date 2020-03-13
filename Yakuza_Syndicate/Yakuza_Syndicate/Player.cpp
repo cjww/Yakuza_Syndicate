@@ -508,7 +508,7 @@ void Player::proccessMessage(Message& msg) {
 		tile->setGangMembers(nullptr);
 		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
 		if (tile->getGangMembers() != nullptr) {
-			if (tile->getGangMembers.getOwner() != playernr) {
+			if (tile->getGangMembers()->getOwner() != playernr) {
 				katanaSound.play();
 			}
 		}
@@ -538,7 +538,7 @@ void Player::proccessMessage(Message& msg) {
 		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
 		Tile* tile = gameField->getTileAt(targetGm->getPosition());
 		if (tile->getGangMembers() != nullptr) {
-			if (tile->getGangMembers.getOwner() != playernr) {
+			if (tile->getGangMembers()->getOwner() != playernr) {
 				katanaSound.play();
 			}
 		}
