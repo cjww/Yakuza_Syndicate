@@ -505,6 +505,7 @@ void Game::processMessages() {
 		case MessageType::DISCONNECT:
 			ipLabel->setString("Player disconnected");
 			setState(GameState::MENU_NET);
+			music.stop();
 			break;
 		default:
 			players[turnIndex]->proccessMessage(msg);
