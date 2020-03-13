@@ -99,12 +99,13 @@ void Player::checkFight(Player* other)
 void Player::removeGM(GangMembers* toRemove)
 {
 	bool removed = false;
-	for (int i = 0; i < gangMembers.size(); i++)
+	for (int i = 0; i < gangMembers.size() && !removed; i++)
 	{
 		if (toRemove == gangMembers[i])
 		{
 			delete gangMembers[i];
 			gangMembers.erase(gangMembers.begin() + i);
+			removed = true;
 		}
 	}
 }
@@ -130,27 +131,12 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 		}
 		if (canBuildDojo) {
 			if (buildDojoBtn->contains(mousePosition)) {
-				Message msg;
-				msg.type = MessageType::DOJO_BUILT;
-				msg.vec2[0] = selectedGM->getPosition();
-				NetworkManager::send(msg);
-				territory.buildDojo(selectedGM->getPosition());
-				selectedGM->setIsBuilding(true);
-				balance -= 1000;
-				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-				selectedGM->setHasAction(false);
-				selectedGM->setInFriendlyTerr(true);
+				buildDojo(selectedGM);
 			}
 		}
 		if (canMakeHeist) {
 			if (makeHeistBtn->contains(mousePosition)) {
-				Message msg;
-				msg.type = MessageType::MADE_HEIST;
-				NetworkManager::send(msg);
-				balance += selectedGM->getAmount() * 100;
-				balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
-				gameField->makeHeist(selectedGM);
-				selectedGM->setHasAction(false);
+				makeHeist(selectedGM);
 			}
 		}
 		canBuildDojo = false;
@@ -166,154 +152,30 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				selectedTile = nullptr;
 				selectedGM = nullptr;
 			}
-			else
-			{
-				this->selectedTile = tilePtr;
-				selectedTileRect.setPosition(tilePtr->getPosition());
-				selectedTileRect.setSize(sf::Vector2f(tilePtr->getGlobalBounds().width, tilePtr->getGlobalBounds().height));
-				selectedTileRect.setFillColor(sf::Color::Transparent);
-				selectedTileRect.setOutlineColor(color);
-				selectedTileRect.setOutlineThickness(1);
-
-				
-				GangMembers* toMerge = nullptr;
-				for (int i = 0; i < this->gangMembers.size(); i++)
-				{
-					if (gangMembers[i]->getPosition() == selectedTile->getPosition())
-					{
-						if (selectedGM == nullptr)
-						{
-							selectedGM = gangMembers[i];
-							selectedGmAmount = gangMembers[i]->getAmount();
-							selectedGmLabel->setString("Selected: < " + std::to_string(selectedGmAmount) + " >");
-							selectedGmLabel->setPosition(selectedGM->getPosition() + sf::Vector2f(-64, 64));
-
-							std::set<Tile*> findBuilding = gameField->getSurroundingTiles(selectedTile);
-							bool foundBuilding = false;
-							for (const auto& tile : findBuilding)
-							{
-								if (tile->getBuilding() != nullptr)
-								{
-									foundBuilding = true;
-								}
-							}
-
-							bool tooCloseToMid = false;
-							for (i = 0; i < 15 && !tooCloseToMid; i++)
-							{
-								if (gameField->lengthOfVector(gameField->getTileByIndex(i, i)->getPosition() - selectedTile->getPosition()) <
-									selectedTile->getGlobalBounds().width * 2)
-								{
-									tooCloseToMid = true;
-								}
-							}
-							if (selectedGM->getAmount() >= 10 &&
-								!foundBuilding && !tooCloseToMid &&
-								selectedGM->hasAction() &&
-								balance >= 1000) 
-							{
-								canBuildDojo = true;
-								buildDojoBtn->setVisuals(uiActiveVis);
-							}
-							if (selectedGM->getAmount() >= 10 &&
-								selectedGM->getPosition() == gameField->getTileByIndex(14, 14)->getPosition() &&
-								selectedGM->hasAction())
-							{
-								canMakeHeist = true;
-								makeHeistBtn->setVisuals(uiActiveVis);
-							}
-						}
-						else if (gangMembers[i]->getPosition() != selectedGM->getPosition())
-						{
-							toMerge = gangMembers[i];
-						}
-						
-					}
-				}
-				
-				if (selectedGM != nullptr && selectedGM->getPosition() != selectedTile->getPosition())
+			else if (tilePtr != nullptr) 
+			{	
+				if (selectedGM != nullptr) //do someting with selected GangMembers
 				{
 					if (selectedGM->hasAction() /*&&
 						gameField->lengthOfVector(selectedGM->getPosition() - selectedTile->getPosition()) <= selectedTile->getGlobalBounds().width*/)
 					{
-						bool split = false;
-						if (selectedGmAmount < selectedGM->getAmount())
-						{
-							selectedGM = selectedGM->split(selectedGmAmount);
-							gangMembers.push_back(selectedGM);
-							if (this->playernr == Owner::PLAYER2)
-							{
-								selectedGM->flipSprite();
-							}
-							split = true;
-						}
-						if (toMerge == nullptr)
-						{
-							
-							Message msg;
-							if (!split) {
-								msg.type = MessageType::GANGMEMBER_MOVED;
-								msg.vec2[0] = selectedGM->getPosition();
-								gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
-							}
-							else {
-								msg.type = MessageType::GANGMEMBER_SPLIT;
-								msg.vec2[0] = selectedGM->getPosition();
-								msg.i = selectedGmAmount;
-							}
-							selectedGM->setPosition(selectedTile->getPosition());
-							if (selectedTile->getGangMembers() != nullptr) {
-								katanaSound.play();
-							}
-							selectedTile->setGangMembers(selectedGM);
-							selectedGM->setHasAction(false);
-							
-							if (!this->territory.checkIfTileInTerr(selectedTile))
-							{
-								selectedGM->setInFriendlyTerr(false);
-							}
-							else
-							{
-								selectedGM->setInFriendlyTerr(true);
-							}
-
-							msg.vec2[1] = selectedGM->getPosition();
+						
+						Message msg;
+						msg.type = MessageType::GANGMEMBER_MOVED;
+						msg.vec2[0] = selectedGM->getPosition();
+						msg.vec2[1] = tilePtr->getPosition();
+						msg.i = selectedGmAmount;
+						
+						if (moveGM(selectedGM, selectedGmAmount, tilePtr)) {
 							NetworkManager::send(msg);
-							
-						}
-						else
-						{
-							if (toMerge->merge(*selectedGM))
-							{
-
-								Message msg;
-								msg.type = MessageType::GANGMEMBER_SPLIT;
-								msg.i = selectedGmAmount;
-								if (!split) {
-									msg.type = MessageType::GANGMEMBER_MOVED;
-									gameField->getTileAt(selectedGM->getPosition())->setGangMembers(nullptr);
-								}
-								msg.vec2[0] = selectedGM->getPosition();
-								msg.vec2[1] = toMerge->getPosition();
-								NetworkManager::send(msg);
-
-								toMerge->setHasAction(false);
-								bool deleted = false;
-								for (int i = 0; i < gangMembers.size() && !deleted; i++)
-								{
-									if (gangMembers[i] == selectedGM)
-									{
-										delete gangMembers[i];
-										gangMembers.erase(gangMembers.begin() + i);
-										deleted = true;
-									}
-								}
-							}
 						}
 					}
 					selectedTile = nullptr;
 					selectedGM = nullptr;
-					
+				}
+				else 
+				{
+					selectTile(tilePtr);
 				}
 				
 			}
@@ -414,6 +276,7 @@ void Player::turnStart() {
 		}
 		else if (gangMembers[i]->getIsBuilding()) {
 			gangMembers[i]->setIsBuilding(false);
+			gangMembers[i]->setInFriendlyTerr(true);
 		}
 	}
 
@@ -503,70 +366,9 @@ void Player::proccessMessage(Message& msg) {
 	}
 	case MessageType::GANGMEMBER_MOVED:
 	{
-		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		Tile* tile = gameField->getTileAt(gm->getPosition());
-		tile->setGangMembers(nullptr);
-		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
-		if (tile->getGangMembers() != nullptr) {
-			if (tile->getGangMembers()->getOwner() != playernr) {
-				katanaSound.play();
-			}
-		}
-		if (targetGm != nullptr) {
-			targetGm->merge(*gm);
-			removeGM(gm);
-			
-		}
-		else {
-			gm->setPosition(msg.vec2[1]);
-			gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
-		}
-		if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
-		{
-			gm->setInFriendlyTerr(false);
-		}
-		else
-		{
-			gm->setInFriendlyTerr(true);
-		}
-		break;
-	}
-	case MessageType::GANGMEMBER_SPLIT:
-	{
-		GangMembers* gm = getGMAtPos(msg.vec2[0]);
-		gm = gm->split(msg.i);
-		GangMembers* targetGm = getGMAtPos(msg.vec2[1]);
-		Tile* tile = gameField->getTileAt(targetGm->getPosition());
-		if (tile->getGangMembers() != nullptr) {
-			if (tile->getGangMembers()->getOwner() != playernr) {
-				katanaSound.play();
-			}
-		}
-		if (targetGm != nullptr) {
-			targetGm->merge(*gm);
-			targetGm->setHasAction(false);
-			delete gm;
-		}
-		else {
-			gangMembers.push_back(gm);
-			gm->setPosition(msg.vec2[1]);
-			gameField->getTileAt(gm->getPosition())->setGangMembers(gm);
-			gm->setHasAction(false);
-
-			if (this->playernr == Owner::PLAYER2)
-			{
-				gm->flipSprite();
-			}
-			if (!this->territory.checkIfTileInTerr(gameField->getTileAt(gm->getPosition())))
-			{
-				gm->setInFriendlyTerr(false);
-			}
-			else
-			{
-				gm->setInFriendlyTerr(true);
-			}
-		}
-
+		GangMembers* gmToMove = getGMAtPos(msg.vec2[0]);
+		Tile* toTile = gameField->getTileAt(msg.vec2[1]);
+		moveGM(gmToMove, msg.i, toTile);
 		break;
 	}
 	case MessageType::MADE_HEIST:
@@ -582,4 +384,150 @@ void Player::proccessMessage(Message& msg) {
 		endTurn = true;
 		break;
 	}
+}
+
+void Player::buildDojo(GangMembers* gm)
+{
+	Message msg;
+	msg.type = MessageType::DOJO_BUILT;
+	msg.vec2[0] = gm->getPosition();
+	NetworkManager::send(msg);
+	territory.buildDojo(gm->getPosition());
+	gm->setIsBuilding(true);
+	balance -= 1000;
+	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+	gm->setHasAction(false);
+}
+
+void Player::makeHeist(GangMembers* gm)
+{
+	Message msg;
+	msg.type = MessageType::MADE_HEIST;
+	NetworkManager::send(msg);
+	balance += gm->getAmount() * 100;
+	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
+	gameField->makeHeist(gm);
+	gm->setHasAction(false);
+}
+
+bool Player::selectTile(Tile* tile) {
+	this->selectedTile = tile;
+	selectedTileRect.setPosition(selectedTile->getPosition());
+	selectedTileRect.setSize(sf::Vector2f(selectedTile->getGlobalBounds().width, selectedTile->getGlobalBounds().height));
+	selectedTileRect.setFillColor(sf::Color::Transparent);
+	selectedTileRect.setOutlineColor(color);
+	selectedTileRect.setOutlineThickness(1);
+	
+	GangMembers* gmAtTile = getGMAtPos(tile->getPosition());
+	if (gmAtTile != nullptr) {
+		selectedGM = gmAtTile;
+		selectedGmAmount = selectedGM->getAmount();
+		selectedGmLabel->setString("Selected: < " + std::to_string(selectedGmAmount) + " >");
+		selectedGmLabel->setPosition(selectedGM->getPosition() + sf::Vector2f(-64, 64));
+
+		std::set<Tile*> findBuilding = gameField->getSurroundingTiles(selectedTile);
+		bool foundBuilding = false;
+		for (const auto& tile : findBuilding)
+		{
+			if (tile->getBuilding() != nullptr)
+			{
+				foundBuilding = true;
+			}
+		}
+
+		bool tooCloseToMid = false;
+		for (int i = 0; i < 15 && !tooCloseToMid; i++)
+		{
+			if (gameField->lengthOfVector(gameField->getTileByIndex(i, i)->getPosition() - selectedTile->getPosition()) <
+				selectedTile->getGlobalBounds().width * 2)
+			{
+				tooCloseToMid = true;
+			}
+		}
+		if (selectedGM->getAmount() >= 10 &&
+			!foundBuilding && !tooCloseToMid &&
+			selectedGM->hasAction() &&
+			balance >= 1000)
+		{
+			canBuildDojo = true;
+			buildDojoBtn->setVisuals(uiActiveVis);
+		}
+		if (selectedGM->getAmount() >= 10 &&
+			selectedGM->getPosition() == gameField->getTileByIndex(14, 14)->getPosition() &&
+			selectedGM->hasAction())
+		{
+			canMakeHeist = true;
+			makeHeistBtn->setVisuals(uiActiveVis);
+		}
+	}
+
+	return false;
+}
+
+GangMembers* Player::trySplitGM(GangMembers* gm, int amount) {
+	GangMembers* newGm = nullptr;
+	if (amount < gm->getAmount())
+	{
+		newGm = gm->split(amount);
+		if (this->playernr == Owner::PLAYER2)
+		{
+			newGm->flipSprite();
+		}
+		newGm->setOwner(playernr);
+	}
+	return newGm;
+}
+
+bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
+	bool success = true;
+	Tile* fromTile = gameField->getTileAt(gmToMove->getPosition());
+	GangMembers* gm = trySplitGM(gmToMove, amount);
+	bool hasSplit = false;
+	if (gm != nullptr) { //if split was needed
+		gmToMove = gm;
+		hasSplit = true;
+	}
+	GangMembers* toMerge = toTile->getGangMembers();
+	if (toMerge != nullptr) {
+		if (toMerge->getOwner() != playernr) {
+			katanaSound.play();
+			gmToMove->setPosition(toTile->getPosition());
+			if (!hasSplit) {
+				fromTile->setGangMembers(nullptr);
+			}
+			toTile->setGangMembers(gmToMove);
+		}
+		else {
+			if (toMerge->merge(*gmToMove)) { //If merge was successfull
+				if (!hasSplit) {
+					fromTile->setGangMembers(nullptr);
+					removeGM(gmToMove);
+				}
+				else {
+					delete gmToMove;
+				}
+				gmToMove = toMerge;
+			}
+			else if (hasSplit) {
+				delete gm;
+				success = false;
+			}
+			else {
+				success = false;
+			}
+		}
+	}
+	else {
+		gmToMove->setPosition(toTile->getPosition());
+		toTile->setGangMembers(gmToMove);
+		gmToMove->setInFriendlyTerr(territory.checkIfTileInTerr(toTile));
+		if (!hasSplit) {
+			fromTile->setGangMembers(nullptr);
+		}
+		else {
+			gangMembers.push_back(gmToMove);
+		}
+	}
+	gmToMove->setHasAction(false);
+	return success;
 }

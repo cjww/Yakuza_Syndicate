@@ -74,4 +74,13 @@ public:
 	bool checkIfWin();
 
 	void proccessMessage(Message& msg);
+
+	void buildDojo(GangMembers* gm);
+	void makeHeist(GangMembers* gm);
+
+	bool selectTile(Tile* tile);
+	GangMembers* trySplitGM(GangMembers* gm, int amount);
+	bool moveGM(GangMembers* gmToMove, int amount, Tile* toTile);
+
+
 };

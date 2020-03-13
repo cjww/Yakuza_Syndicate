@@ -436,7 +436,7 @@ void Game::drawGame() {
 			window.draw(*resumeBtn);
 		}
 	}
-	//window.draw(dbgLabel);
+	window.draw(dbgLabel);
 }
 
 void Game::acceptThread() {
