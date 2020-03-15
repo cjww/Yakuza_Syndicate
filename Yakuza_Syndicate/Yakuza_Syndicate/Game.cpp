@@ -469,9 +469,13 @@ void Game::acceptThread() {
 			std::cout << "Failed to recv color" << std::endl;
 		}
 		else {
+			if (colors[clrPlayer1] == msg.color) {
+				clrPlayer1 = (clrPlayer1 + 1) % COLOR_COUNT;
+			}
 			players[1]->setColor(msg.color);
 			turnIndex = 0;
 		}
+		players[0]->setColor(colors[clrPlayer1]);
 		msg.color = colors[clrPlayer1];
 		if (NetworkManager::send(msg) != sf::Socket::Done) {
 			std::cout << "Failed to send" << std::endl;
@@ -489,7 +493,7 @@ void Game::acceptThread() {
 
 void Game::connectThread() {
 	std::string ip = addressInput->getText();
-	if (NetworkManager::connect(ip, 6969) != sf::Socket::Done) {
+	if (NetworkManager::connect(ip, 5490) != sf::Socket::Done) {
 		ipLabel->setString("Failed to connect");
 		setState(GameState::MENU_NET);
 	}
@@ -540,7 +544,7 @@ void Game::initNetworkgame(bool isHost) {
 	ipLabel->setVisuals(labelVis);
 	if (isHost) {
 		try{
-			NetworkManager::listen(6969);
+			NetworkManager::listen(5490);
 
 			ipLabel->setString("Server located at : " + sf::IpAddress::getLocalAddress().toString());
 
