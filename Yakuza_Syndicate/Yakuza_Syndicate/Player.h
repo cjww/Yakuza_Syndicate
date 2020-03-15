@@ -52,6 +52,7 @@ private:
 
 	sf::Sound katanaSound;
 	sf::Sound hammerSound;
+	sf::Sound coinSound;
 
 	sf::Mutex* mutex;
 

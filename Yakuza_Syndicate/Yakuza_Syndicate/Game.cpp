@@ -22,7 +22,7 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Dojo_Construct.png", "Dojo_Construct");
 	ResourceManager::newSoundBuffer("../res/katana.wav", "Katana");
 	ResourceManager::newSoundBuffer("../res/Hammer.wav", "Hammer");
-
+	ResourceManager::newSoundBuffer("../res/coinSound.wav", "Coins");
 
 
 	this->lastState = GameState::MENU;

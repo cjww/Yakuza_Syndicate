@@ -13,6 +13,8 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 
 	katanaSound.setBuffer(ResourceManager::getSoundBuffer("Katana"));
 	hammerSound.setBuffer(ResourceManager::getSoundBuffer("Hammer"));
+	coinSound.setBuffer(ResourceManager::getSoundBuffer("Coins"));
+	coinSound.setVolume(200);
 
 	territory.setColor(color);
 	selectedTile = nullptr;
@@ -455,6 +457,7 @@ void Player::buildDojo(GangMembers* gm)
 
 void Player::makeHeist(GangMembers* gm)
 {
+	coinSound.play();
 	balance += gm->getAmount() * 100;
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 	gameField->makeHeist(gm);
