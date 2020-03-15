@@ -36,14 +36,14 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	uiInactiveVis.textFillColor = sf::Color(100, 100, 100);
 	uiInactiveVis.textOutlineThickness = 1;
 
-
-	uiPane.addChild((incomeLabel = new Label("Income: " + std::to_string(income) + " Yen")), sf::Vector2f(50, 50));
-	uiPane.addChild((balanceLabel = new Label("Balance: " + std::to_string(balance) + " Yen")), sf::Vector2f(50, 100));
-	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: 20")), sf::Vector2f(50, 150));
-	uiPane.addChild((gmUpkeepLabel = new Label("Gang Member Upkeep: 100")), sf::Vector2f(50, 200));
-	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 500));
-	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 400));
-	uiPane.addChild((makeHeistBtn = new Button("Make Heist", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 300));
+	int leftOffset = 30;
+	uiPane.addChild((incomeLabel = new Label("Income: " + std::to_string(income) + " Yen")), sf::Vector2f(leftOffset, 50));
+	uiPane.addChild((balanceLabel = new Label("Balance: " + std::to_string(balance) + " Yen")), sf::Vector2f(leftOffset, 100));
+	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: 20")), sf::Vector2f(leftOffset, 150));
+	uiPane.addChild((gmUpkeepLabel = new Label("Gang Member Upkeep: 100 Yen")), sf::Vector2f(leftOffset, 200));
+	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(leftOffset, 500));
+	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(leftOffset, 400));
+	uiPane.addChild((makeHeistBtn = new Button("Make Heist", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(leftOffset, 300));
 
 	UIVisualSettings vis = {};
 	vis.textFillColor = sf::Color::White;
@@ -154,7 +154,7 @@ void Player::updateUpkeep()
 	{
 		upkeep += gangMembers[i]->getUpkeep();
 	}
-	gmUpkeepLabel->setString("Gang Member Upkeep: " + std::to_string(upkeep));
+	gmUpkeepLabel->setString("Gang Member Upkeep: " + std::to_string(upkeep) + " Yen");
 }
 
 void Player::updateTotalGM()

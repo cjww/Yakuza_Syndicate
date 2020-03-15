@@ -3,7 +3,6 @@
 Game::Game() :
 	timePerFrame(sf::seconds(1.0f / 60.0f)),
 	elapsedTime(sf::Time::Zero),
-	//window(sf::VideoMode(1000, 600), "Yakuza Syndicate"),
 	window(sf::VideoMode::getFullscreenModes()[0], "Yakuza Syndicate", sf::Style::Fullscreen),
 	serverAcceptThread(&Game::acceptThread, this),
 	clientConnectThread(&Game::connectThread, this),
