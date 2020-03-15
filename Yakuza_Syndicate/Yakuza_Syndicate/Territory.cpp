@@ -6,8 +6,8 @@ void Territory::updateTerritory() {
 	tilesInTerritory.insert(safehouseTiles.begin(), safehouseTiles.end());
 
 	for (int i = 0; i < dojos.size(); i++) {
-		if (dojos[i].getType() != BuildingType::DOJO_CONSTRUCTION) {
-			std::set<Tile*> surroundingTiles = gameField->getSurroundingTiles(gameField->getTileAt(dojos[i].getPosition()));
+		if (dojos[i]->getType() != BuildingType::DOJO_CONSTRUCTION) {
+			std::set<Tile*> surroundingTiles = gameField->getSurroundingTiles(gameField->getTileAt(dojos[i]->getPosition()));
 			tilesInTerritory.insert(surroundingTiles.begin(), surroundingTiles.end());
 		}
 	}
@@ -44,12 +44,12 @@ int Territory::getIncome() {
 std::vector<GangMembers*> Territory::getNewGangMembers() {
 	std::vector<GangMembers*> allGangMembers;
 	for (auto& dojo : dojos) {
-		GangMembers* gm = dojo.spawnGangMembers();
+		GangMembers* gm = dojo->spawnGangMembers();
 		if (gm != nullptr) {
 			allGangMembers.push_back(gm);
 		}
-		if (dojo.getType() == BuildingType::DOJO_CONSTRUCTION) {
-			dojo.finishConstructing();
+		if (dojo->getType() == BuildingType::DOJO_CONSTRUCTION) {
+			dojo->finishConstructing();
 			updateTerritory();
 		}
 	}
@@ -76,13 +76,31 @@ void Territory::setColor(sf::Color color) {
 void Territory::buildDojo(sf::Vector2f position) {
 	Tile* tile = gameField->getTileAt(position);
 	if (tile != nullptr && tile->getBuilding() == nullptr) {
-		Building newDojo(BuildingType::DOJO_CONSTRUCTION, ResourceManager::getTexture("Dojo_Construct"));
-		newDojo.setOwner(owner);
-		newDojo.setPosition(tile->getPosition());
+		Building* newDojo = new Building(BuildingType::DOJO_CONSTRUCTION, ResourceManager::getTexture("Dojo_Construct"));
+		newDojo->setOwner(owner);
+		newDojo->setPosition(tile->getPosition());
 		dojos.push_back(newDojo);
-		tile->setBuilding(&dojos.back());
+		tile->setBuilding(dojos.back());
 		updateTerritory();
 	}
+}
+
+void Territory::removeDojo(Building* toRemove)
+{
+
+	//mutex->lock();
+	bool removed = false;
+	for (int i = 0; i < dojos.size() && !removed; i++)
+	{
+		if (toRemove == dojos[i])
+		{
+			delete dojos[i];
+			dojos.erase(dojos.begin() + i);
+			removed = true;
+		}
+	}
+	//mutex->unlock();
+
 }
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -98,7 +116,7 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 
 	for (const auto& dojo : dojos) {
-		target.draw(dojo, states);
+		target.draw(*dojo, states);
 	}
 
 	target.draw(safeHouse, states);
