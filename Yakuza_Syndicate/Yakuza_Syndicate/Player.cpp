@@ -76,6 +76,7 @@ void Player::checkFight(Player* other)
 {
 	for (int i = 0; i < this->gangMembers.size(); i++)
 	{
+
 		GangMembers* gmToFight = other->getGMAtPos(gangMembers[i]->getPosition());
 		if (gmToFight != nullptr)
 		{
@@ -103,13 +104,21 @@ void Player::checkFight(Player* other)
 				winner = gangMembers[i];
 				loserPlayer = other;
 			}
-
 			if (winner != nullptr) {
 				Building* dojo = gameField->getTileAt(winner->getPosition())->getBuilding();
 				if (dojo != nullptr) {
 					if (dojo->getOwner() != winner->getOwner()) {
 						loserPlayer->territory.removeDojo(dojo);
 					}
+				}
+			}
+		}
+		else {
+			Building* dojo = gameField->getTileAt(gangMembers[i]->getPosition())->getBuilding();
+			if (dojo != nullptr) {
+				//Gangmember on other players dojo
+				if (dojo->getOwner() != playernr) {
+					other->territory.removeDojo(dojo);
 				}
 			}
 		}

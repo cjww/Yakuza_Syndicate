@@ -95,7 +95,7 @@ void GangMembers::fight(GangMembers &other)
 	{
 		strOther *= 0.75f;
 	}
-	else if (other.inFriendlyTerr)
+	if (other.inFriendlyTerr)
 	{
 		strThis *= 0.75f;
 	}
