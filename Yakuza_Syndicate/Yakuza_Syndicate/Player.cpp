@@ -167,7 +167,6 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				msg.vec2[0] = selectedGM->getPosition();
 				NetworkManager::send(msg);
 				buildDojo(selectedGM);
-				hammerSound.play();
 			}
 		}
 		if (canMakeHeist) {
@@ -420,6 +419,7 @@ void Player::proccessMessage(Message& msg) {
 
 void Player::buildDojo(GangMembers* gm)
 {
+	hammerSound.play();
 	territory.buildDojo(gm->getPosition());
 	gm->setIsBuilding(true);
 	balance -= 1000;
