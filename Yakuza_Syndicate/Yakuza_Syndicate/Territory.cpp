@@ -96,6 +96,7 @@ void Territory::removeDojo(Building* toRemove)
 	{
 		if (toRemove == dojos[i])
 		{
+			gameField->getTileAt(dojos[i]->getPosition())->setBuilding(nullptr);
 			delete dojos[i];
 			dojos.erase(dojos.begin() + i);
 			removed = true;
