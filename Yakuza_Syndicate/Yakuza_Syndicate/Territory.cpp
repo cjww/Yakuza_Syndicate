@@ -29,7 +29,9 @@ Territory::Territory(GameField* gameField, Owner owner)
 		safeHouse.setPosition(topRight->getPosition());
 		topRight->setBuilding(&safeHouse);
 	}
-	
+
+	dojos.reserve(15 * 15);
+
 	updateTerritory();
 }
 
@@ -91,7 +93,6 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		rect.setPosition(tile->getPosition());
 		sf::Color c = this->color;
 		c.a = 100;
-		//rect.setFillColor(sf::Color::Transparent);
 		rect.setFillColor(c);
 		target.draw(rect);
 	}

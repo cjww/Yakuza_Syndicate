@@ -155,6 +155,10 @@ bool GangMembers::getIsBuilding() const {
 	return inBuildingState;
 }
 
+bool GangMembers::isInTerr() const {
+	return this->inFriendlyTerr;
+}
+
 void GangMembers::update() {
 	//Set sprite
 	setTexture(ResourceManager::getTexture("GangMembers"));

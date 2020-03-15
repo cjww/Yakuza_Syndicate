@@ -13,7 +13,7 @@ enum class GameState {
 	MENU_NET_WAIT,
 	GAME_LOCAL, //Game on local comp
 	GAME_NET,	//Game over network
-	GAME_MENU
+	GAME_MENU // In Game menu
 };
 
 class Game {

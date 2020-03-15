@@ -33,5 +33,7 @@ public:
 	void setIsBuilding(bool value);
 	bool getIsBuilding() const;
 
+	bool isInTerr() const;
+
 	void update();
 };

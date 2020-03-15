@@ -108,9 +108,9 @@ Game::Game() :
 	winnerText.setFont(winnerFont);
 	winnerText.setPosition(window.getSize().x / 3, 400);
 
-	music.openFromFile("../res/Shamisen.wav");
+	music.openFromFile("../res/music1.wav");
 	music.setLoop(true);
-	music.setVolume(30);
+	music.setVolume(50);
 	
 	turnIndex = 0;
 	while (window.isOpen()) {
@@ -382,7 +382,11 @@ void Game::updateGame() {
 	Tile* mtile = gameField->getTileAt((sf::Vector2f)sf::Mouse::getPosition(window));
 	if (mtile != nullptr) {
 		if (mtile->getGangMembers() != nullptr) {
-			dbgLabel.setString(std::to_string(mtile->getGangMembers()->getAmount()));
+			dbgLabel.setString(
+				std::to_string(mtile->getGangMembers()->getAmount()) +
+				", " +
+				std::to_string(mtile->getGangMembers()->isInTerr())
+			);
 		}
 		else {
 			dbgLabel.setString("NULL");
@@ -437,7 +441,7 @@ void Game::drawGame() {
 			window.draw(*resumeBtn);
 		}
 	}
-	window.draw(dbgLabel);
+	//window.draw(dbgLabel);
 }
 
 void Game::acceptThread() {

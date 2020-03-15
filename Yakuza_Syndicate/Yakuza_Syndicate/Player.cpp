@@ -165,12 +165,12 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				selectedTile = nullptr;
 				selectedGM = nullptr;
 			}
-			else if (tilePtr != nullptr) 
+			else
 			{	
 				if (selectedGM != nullptr) //do someting with selected GangMembers
 				{
-					if (selectedGM->hasAction() /*&&
-						gameField->lengthOfVector(selectedGM->getPosition() - selectedTile->getPosition()) <= selectedTile->getGlobalBounds().width*/)
+					if (selectedGM->hasAction() 
+						/*&& gameField->lengthOfVector(selectedGM->getPosition() - tilePtr->getPosition()) <= tilePtr->getGlobalBounds().width*/)
 					{
 						
 						Message msg;
@@ -491,6 +491,7 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 		if (toMerge->getOwner() != this->playernr) {
 			katanaSound.play();
 			gmToMove->setPosition(toTile->getPosition());
+			gmToMove->setInFriendlyTerr(territory.checkIfTileInTerr(toTile));
 			if (!hasSplit) {
 				fromTile->setGangMembers(nullptr);
 			}
@@ -500,7 +501,7 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 			toTile->setGangMembers(gmToMove);
 		}
 		else {
-			if (toMerge->merge(*gmToMove)) { //If merge was successfull
+			if (toMerge->merge(*gmToMove)) { //If merge was successful
 				if (!hasSplit) {
 					fromTile->setGangMembers(nullptr);
 					removeGM(gmToMove);
@@ -511,7 +512,8 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 				gmToMove = toMerge;
 			}
 			else if (hasSplit) {
-				delete gm;
+				fromTile->getGangMembers()->merge(*gmToMove);
+				delete gmToMove;
 				success = false;
 			}
 			else {
@@ -530,6 +532,8 @@ bool Player::moveGM(GangMembers* gmToMove, int amount, Tile* toTile) {
 			gangMembers.push_back(gmToMove);
 		}
 	}
-	gmToMove->setHasAction(false);
+	if (success) {
+		gmToMove->setHasAction(false);
+	}
 	return success;
 }
