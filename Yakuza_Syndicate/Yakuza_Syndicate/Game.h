@@ -77,9 +77,6 @@ private:
 
 	sf::Music music;
 
-	//DEBUG
-	Label dbgLabel;
-
 public:
 	Game();
 	virtual ~Game();
