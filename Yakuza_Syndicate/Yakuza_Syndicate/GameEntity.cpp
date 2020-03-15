@@ -79,7 +79,7 @@ void GameEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void GameEntity::animate(sf::Texture* tex, int imageSize, int length, float timePerFrame) {
 	sprite.setTexture(*tex);
-	animRect = sf::IntRect(animFrame * imageSize, 0, imageSize, imageSize);
+	sf::IntRect animRect(animFrame * imageSize, 0, imageSize, imageSize);
 	sprite.setTextureRect(animRect);
 	animTimer++;
 	if (animTimer >= timePerFrame * 60.f) {

@@ -8,11 +8,11 @@
 #include <fstream>
 
 enum class GameState {
-	MENU,		//Main Menu
-	MENU_NET,	//Menu for hosting or joining network
-	MENU_NET_WAIT,
-	GAME_LOCAL, //Game on local comp
-	GAME_NET,	//Game over network
+	MENU,		// Main Menu
+	MENU_NET,	// Menu for hosting or joining network
+	MENU_NET_WAIT, // In menu while waiting for network
+	GAME_LOCAL, // Game on local comp
+	GAME_NET,	// Game over network
 	GAME_MENU // In Game menu
 };
 

@@ -13,7 +13,6 @@ private:
 
 	float animTimer;
 	int animFrame;
-	sf::IntRect animRect;
 public:
 	GameEntity();
 	GameEntity(sf::Texture &texture);
@@ -37,6 +36,5 @@ public:
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	//void setupAnimation(sf::Texture& texture, int imageSize, int length, float speed);
 	void animate(sf::Texture* tex, int imageSize, int length, float speed);
 };
