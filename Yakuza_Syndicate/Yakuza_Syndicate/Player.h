@@ -58,7 +58,6 @@ private:
 
 public:
 	Player(GameField* gameField, Owner owner, sf::RenderWindow& window);
-	Player(const Player& otherPlayer);
 	virtual ~Player();
 
 	void checkFight(Player* other);

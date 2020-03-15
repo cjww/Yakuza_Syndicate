@@ -61,11 +61,6 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 
 }
 
-Player::Player(const Player& otherPlayer) : Player(otherPlayer.gameField, otherPlayer.playernr, otherPlayer.window)
-{
-	
-}
-
 Player::~Player() {
 	delete selectedGmLabel;
 	for (auto& gm : gangMembers) {
