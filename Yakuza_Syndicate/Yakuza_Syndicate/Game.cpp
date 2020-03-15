@@ -60,6 +60,15 @@ Game::Game() :
 	clrPlayer1 = 0;
 	clrPlayer2 = 1;
 
+	titleFont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	titleText.setFont(titleFont);
+	titleText.setString("Yakuza Syndicate");
+	titleText.setFillColor(sf::Color::Magenta);
+	titleText.setPosition(window.getSize().x / 3, 200);
+	titleText.setCharacterSize(80);
+	titleText.setOutlineThickness(2);
+	titleText.setOutlineColor(sf::Color::Black);
+
 	menu.addChild(
 		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x/3, 400));
@@ -372,6 +381,7 @@ void Game::handleEventsMenu(const sf::Event& e) {
 void Game::drawMenu() {
 	if (state == GameState::MENU) {
 		window.draw(menu);
+		window.draw(titleText);
 	}
 	else {
 		window.draw(menuNet);

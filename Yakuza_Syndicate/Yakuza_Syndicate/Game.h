@@ -45,6 +45,9 @@ private:
 	Button* playLocalBtn;
 	Button* playNetBtn;
 	Button* exitBtn;
+	
+	sf::Text titleText;
+	sf::Font titleFont;
 
 	Button* gameMenuBtn;
 	Pane gameMenu;
