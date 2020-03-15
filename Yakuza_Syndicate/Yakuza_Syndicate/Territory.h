@@ -2,6 +2,7 @@
 #include "Building.h"
 #include "GameField.h"
 #include <set>
+#include <SFML/System/Mutex.hpp>
 
 class Territory : public sf::Drawable{
 private:
@@ -12,6 +13,8 @@ private:
 	Owner owner;
 
 	std::set<Tile*> tilesInTerritory;
+
+	sf::Mutex* mutex;
 	void updateTerritory();
 
 public:

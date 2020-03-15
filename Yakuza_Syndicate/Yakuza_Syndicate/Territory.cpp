@@ -1,6 +1,8 @@
 #include "Territory.h"
 
 void Territory::updateTerritory() {
+	mutex->lock();
+
 	tilesInTerritory.clear();
 	std::set<Tile*> safehouseTiles = gameField->getSurroundingTiles(gameField->getTileAt(safeHouse.getPosition()));
 	tilesInTerritory.insert(safehouseTiles.begin(), safehouseTiles.end());
@@ -11,13 +13,15 @@ void Territory::updateTerritory() {
 			tilesInTerritory.insert(surroundingTiles.begin(), surroundingTiles.end());
 		}
 	}
-
+	mutex->unlock();
 }
 
 Territory::Territory(GameField* gameField, Owner owner)
 	: safeHouse(BuildingType::SAFEHOUSE, ResourceManager::getTexture("SafeHouse")),
 	gameField(gameField), owner(owner) {
 
+	mutex = new sf::Mutex;
+	
 	safeHouse.setOwner(owner);
 	Tile* bottomLeft = gameField->getTileByIndex(0, 14);
 	if (bottomLeft->getBuilding() == nullptr) {
@@ -37,6 +41,7 @@ Territory::~Territory() {
 	for (auto& dojo : dojos) {
 		delete dojo;
 	}
+	delete mutex;
 }
 
 int Territory::getIncome() {
@@ -89,8 +94,6 @@ void Territory::buildDojo(sf::Vector2f position) {
 
 void Territory::removeDojo(Building* toRemove)
 {
-
-	//mutex->lock();
 	bool removed = false;
 	for (int i = 0; i < dojos.size() && !removed; i++)
 	{
@@ -106,13 +109,11 @@ void Territory::removeDojo(Building* toRemove)
 	if (removed) {
 		updateTerritory();
 	}
-	//mutex->unlock();
-
 }
 
 void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-
+	mutex->lock();
 	for (const auto& tile : tilesInTerritory) {
 		sf::RectangleShape rect(sf::Vector2f(tile->getGlobalBounds().width, tile->getGlobalBounds().height));
 		rect.setPosition(tile->getPosition());
@@ -121,6 +122,7 @@ void Territory::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		rect.setFillColor(c);
 		target.draw(rect);
 	}
+	mutex->unlock();
 
 	for (const auto& dojo : dojos) {
 		target.draw(*dojo, states);
