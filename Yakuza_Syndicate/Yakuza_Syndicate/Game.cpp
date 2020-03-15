@@ -109,7 +109,7 @@ Game::Game() :
 	winnerText.setFont(winnerFont);
 	winnerText.setPosition(window.getSize().x / 3, 400);
 
-	music.openFromFile("../res/music1.wav");
+	music.openFromFile("../res/music.wav");
 	music.setLoop(true);
 	music.setVolume(50);
 	
