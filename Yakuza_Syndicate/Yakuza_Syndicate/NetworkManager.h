@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 enum class MessageType {
 	GANGMEMBER_MOVED,
-	GANGMEMBER_SPLIT,
 	DOJO_BUILT,
 	MADE_HEIST,
 	COLOR_CHANGED,
