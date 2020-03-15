@@ -30,8 +30,6 @@ Territory::Territory(GameField* gameField, Owner owner)
 		topRight->setBuilding(&safeHouse);
 	}
 
-	dojos.reserve(15 * 15);
-
 	updateTerritory();
 }
 
