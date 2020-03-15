@@ -25,6 +25,8 @@ private:
 
 	int income;
 	int balance;
+	int upkeep;
+	int totalGM;
 	
 	sf::RectangleShape selectedTileRect;
 	Tile* selectedTile;
@@ -44,7 +46,7 @@ private:
 	Label* balanceLabel;
 	Label* incomeLabel;
 	Label* totalGmLabel;
-	Label* gmInCustodyLabel;
+	Label* gmUpkeepLabel;
 
 	sf::RenderWindow& window;
 
@@ -60,6 +62,8 @@ public:
 
 	void checkFight(Player* other);
 	void removeGM(GangMembers* toRemove);
+	void updateUpkeep();
+	void updateTotalGM();
 
 	GangMembers* getGMAtPos(sf::Vector2f pos);
 	void mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button);

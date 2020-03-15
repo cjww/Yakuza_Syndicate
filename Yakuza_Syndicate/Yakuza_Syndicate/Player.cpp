@@ -19,6 +19,8 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	selectedGM = nullptr;
 	balance = 1000;
 	income = territory.getIncome();
+	upkeep = 100;
+	totalGM = 20;
 	selectedGmAmount = 0;
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
@@ -35,8 +37,8 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 
 	uiPane.addChild((incomeLabel = new Label("Income: " + std::to_string(income) + " Yen")), sf::Vector2f(50, 50));
 	uiPane.addChild((balanceLabel = new Label("Balance: " + std::to_string(balance) + " Yen")), sf::Vector2f(50, 100));
-	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: -")), sf::Vector2f(50, 150));
-	uiPane.addChild((gmInCustodyLabel = new Label("Gang Members in Custody: -")), sf::Vector2f(50, 200));
+	uiPane.addChild((totalGmLabel = new Label("Total Gang Members: 20")), sf::Vector2f(50, 150));
+	uiPane.addChild((gmUpkeepLabel = new Label("Gang Member Upkeep: 100")), sf::Vector2f(50, 200));
 	uiPane.addChild((endTurnBtn = new Button("End Turn", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 500));
 	uiPane.addChild((buildDojoBtn = new Button("Build Dojo", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 400));
 	uiPane.addChild((makeHeistBtn = new Button("Make Heist", sf::Vector2f(window.getSize().x / 5, 50))), sf::Vector2f(50, 300));
@@ -114,6 +116,8 @@ void Player::checkFight(Player* other)
 			}
 		}
 	}
+	updateUpkeep();
+	updateTotalGM();
 }
 
 void Player::removeGM(GangMembers* toRemove)
@@ -130,6 +134,26 @@ void Player::removeGM(GangMembers* toRemove)
 		}
 	}
 	mutex->unlock();
+}
+
+void Player::updateUpkeep()
+{
+	upkeep = 0;
+	for (int i = 0; i < gangMembers.size(); i++)
+	{
+		upkeep += gangMembers[i]->getUpkeep();
+	}
+	gmUpkeepLabel->setString("Gang Member Upkeep: " + std::to_string(upkeep));
+}
+
+void Player::updateTotalGM()
+{
+	totalGM = 0;
+	for (int i = 0; i < gangMembers.size(); i++)
+	{
+		totalGM += gangMembers[i]->getAmount();
+	}
+	totalGmLabel->setString("Total Gang Members: " + std::to_string(totalGM));
 }
 
 GangMembers* Player::getGMAtPos(sf::Vector2f pos)
@@ -187,7 +211,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				if (selectedGM != nullptr) //do someting with selected GangMembers
 				{
 					if (selectedGM->hasAction() 
-						/*&& gameField->lengthOfVector(selectedGM->getPosition() - tilePtr->getPosition()) <= tilePtr->getGlobalBounds().width*/)
+						&& gameField->lengthOfVector(selectedGM->getPosition() - tilePtr->getPosition()) <= tilePtr->getGlobalBounds().width * 2)
 					{
 						
 						Message msg;
@@ -312,7 +336,7 @@ void Player::turnStart() {
 		}
 	}
 
-	balance += territory.getIncome();
+	balance += territory.getIncome() - upkeep;
 	balanceLabel->setString("Balance: " + std::to_string(balance) + " Yen");
 	
 	std::vector<GangMembers*> newGangMembers = territory.getNewGangMembers();
@@ -344,6 +368,8 @@ void Player::turnStart() {
 			gameField->getTileAt(newGm->getPosition())->setGangMembers(newGm);
 		}
 	}
+	updateTotalGM();
+	updateUpkeep();
 }
 
 void Player::setColor(sf::Color color) {
