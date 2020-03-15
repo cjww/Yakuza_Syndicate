@@ -7,6 +7,7 @@ private:
 	sf::Font font;
 
 	int amount;
+	int upkeep;
 	bool action;
 	bool inFriendlyTerr;
 
@@ -19,6 +20,8 @@ public:
 
 	
 	bool merge(GangMembers& other);
+
+	int getUpkeep();
 	int getAmount();
 	void setAmount(int amount);
 	bool hasAction();
