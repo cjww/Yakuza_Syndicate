@@ -12,6 +12,7 @@ private:
 	int fieldSize;
 	Bank bank;
 	PolicePatrol police;
+	sf::RectangleShape policeRectShape;
 	sf::Sprite policeStation;
 
 
