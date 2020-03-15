@@ -14,7 +14,6 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	katanaSound.setBuffer(ResourceManager::getSoundBuffer("Katana"));
 	hammerSound.setBuffer(ResourceManager::getSoundBuffer("Hammer"));
 	coinSound.setBuffer(ResourceManager::getSoundBuffer("Coins"));
-	coinSound.setVolume(200);
 
 	territory.setColor(color);
 	selectedTile = nullptr;
@@ -24,6 +23,7 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 	upkeep = 100;
 	totalGM = 20;
 	selectedGmAmount = 0;
+
 	shader.loadFromFile("../res/fragmentShader.glsl", sf::Shader::Type::Fragment);
 	
 	uiActiveVis = {};
