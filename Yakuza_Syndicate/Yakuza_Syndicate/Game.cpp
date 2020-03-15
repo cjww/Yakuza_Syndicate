@@ -45,8 +45,6 @@ Game::Game() :
 	inactiveVis.rectFillColor = sf::Color(50, 50, 50);
 	inactiveVis.textFillColor = sf::Color(80, 80, 80);
 
-	clrPlayer1 = 0;
-	clrPlayer2 = 1;
 	colors[0] = sf::Color::Green;
 	colors[1] = sf::Color::Red;
 	colors[2] = sf::Color::Blue;
@@ -59,6 +57,8 @@ Game::Game() :
 	colors[9] = sf::Color(50, 75, 143);
 	colors[10] = sf::Color(17, 213, 158);
 	colors[11] = sf::Color(201, 181, 24);
+	clrPlayer1 = 0;
+	clrPlayer2 = 1;
 
 	menu.addChild(
 		(playLocalBtn = new Button("Play Local", sf::Vector2f(window.getSize().x/3, 50), activeVis)),
@@ -69,6 +69,17 @@ Game::Game() :
 		menu.addChild((colorBtns[i] = new Button(colorBtn)),
 			sf::Vector2f(50 + 65 * (i % (COLOR_COUNT/2)), 375 + 65 * (i / (COLOR_COUNT/2))));
 	}
+	UIVisualSettings newVis = colorBtns[clrPlayer1]->getVisuals();
+	newVis.rectOutlineThicknes = 5;
+	newVis.rectOutlineColor = sf::Color::Black;
+	colorBtns[clrPlayer1]->setVisuals(newVis);
+
+	newVis = colorBtns[clrPlayer2]->getVisuals();
+	newVis.rectOutlineThicknes = 5;
+	newVis.rectOutlineColor = sf::Color::White;
+	colorBtns[clrPlayer2]->setVisuals(newVis);
+
+	
 	menu.addChild(
 		(playNetBtn = new Button("Play LAN", sf::Vector2f(window.getSize().x / 3, 50), activeVis)),
 		sf::Vector2f(window.getSize().x / 3, 500));
