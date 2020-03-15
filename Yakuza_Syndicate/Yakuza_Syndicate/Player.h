@@ -49,6 +49,7 @@ private:
 	sf::RenderWindow& window;
 
 	sf::Sound katanaSound;
+	sf::Sound hammerSound;
 
 	sf::Mutex* mutex;
 

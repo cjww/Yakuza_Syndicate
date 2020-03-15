@@ -21,6 +21,7 @@ Game::Game() :
 	ResourceManager::newTexture("../res/Hammer.png", "Hammer");
 	ResourceManager::newTexture("../res/Dojo_Construct.png", "Dojo_Construct");
 	ResourceManager::newSoundBuffer("../res/katana.wav", "Katana");
+	ResourceManager::newSoundBuffer("../res/Hammer.wav", "Hammer");
 
 
 
@@ -108,7 +109,7 @@ Game::Game() :
 	winnerText.setFont(winnerFont);
 	winnerText.setPosition(window.getSize().x / 3, 400);
 
-	music.openFromFile("../res/music1.wav");
+	music.openFromFile("../res/music.wav");
 	music.setLoop(true);
 	music.setVolume(50);
 	

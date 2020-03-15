@@ -12,6 +12,7 @@ Player::Player(GameField* gameField, Owner owner, sf::RenderWindow& window)
 {
 
 	katanaSound.setBuffer(ResourceManager::getSoundBuffer("Katana"));
+	hammerSound.setBuffer(ResourceManager::getSoundBuffer("Hammer"));
 
 	territory.setColor(color);
 	selectedTile = nullptr;
@@ -142,6 +143,7 @@ void Player::mousePressed(sf::Vector2f mousePosition, sf::Mouse::Button button) 
 				msg.vec2[0] = selectedGM->getPosition();
 				NetworkManager::send(msg);
 				buildDojo(selectedGM);
+				hammerSound.play();
 			}
 		}
 		if (canMakeHeist) {
