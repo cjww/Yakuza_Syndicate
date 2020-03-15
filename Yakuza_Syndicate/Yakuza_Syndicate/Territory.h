@@ -16,7 +16,7 @@ private:
 
 public:
 	Territory(GameField* gameField, Owner owner);
-
+	virtual ~Territory();
 
 	int getIncome();
 	std::vector<GangMembers*> getNewGangMembers();

@@ -35,7 +35,11 @@ Territory::Territory(GameField* gameField, Owner owner)
 	updateTerritory();
 }
 
-
+Territory::~Territory() {
+	for (auto& dojo : dojos) {
+		delete dojo;
+	}
+}
 
 int Territory::getIncome() {
 	return tilesInTerritory.size() * 50;
