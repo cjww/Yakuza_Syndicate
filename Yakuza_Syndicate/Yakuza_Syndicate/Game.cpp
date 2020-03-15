@@ -380,6 +380,7 @@ void Game::handleEventsLocalGame(const sf::Event& e) {
 }
 
 void Game::updateGame() {
+	//DEBUG--[[
 	Tile* mtile = gameField->getTileAt((sf::Vector2f)sf::Mouse::getPosition(window));
 	if (mtile != nullptr) {
 		if (mtile->getGangMembers() != nullptr) {
@@ -394,6 +395,7 @@ void Game::updateGame() {
 		}
 		dbgLabel.setPosition(mtile->getPosition());
 	}
+	//--]]DEBUG
 
 	players[turnIndex]->update();
 	gameField->updateAnimations();

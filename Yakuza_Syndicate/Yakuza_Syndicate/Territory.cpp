@@ -1,7 +1,7 @@
 #include "Territory.h"
 
 void Territory::updateTerritory() {
-	
+	tilesInTerritory.clear();
 	std::set<Tile*> safehouseTiles = gameField->getSurroundingTiles(gameField->getTileAt(safeHouse.getPosition()));
 	tilesInTerritory.insert(safehouseTiles.begin(), safehouseTiles.end());
 
@@ -101,6 +101,10 @@ void Territory::removeDojo(Building* toRemove)
 			dojos.erase(dojos.begin() + i);
 			removed = true;
 		}
+	}
+
+	if (removed) {
+		updateTerritory();
 	}
 	//mutex->unlock();
 
