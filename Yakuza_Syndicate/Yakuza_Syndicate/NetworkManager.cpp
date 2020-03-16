@@ -43,9 +43,7 @@ void NetworkManager::close() {
 sf::Socket::Status NetworkManager::send(Message& msg) {
 	sf::Socket::Status status = sf::Socket::Status::NotReady;
 	if (open) {
-		sf::Packet p;
-		p.append(&msg, sizeof(msg));
-		status = socket.send(p);
+		status = socket.send(&msg, sizeof(msg));
 	}
 	return status;
 }
@@ -53,11 +51,8 @@ sf::Socket::Status NetworkManager::send(Message& msg) {
 sf::Socket::Status NetworkManager::recv(Message& msg) {
 	sf::Socket::Status status = sf::Socket::Status::NotReady;
 	if (open) {
-		sf::Packet p;
-		status = socket.receive(p);
-		if (status == sf::Socket::Done) {
-			msg = *(Message*)p.getData();
-		}
+		size_t recvSize;
+		status = socket.receive(&msg, sizeof(msg), recvSize);
 	}
 	return status;
 }

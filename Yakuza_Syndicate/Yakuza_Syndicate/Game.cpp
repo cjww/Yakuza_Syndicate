@@ -61,7 +61,7 @@ Game::Game() :
 	titleFont.loadFromFile("C:/Windows/Fonts/Arial.ttf");
 	titleText.setFont(titleFont);
 	titleText.setString("Yakuza Syndicate");
-	titleText.setFillColor(sf::Color::Magenta);
+	//titleText.setFillColor(sf::Color::Magenta);
 	titleText.setPosition(window.getSize().x / 3, 200);
 	titleText.setCharacterSize(80);
 	titleText.setOutlineThickness(2);
