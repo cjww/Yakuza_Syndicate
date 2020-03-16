@@ -77,6 +77,8 @@ private:
 
 	sf::Music music;
 
+	sf::Cursor cur;
+
 public:
 	Game();
 	virtual ~Game();

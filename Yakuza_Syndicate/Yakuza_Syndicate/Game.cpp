@@ -131,6 +131,11 @@ Game::Game() :
 	music.setLoop(true);
 	music.setVolume(50);
 	
+	sf::Image cursorImage;
+	cursorImage.loadFromFile("../res/Cursor.png");
+	cur.loadFromPixels(cursorImage.getPixelsPtr(), cursorImage.getSize(), sf::Vector2u(0, 0));
+	window.setMouseCursor(cur);
+
 	turnIndex = 0;
 	while (window.isOpen()) {
 		handleEvents();
