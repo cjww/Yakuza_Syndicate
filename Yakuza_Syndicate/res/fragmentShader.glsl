@@ -6,7 +6,7 @@ uniform vec4 teamColor;
 void main() {
     vec2 texCoord = gl_TexCoord[0].xy;
     vec4 texPixel = texture2D(texture, texCoord);
-    if(texPixel == vec4(0, 0, 0, 1) && gl_Color != vec4(1, 1, 1, 1)){
+    if(texPixel == vec4(0, 0, 0, 1) && gl_Color != vec4(1, 1, 1, 1)){ //If no texture and color is diffrent from default
         texPixel = vec4(1, 1, 1, 1);
     }
 
