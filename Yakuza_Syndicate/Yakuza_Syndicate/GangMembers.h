@@ -7,7 +7,7 @@ private:
 	sf::Font font;
 
 	int amount;
-	float upkeep;
+	int upkeep;
 	bool action;
 	bool inFriendlyTerr;
 

@@ -5,7 +5,7 @@ GangMembers::GangMembers(int amount)
 {
 
 	this->amount = amount;
-	this->upkeep = 7.5;
+	this->upkeep = 5;
 	action = true;
 	inFriendlyTerr = true;
 	inBuildingState = false;	this->font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
